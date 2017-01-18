@@ -104,4 +104,7 @@ void toon2App::receive( const asio::error_code &, std::size_t len )
 
 }
 
-CINDER_APP( toon2App, RendererGl )
+CINDER_APP( toon2App, RendererGl, [ & ] ( App::Settings *settings ) 
+{
+    settings->setWindowSize( 1280, 720 );
+} )

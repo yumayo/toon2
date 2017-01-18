@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{4C11A21B-2EC6-4D94-BC04-14BC22D0B517}</ProjectGuid>
-    <RootNamespace>game</RootNamespace>
+    <ProjectGuid>{839C3955-007C-41A5-85DB-9AF2F9874D4A}</ProjectGuid>
+    <RootNamespace>toon2</RootNamespace>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -113,7 +113,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ClCompile Include="..\src\gameApp.cpp" />
+    <ClCompile Include="..\src\toon2App.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h" />
