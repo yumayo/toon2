@@ -24,35 +24,49 @@ public:
 private:
     using udp = asio::ip::udp;
     boost::array<char, 2048> buf;
-    asio::io_service io_service;
-    asio::ip::udp::socket socket;
+    asio::io_service receiver;
+    asio::io_service sender;
+    asio::ip::udp::socket receive_socket;
+    asio::ip::udp::socket send_socket;
     CameraPersp camera;
     float angle = 0.0F;
 };
 
 toon2App::toon2App( )
-    : socket( io_service, asio::ip::udp::endpoint( asio::ip::udp::v4( ), 25565 ) )
+    : receive_socket( receiver, asio::ip::udp::endpoint( asio::ip::udp::v4( ), 25565 ) )
+    , send_socket( sender )
 {
 }
 
 void toon2App::send( )
 {
+    try
+    {
+        udp::resolver resolver( sender );
+        udp::resolver::query query( udp::v4( ), "192.168.11.2", "25565" );
+        udp::endpoint receiver_endpoint = *resolver.resolve( query );
+
+        send_socket.open( udp::v4( ) );
+
+        std::string str = "HELLO";
+        send_socket.send_to( asio::buffer( str ), receiver_endpoint );
+    }
+    catch ( std::exception& e )
+    {
+        std::cerr << e.what( ) << std::endl;
+    }
 }
 
 void toon2App::recv( )
 {
-    if ( io_service.poll( ) )
+    try
     {
-        io_service.reset( );
-        try
-        {
-            udp::endpoint remote_endpoint;
-            socket.async_receive_from( asio::buffer( buf ), remote_endpoint, std::bind( &toon2App::receive, this, std::placeholders::_1, std::placeholders::_2 ) );
-        }
-        catch ( std::exception& e )
-        {
-            std::cerr << e.what( ) << std::endl;
-        }
+        udp::endpoint remote_endpoint;
+        receive_socket.async_receive_from( asio::buffer( buf ), remote_endpoint, std::bind( &toon2App::receive, this, std::placeholders::_1, std::placeholders::_2 ) );
+    }
+    catch ( std::exception& e )
+    {
+        std::cerr << e.what( ) << std::endl;
     }
 }
 
@@ -61,15 +75,7 @@ void toon2App::setup( )
     camera.setPerspective( 60.0F, getWindowAspectRatio( ), 0.1F, 100.0F );
     camera.lookAt( vec3( 0, 0, -5 ), vec3( 0, 0, 0 ) );
 
-    try
-    {
-        udp::endpoint remote_endpoint;
-        socket.async_receive_from( asio::buffer( buf ), remote_endpoint, std::bind( &toon2App::receive, this, std::placeholders::_1, std::placeholders::_2 ) );
-    }
-    catch ( std::exception& e )
-    {
-        std::cerr << e.what( ) << std::endl;
-    }
+    recv( );
 }
 
 void toon2App::mouseDown( MouseEvent event )
@@ -78,7 +84,12 @@ void toon2App::mouseDown( MouseEvent event )
 
 void toon2App::update( )
 {
-    recv( );
+    if ( receiver.poll( ) )
+    {
+        receiver.reset( );
+        recv( );
+    }
+
     angle += 0.01F;
 }
 
@@ -104,7 +115,7 @@ void toon2App::receive( const asio::error_code &, std::size_t len )
 
 }
 
-CINDER_APP( toon2App, RendererGl, [ & ] ( App::Settings *settings ) 
+CINDER_APP( toon2App, RendererGl, [ & ] ( App::Settings *settings )
 {
     settings->setWindowSize( 1280, 720 );
 } )
