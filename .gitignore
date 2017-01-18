@@ -1,7 +1,8 @@
 git.lnk
 include/
 resources/
-vc2013/
+
+vc2013/*
 !vc2013/game.sln
 !vc2013/game.vcxproj
 !vc2013/game.vcxproj.filters
