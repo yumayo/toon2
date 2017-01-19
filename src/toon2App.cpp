@@ -21,11 +21,9 @@ using namespace ci::app;
 class recv_obejct
 {
 public:
-    recv_obejct( std::function<void( )> const& function );
+    recv_obejct( asio::io_service::work** work, std::function<void( )> const& function );
     ~recv_obejct( );
 private:
-    bool kill = false;
-
     std::shared_ptr<std::thread> thread;
 };
 
@@ -35,7 +33,11 @@ public:
     void send( );
     void recv( );
     void setup( ) override;
+    void cleanup( ) override;
     void mouseDown( MouseEvent event ) override;
+    void touchesBegan( TouchEvent event ) override;
+    void touchesMoved( TouchEvent event ) override;
+    void touchesEnded( TouchEvent event ) override;
     void update( ) override;
     void draw( ) override;
     void receive( const asio::error_code& error, std::size_t len );
@@ -44,17 +46,22 @@ private:
     boost::array<char, 2048> buf;
     asio::io_service sender;
     asio::ip::udp::socket send_socket;
+    asio::io_service receiver;
+    asio::io_service::work* work;
+    asio::ip::udp::socket receive_socket;
     CameraPersp camera;
     float angle = 0.0F;
     vec2 pos;
     bool polling = false;
-    recv_obejct recever;
+    recv_obejct r_object;
 };
 
 toon2App::toon2App( )
     : send_socket( sender )
-    , recever( std::bind( &toon2App::recv, this ) )
+    , receive_socket( receiver, asio::ip::udp::endpoint( asio::ip::udp::v4( ), 25565 ) )
+    , r_object( &work, std::bind( &toon2App::recv, this ) )
 {
+    work = new asio::io_service::work( receiver );
     buf.fill( 0 );
 }
 
@@ -68,7 +75,8 @@ void toon2App::send( )
 
         send_socket.open( udp::v4( ) );
 
-        std::string str = "HELLO";
+        char str[sizeof( pos )];
+        memcpy( str, &pos, sizeof( pos ) );
         send_socket.send_to( asio::buffer( str ), receiver_endpoint );
     }
     catch ( std::exception& e )
@@ -77,35 +85,16 @@ void toon2App::send( )
     }
 }
 
-#include <ctime>
-
 void toon2App::recv( )
 {
     try
     {
-        asio::io_service receiver;
-        asio::deadline_timer connect_timer( receiver );
-        asio::ip::udp::socket receive_socket( receiver, asio::ip::udp::endpoint( asio::ip::udp::v4( ), 25565 ) );
         udp::endpoint remote_endpoint;
-        receive_socket.async_receive_from( asio::buffer( buf ), remote_endpoint, [ this, &connect_timer ] ( const asio::error_code & error, std::size_t len )
+        receive_socket.async_receive_from( asio::buffer( buf ), remote_endpoint, [ this ] ( const asio::error_code & error, std::size_t len )
         {
-            connect_timer.cancel( );
-
-            console( ).write( buf.data( ), len + 1 );
-            console( ) << std::endl;
-            console( ) << std::endl;
+            memcpy( &pos, buf.data( ), sizeof( pos ) );
         } );
-
-        // 5秒でタイムアウト
-        connect_timer.expires_from_now( boost::posix_time::seconds( 5 ) );
-        connect_timer.async_wait( [ &receive_socket ] ( const asio::error_code& error )
-        {
-            if ( !error )
-            {
-                // タイムアウト : 接続を切る。接続のハンドラがエラーになる
-                receive_socket.close( );
-            }
-        } );
+        receiver.reset( );
         receiver.run( );
     }
     catch ( std::exception& e )
@@ -120,14 +109,40 @@ void toon2App::setup( )
     camera.lookAt( vec3( 0, 0, -5 ), vec3( 0, 0, 0 ) );
 }
 
+void toon2App::cleanup( )
+{
+    delete work;
+    work = nullptr;
+
+    receiver.stop( );
+}
+
 void toon2App::mouseDown( MouseEvent event )
+{
+}
+
+void toon2App::touchesBegan( TouchEvent event )
+{
+    for ( auto& touch : event.getTouches( ) )
+    {
+        pos = touch.getPos( );
+    }
+}
+
+void toon2App::touchesMoved( TouchEvent event )
+{
+    for ( auto& touch : event.getTouches( ) )
+    {
+        pos = touch.getPos( );
+    }
+}
+
+void toon2App::touchesEnded( TouchEvent event )
 {
 }
 
 void toon2App::update( )
 {
-    memcpy( &pos, buf.data( ), sizeof( pos ) );
-
     angle += 0.01F;
 }
 
@@ -147,16 +162,20 @@ void toon2App::draw( )
     gl::drawSolidCircle( pos, 10 );
 }
 
+void toon2App::receive( const asio::error_code & error, std::size_t len )
+{
+}
+
 CINDER_APP( toon2App, RendererGl, [ & ] ( App::Settings *settings )
 {
     settings->setWindowSize( 1280, 720 );
 } )
 
-recv_obejct::recv_obejct( std::function<void( )> const& function )
+recv_obejct::recv_obejct( asio::io_service::work** work, std::function<void( )> const& function )
 {
-    thread = std::make_shared<std::thread>( [ this, function ]
+    thread = std::make_shared<std::thread>( [ this, function, work ]
     {
-        while ( !kill )
+        while ( *work )
         {
             function( );
         }
@@ -165,6 +184,5 @@ recv_obejct::recv_obejct( std::function<void( )> const& function )
 
 recv_obejct::~recv_obejct( )
 {
-    kill = true;
     thread->join( );
 }
