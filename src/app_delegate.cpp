@@ -1,5 +1,9 @@
 ﻿#include "app_delegate.h"
 #include "toon2.h"
+app_delegate::app_delegate( )
+{
+    set_name( "app_delegate" );
+}
 app_delegate::~app_delegate( )
 {
     /* nothing */
@@ -7,7 +11,7 @@ app_delegate::~app_delegate( )
 void app_delegate::setup( )
 {
     auto p = toon2::create( );
-    p->set_name( u8"test" );
+    p->set_name( "test" );
     add_child( p );
 }
 void app_delegate::cleanup( )

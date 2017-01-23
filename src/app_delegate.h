@@ -3,6 +3,7 @@
 class app_delegate : public node, public virtual cinder::app::App
 {
 public:
+    app_delegate( );
     ~app_delegate( );
 public:
     void setup( ) override;

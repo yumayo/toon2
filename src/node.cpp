@@ -3,7 +3,7 @@
 using namespace cinder;
 node::~node( )
 {
-    app::console( ) << "~node()" << std::endl;
+    app::console( ) << "~node() : [" << _name << "]" << std::endl;
 }
 bool node::init( )
 {
