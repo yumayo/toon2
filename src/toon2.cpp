@@ -1,41 +1,45 @@
 ﻿#include "toon2.h"
 #include "cinder/gl/gl.h"
+#include "jsoncpp/json.h"
 using namespace cinder;
-void toon2::setup( )
+bool toon2::init( )
 {
+    Json::Value root;
+    Json::Reader reader;
+
+    auto loadString = [ this ] ( std::string const& relative_path )
+    {
+        return std::string( static_cast<char*>( app::loadAsset( relative_path )->getBuffer( )->getData( ) ) );
+    };
+
+    if ( reader.parse( loadString( u8"audio.json" ), root ) )
+    {
+        auto str = root[u8"BGM"][u8"city"].asString( );
+    }
+
+    camera.setPerspective( 60.0F, app::getWindowAspectRatio( ), 0.1F, 100.0F );
+    camera.lookAt( vec3( 0, 0, -5 ), vec3( 0 ) );
+
+    gl::enableDepth( );
+
+    set_schedule_update( );
+
+    return true;
 }
-void toon2::cleanup( )
+void toon2::update( float delta )
 {
-}
-void toon2::mouseDown( cinder::app::MouseEvent event )
-{
-}
-void toon2::mouseUp( cinder::app::MouseEvent event )
-{
-}
-void toon2::mouseWheel( cinder::app::MouseEvent event )
-{
-}
-void toon2::mouseMove( cinder::app::MouseEvent event )
-{
-}
-void toon2::mouseDrag( cinder::app::MouseEvent event )
-{
-}
-void toon2::touchesBegan( cinder::app::TouchEvent event )
-{
-}
-void toon2::touchesMoved( cinder::app::TouchEvent event )
-{
-}
-void toon2::touchesEnded( cinder::app::TouchEvent event )
-{
-}
-void toon2::update( )
-{
-    console( ) << getElapsedSeconds( ) - prev_second << std::endl;
-    prev_second = getElapsedSeconds( );
+    rotate += delta;
 }
 void toon2::draw( )
 {
+    gl::clear( );
+
+    gl::setMatrices( camera );
+
+    gl::pushModelView( );
+    gl::rotate( rotate, vec3( 1, 0, 0 ) );
+    gl::rotate( rotate, vec3( 0, 1, 0 ) );
+    gl::rotate( rotate, vec3( 0, 0, 1 ) );
+    gl::drawColorCube( vec3( 0 ), vec3( 1 ) );
+    gl::popModelView( );
 }

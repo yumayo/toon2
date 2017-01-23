@@ -114,10 +114,16 @@
   <ItemGroup />
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\meeting\room.cpp" />
+    <ClCompile Include="..\src\node.cpp" />
+    <ClCompile Include="..\src\app_delegate.cpp" />
     <ClCompile Include="..\src\toon2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h" />
+    <ClInclude Include="..\src\meeting\room.h" />
+    <ClInclude Include="..\src\node.h" />
+    <ClInclude Include="..\src\app_delegate.h" />
     <ClInclude Include="..\src\toon2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
