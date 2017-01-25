@@ -417,7 +417,7 @@ cinder::mat3 node::get_world_matrix( )
     }
 
     mat3 result;
-    for(auto itr = mats.rbegin(); itr != mats.rend(); ++itr)
+    for ( auto itr = mats.rbegin( ); itr != mats.rend( ); ++itr )
     {
         result *= *itr;
     }

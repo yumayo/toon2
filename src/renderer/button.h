@@ -19,5 +19,6 @@ namespace renderer
     protected:
         bool _swallow = false;
         bool _touch = false;
+        uint32_t _id = 0;
     };
 }
