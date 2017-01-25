@@ -118,13 +118,16 @@
     <ClCompile Include="..\src\node.cpp" />
     <ClCompile Include="..\src\app_delegate.cpp" />
     <ClCompile Include="..\src\toon2.cpp" />
+    <ClCompile Include="..\src\utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\cocoslike.h" />
     <ClInclude Include="..\include\Resources.h" />
     <ClInclude Include="..\src\meeting\room.h" />
     <ClInclude Include="..\src\node.h" />
     <ClInclude Include="..\src\app_delegate.h" />
     <ClInclude Include="..\src\toon2.h" />
+    <ClInclude Include="..\src\utility.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

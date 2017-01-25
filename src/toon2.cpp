@@ -17,10 +17,16 @@ bool toon2::init( )
         auto str = root[u8"BGM"][u8"city"].asString( );
     }
 
-    camera.setPerspective( 60.0F, app::getWindowAspectRatio( ), 0.1F, 100.0F );
-    camera.lookAt( vec3( 0, 0, -5 ), vec3( 0 ) );
-
     gl::enableDepth( );
+
+    set_position( vec2( 100, 100 ) );
+
+
+    set_content_size( vec2( 100, 100 ) );
+
+    set_color( ColorA( 1, 1, 1, 1 ) );
+
+    set_anchor_point( vec2( 0.5, 0.5 ) );
 
     set_schedule_update( );
 
@@ -28,18 +34,9 @@ bool toon2::init( )
 }
 void toon2::update( float delta )
 {
-    rotate += delta;
+    set_rotation( get_rotation( ) + delta );
 }
-void toon2::draw( )
+void toon2::render( )
 {
-    gl::clear( );
-
-    gl::setMatrices( camera );
-
-    gl::pushModelView( );
-    gl::rotate( rotate, vec3( 1, 0, 0 ) );
-    gl::rotate( rotate, vec3( 0, 1, 0 ) );
-    gl::rotate( rotate, vec3( 0, 0, 1 ) );
-    gl::drawColorCube( vec3( 0 ), vec3( 1 ) );
-    gl::popModelView( );
+    gl::drawSolidRect( Rectf( vec2( 0 ), _content_size ) );
 }

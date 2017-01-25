@@ -7,8 +7,6 @@ public:
     CREATE( toon2 );
     bool init( ) override;
     void update( float delta ) override;
-    void draw( ) override;
+    void render( ) override;
 private:
-    cinder::CameraPersp camera;
-    float rotate = 0.0F;
 };

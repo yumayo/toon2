@@ -16,10 +16,28 @@ static std::shared_ptr<__TYPE__> create( Args... args )\
     {\
         ret.reset( );\
     }\
-    return std::move( ret ); \
+    return std::move( ret );\
 }
-class node
+#ifdef _DEBUG
+#define ASSERT(cond, msg) \
+do \
+{ \
+    if ( !( cond ) ) \
+    { \
+        log( "Assert failed: %s", msg ); \
+        assert( cond ); \
+    } \
+} while ( 0 )
+#else
+#define ASSERT(cond, msg)
+#endif
+class node;
+using node_ref = std::shared_ptr<node>;
+class node : public std::enable_shared_from_this<node>
 {
+public:
+    static const int INVALID_TAG = -1;
+
 public:
     CREATE( node );
 public:
@@ -33,7 +51,9 @@ public:
     virtual void touches_moved( cinder::app::TouchEvent event );
     virtual void touches_ended( cinder::app::TouchEvent event );
     virtual void update( float delta );
-    virtual void draw( );
+    virtual void render( );
+public:
+    void renderer( );
 
 protected:
     bool _schedule_update = false;
@@ -60,7 +80,7 @@ public:
     cinder::vec2 get_position( );
 
 protected:
-    cinder::vec2 _scale = cinder::vec2( 0 );
+    cinder::vec2 _scale = cinder::vec2( 1 );
 public:
     void set_scale( cinder::vec2 value );
     cinder::vec2 get_scale( );
@@ -96,21 +116,29 @@ public:
     cinder::ColorA get_color( );
 
 protected:
-    std::vector<std::shared_ptr<node>> _children;
+    std::vector<node_ref> _children;
 public:
-    void add_child( std::shared_ptr<node> const& value );
-    std::vector<std::shared_ptr<node>> const& get_children( );
+    void add_child( node_ref const& value );
+    node_ref get_child_by_name( std::string const& name );
+    node_ref get_child_by_tag( int tag );
+    void remove_child( node_ref const& child );
+    void remove_child_by_name( std::string const& name );
+    void remove_child_by_tag( size_t tag );
+    void remove_all_children( );
+    void remove_from_parent( );
+    std::vector<node_ref> const& get_children( );
 
 protected:
-    node* _parent = nullptr;
+    node_ref _parent = nullptr;
 public:
-    node* get_parent( );
+    void set_parent( node_ref value );
+    node_ref get_parent( );
 
 protected:
-    size_t _tag = 0;
+    int _tag = node::INVALID_TAG;
 public:
-    void set_tag( size_t value );
-    size_t get_tag( );
+    void set_tag( int value );
+    int get_tag( );
 
 protected:
     int _order = 0;
@@ -124,7 +152,7 @@ public:
     void set_name( std::string value );
     std::string get_name( );
 
-protected:
+private:
     size_t _hash = 0;
 
 protected:
