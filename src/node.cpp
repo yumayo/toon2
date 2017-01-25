@@ -10,10 +10,6 @@ node::~node( )
 {
     log( "~node(): [%s]", _name.c_str( ) );
 }
-bool node::init( )
-{
-    return true;
-}
 bool node::mouse_began( cinder::app::MouseEvent event )
 {
     return false;
@@ -159,6 +155,10 @@ void node::_render( )
         c->_render( );
     }
     gl::popModelView( );
+}
+bool node::init( )
+{
+    return true;
 }
 void node::set_schedule_update( bool value )
 {
@@ -358,7 +358,7 @@ void node::remove_child_by_name( std::string const & name )
         log( "remove_child_by_name(name = %s): 子供が見つかりませんでした。", name.c_str( ) );
     }
 }
-void node::remove_child_by_tag( size_t tag )
+void node::remove_child_by_tag( int tag )
 {
     ASSERT( tag != node::INVALID_TAG, "Invalid tag" );
 
@@ -417,10 +417,10 @@ cinder::mat3 node::get_world_matrix( )
     }
 
     mat3 result;
-    std::for_each( std::crbegin( mats ), std::crend( mats ), [ &result ] ( mat3 const& mat )
+    for(auto itr = mats.rbegin(); itr != mats.rend(); ++itr)
     {
-        result *= mat;
-    } );
+        result *= *itr;
+    }
 
     return result;
 }

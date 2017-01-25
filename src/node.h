@@ -37,7 +37,6 @@ public:
 public:
     virtual ~node( );
 public:
-    virtual bool init( );
     virtual bool mouse_began( cinder::app::MouseEvent event );
     virtual void mouse_moved( cinder::app::MouseEvent event );
     virtual void mouse_ended( cinder::app::MouseEvent event );
@@ -55,6 +54,9 @@ protected:
     virtual void _touches_ended( cinder::app::TouchEvent event );
     virtual void _update( float delta );
     virtual void _render( );
+
+protected:
+    bool init( );
 
 protected:
     bool _schedule_update = false;
@@ -166,7 +168,7 @@ public:
     node_ref get_child_by_tag( int tag );
     void remove_child( node_ref child );
     void remove_child_by_name( std::string const& name );
-    void remove_child_by_tag( size_t tag );
+    void remove_child_by_tag( int tag );
     void remove_all_children( );
     void remove_from_parent( );
 

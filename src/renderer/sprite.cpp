@@ -13,8 +13,6 @@ CREATE_CPP( sprite, std::string const& relative_path )
 }
 bool sprite::init( )
 {
-    if ( !node::init( ) ) return false;
-
     set_anchor_point( { 0.5F, 0.5F } );
     set_pivot( { 0.5F, 0.5F } );
 

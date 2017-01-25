@@ -28,17 +28,18 @@ void app_delegate::setup( )
     {
         p1->set_position( { 200, 200 } );
         p1->set_color( { 1, 0, 1, 1 } );
-        //p1->set_scale( { 2, 2 } );
-        //p1->set_rotation( M_PI / 3 );
+        p1->set_scale( { 2, 2 } );
+        p1->set_rotation( M_PI / 3 );
         p1->set_name( "p1 sprite" );
         p1->set_anchor_point( { 0.5, 0.5 } );
         p1->set_pivot( { 0, 0 } );
         add_child( p1 );
 
-        if ( auto p2 = renderer::button::create( vec2( 50, 50 ) ) )
+        if ( auto p2 = renderer::sprite::create( "hogehoge.png" ) )
         {
             p2->set_position( { 0, 0 } );
-            p2->set_color( { 0, 1, 0, 1 } );
+            p2->set_scale( { 0.25F, 0.25F } );
+            //p2->set_color( { 0, 1, 0, 1 } );
             p2->set_name( "p2 rect" );
             p1->add_child( p2 );
 

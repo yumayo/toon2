@@ -9,8 +9,6 @@ CREATE_CPP( rect, cinder::vec2 const & size )
 }
 bool rect::init( cinder::vec2 const& size )
 {
-    if ( !node::init( ) ) return false;
-
     set_anchor_point( { 0.5F, 0.5F } );
     set_pivot( { 0.5F, 0.5F } );
     _content_size = size;

@@ -5,7 +5,7 @@ class toon2 : public node
 {
 public:
     CREATE_H( toon2 );
-    bool init( ) override;
+    bool init( );
     void update( float delta ) override;
     void render( ) override;
 private:
