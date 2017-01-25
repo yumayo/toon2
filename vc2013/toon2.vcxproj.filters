@@ -19,6 +19,9 @@
     <Filter Include="Source Files\network">
       <UniqueIdentifier>{d024d38e-57e9-4087-bc48-85713323c7b8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\renderer">
+      <UniqueIdentifier>{2ff79420-2004-4333-9938-55b8b2af6e06}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -44,6 +47,15 @@
     </ClInclude>
     <ClInclude Include="..\include\cocoslike.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\renderer\rect.h">
+      <Filter>Source Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\event.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\renderer\button.h">
+      <Filter>Source Files\renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -71,6 +83,15 @@
     </ClCompile>
     <ClCompile Include="..\src\utility.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\renderer\rect.cpp">
+      <Filter>Source Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\event.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\renderer\button.cpp">
+      <Filter>Source Files\renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

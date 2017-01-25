@@ -2,76 +2,193 @@
 #include "cinder/gl/gl.h"
 #include "utility.h"
 using namespace cinder;
+CREATE_CPP( node )
+{
+    CREATE( node );
+}
 node::~node( )
 {
     log( "~node(): [%s]", _name.c_str( ) );
 }
 bool node::init( )
 {
-    set_name( "" );
     return true;
 }
-void node::clean( )
+bool node::mouse_began( cinder::app::MouseEvent event )
 {
-    for ( auto const& c : _children )
-    {
-        c->clean( );
-    }
-    _children.clear( );
-}
-void node::mouse_began( cinder::app::MouseEvent event )
-{
-    for ( auto const& c : _children )
-    {
-        if ( c->_schedule_mouse_event ) c->mouse_began( event );
-    }
+    return false;
 }
 void node::mouse_moved( cinder::app::MouseEvent event )
 {
-    for ( auto const& c : _children )
-    {
-        if ( c->_schedule_mouse_event ) c->mouse_moved( event );
-    }
 }
 void node::mouse_ended( cinder::app::MouseEvent event )
 {
-    for ( auto const& c : _children )
-    {
-        if ( c->_schedule_mouse_event ) c->mouse_ended( event );
-    }
 }
-void node::touches_began( cinder::app::TouchEvent event )
+bool node::touches_began( cinder::app::TouchEvent event )
 {
-    for ( auto const& c : _children )
-    {
-        if ( c->_schedule_touch_event ) c->touches_began( event );
-    }
+    return false;
 }
 void node::touches_moved( cinder::app::TouchEvent event )
 {
-    for ( auto const& c : _children )
-    {
-        if ( c->_schedule_touch_event ) c->touches_moved( event );
-    }
 }
 void node::touches_ended( cinder::app::TouchEvent event )
 {
-    for ( auto const& c : _children )
-    {
-        if ( c->_schedule_touch_event ) c->touches_ended( event );
-    }
 }
 void node::update( float delta )
 {
-    for ( auto const& c : _children )
-    {
-        if ( c->_schedule_update ) c->update( delta );
-    }
 }
 void node::render( )
 {
 }
-void node::renderer( )
+bool node::_mouse_began( cinder::app::MouseEvent event )
+{
+    for ( auto const& c : _children )
+    {
+        if ( c->_schedule_mouse_event )
+            if ( c->_mouse_began( event ) )
+            {
+                c->_swallow = true;
+                return false;
+            }
+    }
+    return mouse_began( event );
+}
+void node::_mouse_moved( cinder::app::MouseEvent event )
+{
+    node* object = nullptr;
+    for ( auto const& c : _children )
+    {
+        if ( c->_schedule_mouse_event && c->_swallow )
+        {
+            object = c.get( );
+            break;
+        }
+    }
+    if ( this->_swallow ) object = this;
+
+    // ターゲットのオブジェクトが見つかった場合はそのオブジェクトのみイベントを起こします。
+    if ( object )
+    {
+        object->mouse_moved( event );
+    }
+    // 見つからなかった場合は、全てのオブジェクトにイベントを通します。
+    else
+    {
+        for ( auto const& c : _children )
+        {
+            if ( c->_schedule_mouse_event ) c->_mouse_moved( event );
+        }
+        mouse_moved( event );
+    }
+}
+void node::_mouse_ended( cinder::app::MouseEvent event )
+{
+    node* object = nullptr;
+    for ( auto const& c : _children )
+    {
+        if ( c->_schedule_mouse_event && c->_swallow )
+        {
+            object = c.get( );
+            break;
+        }
+    }
+    if ( this->_swallow ) object = this;
+
+    // ターゲットのオブジェクトが見つかった場合はそのオブジェクトのみイベントを起こします。
+    if ( object )
+    {
+        object->mouse_ended( event );
+        object->_swallow = false;
+    }
+    // 見つからなかった場合は、全てのオブジェクトにイベントを通します。
+    else
+    {
+        for ( auto const& c : _children )
+        {
+            if ( c->_schedule_mouse_event ) c->_mouse_ended( event );
+        }
+        mouse_ended( event );
+    }
+}
+bool node::_touches_began( cinder::app::TouchEvent event )
+{
+    for ( auto const& c : _children )
+    {
+        if ( c->_schedule_touch_event )
+            if ( c->_touches_began( event ) )
+            {
+                c->_swallow = true;
+                return false;
+            }
+    }
+    return touches_began( event );
+}
+void node::_touches_moved( cinder::app::TouchEvent event )
+{
+    node* object = nullptr;
+    for ( auto const& c : _children )
+    {
+        if ( c->_schedule_touch_event && c->_swallow )
+        {
+            object = c.get( );
+            break;
+        }
+    }
+    if ( this->_swallow ) object = this;
+
+    // ターゲットのオブジェクトが見つかった場合はそのオブジェクトのみイベントを起こします。
+    if ( object )
+    {
+        object->touches_moved( event );
+    }
+    // 見つからなかった場合は、全てのオブジェクトにイベントを通します。
+    else
+    {
+        for ( auto const& c : _children )
+        {
+            if ( c->_schedule_touch_event ) c->_touches_moved( event );
+        }
+        touches_moved( event );
+    }
+}
+void node::_touches_ended( cinder::app::TouchEvent event )
+{
+    node* object = nullptr;
+    for ( auto const& c : _children )
+    {
+        if ( c->_schedule_touch_event && c->_swallow )
+        {
+            object = c.get( );
+            break;
+        }
+    }
+    if ( this->_swallow ) object = this;
+
+    // ターゲットのオブジェクトが見つかった場合はそのオブジェクトのみイベントを起こします。
+    if ( object )
+    {
+        object->touches_ended( event );
+        object->_swallow = false;
+    }
+    // 見つからなかった場合は、全てのオブジェクトにイベントを通します。
+    else
+    {
+        for ( auto const& c : _children )
+        {
+            if ( c->_schedule_touch_event ) c->_touches_ended( event );
+        }
+        touches_ended( event );
+    }
+}
+void node::_update( float delta )
+{
+    for ( auto const& c : _children )
+    {
+        if ( c->_schedule_update ) c->_update( delta );
+    }
+    update( delta );
+}
+void node::_render( )
 {
     gl::pushModelView( );
     gl::translate( _position );
@@ -80,10 +197,10 @@ void node::renderer( )
     gl::translate( -_content_size * _anchor_point );
     gl::color( _color );
     this->render( );
-    gl::translate( _position + _pivot );
+    gl::translate( _content_size * _pivot );
     for ( auto const& c : _children )
     {
-        c->renderer( );
+        c->_render( );
     }
     gl::popModelView( );
 }
@@ -167,103 +284,15 @@ cinder::ColorA node::get_color( )
 {
     return _color;
 }
-void node::add_child( node_ref const& value )
-{
-    _children.emplace_back( value );
-}
-node_ref node::get_child_by_name( std::string const & name )
-{
-    ASSERT( !name.empty( ), "無効な名前です。" );
-
-    std::hash<std::string> h;
-    size_t hash = h( name );
-
-    auto itr = std::find_if( std::begin( _children ), std::end( _children ), [ this, hash, name ] ( node_ref& child )
-    {
-        return child->_hash == hash && child->_name.compare( name ) == 0;
-    } );
-
-    if ( itr != std::end( _children ) )
-    {
-        return *itr;
-    }
-    return node_ref( );
-}
-node_ref node::get_child_by_tag( int tag )
-{
-    ASSERT( tag != node::INVALID_TAG, "無効なタグです。" );
-
-    auto itr = std::find_if( std::begin( _children ), std::end( _children ), [ this, tag ] ( node_ref& n )
-    {
-        return n->_tag == tag;
-    } );
-
-    if ( itr != std::end( _children ) )
-    {
-        return *itr;
-    }
-    return node_ref( );
-}
-void node::remove_child( node_ref const & child )
-{
-    if ( _children.empty( ) ) return;
-
-    auto itr = std::find_if( std::begin( _children ), std::end( _children ), [ this, child ] ( node_ref& n )
-    {
-        return n == child;
-    } );
-    _children.erase( itr );
-}
-void node::remove_child_by_name( std::string const & name )
-{
-    ASSERT( !name.empty( ), "無効な名前です。" );
-
-    node_ref child = this->get_child_by_name( name );
-
-    if ( child )
-    {
-        this->remove_child( child );
-    }
-    else
-    {
-        log( "remove_child_by_name(name = %s): 子供が見つかりませんでした。", name.c_str( ) );
-    }
-}
-void node::remove_child_by_tag( size_t tag )
-{
-    ASSERT( tag != node::INVALID_TAG, "Invalid tag" );
-
-    node_ref child = this->get_child_by_tag( tag );
-
-    if ( child )
-    {
-        this->remove_child( child );
-    }
-    else
-    {
-        log( "remove_child_by_tag(tag = %d): 子供が見つかりませんでした。", tag );
-    }
-}
-void node::remove_all_children( )
-{
-    clean( );
-}
-void node::remove_from_parent( )
-{
-    if ( _parent )
-    {
-        _parent->remove_child( shared_from_this( ) );
-    }
-}
 std::vector<node_ref> const & node::get_children( )
 {
     return _children;
 }
-void node::set_parent( node_ref value )
+void node::set_parent( node* value )
 {
     _parent = value;
 }
-node_ref node::get_parent( )
+node* node::get_parent( )
 {
     return _parent;
 }
@@ -309,4 +338,141 @@ void node::set_visible( bool value )
 bool node::get_visible( )
 {
     return _visible;
+}
+void node::set_swallow( bool value )
+{
+    _swallow = value;
+}
+bool node::get_swallow( )
+{
+    return _swallow;
+}
+void node::add_child( node_ref value )
+{
+    value->_parent = this;
+    _children.emplace_back( value );
+}
+node_ref node::get_child_by_name( std::string const & name )
+{
+    ASSERT( !name.empty( ), "無効な名前です。" );
+
+    std::hash<std::string> h;
+    size_t hash = h( name );
+
+    auto itr = std::find_if( std::begin( _children ), std::end( _children ), [ this, hash, name ] ( node_ref& child )
+    {
+        return child->_hash == hash && child->_name.compare( name ) == 0;
+    } );
+
+    if ( itr != std::end( _children ) )
+    {
+        return *itr;
+    }
+    return node_ref( );
+}
+node_ref node::get_child_by_tag( int tag )
+{
+    ASSERT( tag != node::INVALID_TAG, "無効なタグです。" );
+
+    auto itr = std::find_if( std::begin( _children ), std::end( _children ), [ this, tag ] ( node_ref& n )
+    {
+        return n->_tag == tag;
+    } );
+
+    if ( itr != std::end( _children ) )
+    {
+        return *itr;
+    }
+    return node_ref( );
+}
+void node::remove_child( node_ref child )
+{
+    if ( _children.empty( ) ) return;
+
+    auto itr = std::find_if( std::begin( _children ), std::end( _children ), [ this, child ] ( node_ref& n )
+    {
+        return n == child;
+    } );
+    _children.erase( itr );
+}
+void node::remove_child_by_name( std::string const & name )
+{
+    ASSERT( !name.empty( ), "無効な名前です。" );
+
+    node_ref child = this->get_child_by_name( name );
+
+    if ( child )
+    {
+        this->remove_child( child );
+    }
+    else
+    {
+        log( "remove_child_by_name(name = %s): 子供が見つかりませんでした。", name.c_str( ) );
+    }
+}
+void node::remove_child_by_tag( size_t tag )
+{
+    ASSERT( tag != node::INVALID_TAG, "Invalid tag" );
+
+    node_ref child = this->get_child_by_tag( tag );
+
+    if ( child )
+    {
+        this->remove_child( child );
+    }
+    else
+    {
+        log( "remove_child_by_tag(tag = %d): 子供が見つかりませんでした。", tag );
+    }
+}
+void node::remove_all_children( )
+{
+    _children.clear( );
+}
+void node::remove_from_parent( )
+{
+    if ( _parent )
+    {
+        _parent->remove_child( shared_from_this( ) );
+    }
+}
+node_ref node::get_root( )
+{
+    return _get_root( );
+}
+
+node_ref node::_get_root( )
+{
+    if ( _parent )
+    {
+        return _parent->_get_root( );
+    }
+    else
+    {
+        return shared_from_this( );
+    }
+}
+
+cinder::mat3 node::get_world_matrix( )
+{
+    std::vector<mat3> mats;
+    auto p = _parent;
+    while ( p )
+    {
+        auto m = translate( mat3( ), p->_position );
+        m = scale( m, p->_scale );
+        m = rotate( m, p->_rotation );
+        m = translate( m, -p->_content_size * p->_anchor_point );
+        m = translate( m, p->_content_size * p->_pivot );
+        mats.emplace_back( std::move( m ) );
+        p = p->_parent;
+    }
+
+    mat3 result;
+    std::for_each( std::crbegin( mats ), std::crend( mats ), [ &result ] ( mat3 const& mat )
+    {
+        result *= mat;
+    } );
+
+    return result;
 }

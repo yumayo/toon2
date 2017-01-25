@@ -4,7 +4,7 @@
 class toon2 : public node
 {
 public:
-    CREATE( toon2 );
+    CREATE_H( toon2 );
     bool init( ) override;
     void update( float delta ) override;
     void render( ) override;

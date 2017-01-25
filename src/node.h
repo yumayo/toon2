@@ -5,19 +5,13 @@
 #include <vector>
 #include <string>
 #include <memory>
-#define CREATE(__TYPE__)\
-template <class... Args>\
-static std::shared_ptr<__TYPE__> create( Args... args )\
-{\
-    auto ret = std::make_shared<__TYPE__>( );\
-    if ( ret && ret->init( args... ) )\
-        ;\
-    else\
-    {\
-        ret.reset( );\
-    }\
-    return std::move( ret );\
-}
+#define CREATE_H(__TYPE__, ...) static std::shared_ptr<__TYPE__> create(__VA_ARGS__)
+#define CREATE_CPP(__TYPE__, ...) std::shared_ptr<__TYPE__> __TYPE__::create(__VA_ARGS__)
+#define CREATE(__TYPE__, ...) \
+auto ret = std::make_shared<__TYPE__>( ); \
+if ( ret && ret->init( __VA_ARGS__ ) ); \
+else ret.reset( ); \
+return std::move( ret );
 #ifdef _DEBUG
 #define ASSERT(cond, msg) \
 do \
@@ -39,21 +33,28 @@ public:
     static const int INVALID_TAG = -1;
 
 public:
-    CREATE( node );
+    CREATE_H( node );
 public:
     virtual ~node( );
+public:
     virtual bool init( );
-    virtual void clean( );
-    virtual void mouse_began( cinder::app::MouseEvent event );
+    virtual bool mouse_began( cinder::app::MouseEvent event );
     virtual void mouse_moved( cinder::app::MouseEvent event );
     virtual void mouse_ended( cinder::app::MouseEvent event );
-    virtual void touches_began( cinder::app::TouchEvent event );
+    virtual bool touches_began( cinder::app::TouchEvent event );
     virtual void touches_moved( cinder::app::TouchEvent event );
     virtual void touches_ended( cinder::app::TouchEvent event );
     virtual void update( float delta );
     virtual void render( );
-public:
-    void renderer( );
+protected:
+    virtual bool _mouse_began( cinder::app::MouseEvent event );
+    virtual void _mouse_moved( cinder::app::MouseEvent event );
+    virtual void _mouse_ended( cinder::app::MouseEvent event );
+    virtual bool _touches_began( cinder::app::TouchEvent event );
+    virtual void _touches_moved( cinder::app::TouchEvent event );
+    virtual void _touches_ended( cinder::app::TouchEvent event );
+    virtual void _update( float delta );
+    virtual void _render( );
 
 protected:
     bool _schedule_update = false;
@@ -110,7 +111,7 @@ public:
     cinder::vec2 get_pivot( );
 
 protected:
-    cinder::ColorA _color = cinder::ColorA::black( );
+    cinder::ColorA _color = cinder::ColorA::white( );
 public:
     void set_color( cinder::ColorA value );
     cinder::ColorA get_color( );
@@ -118,21 +119,13 @@ public:
 protected:
     std::vector<node_ref> _children;
 public:
-    void add_child( node_ref const& value );
-    node_ref get_child_by_name( std::string const& name );
-    node_ref get_child_by_tag( int tag );
-    void remove_child( node_ref const& child );
-    void remove_child_by_name( std::string const& name );
-    void remove_child_by_tag( size_t tag );
-    void remove_all_children( );
-    void remove_from_parent( );
     std::vector<node_ref> const& get_children( );
 
 protected:
-    node_ref _parent = nullptr;
+    node* _parent = nullptr;
 public:
-    void set_parent( node_ref value );
-    node_ref get_parent( );
+    void set_parent( node* value );
+    node* get_parent( );
 
 protected:
     int _tag = node::INVALID_TAG;
@@ -167,4 +160,26 @@ public:
     void set_visible( bool value );
     bool get_visible( );
 
+protected:
+    bool _swallow = false;
+public:
+    void set_swallow( bool value = true );
+    bool get_swallow( );
+
+public:
+    void add_child( node_ref value );
+    node_ref get_child_by_name( std::string const& name );
+    node_ref get_child_by_tag( int tag );
+    void remove_child( node_ref child );
+    void remove_child_by_name( std::string const& name );
+    void remove_child_by_tag( size_t tag );
+    void remove_all_children( );
+    void remove_from_parent( );
+
+public:
+    node_ref get_root( );
+    node_ref _get_root( );
+
+public:
+    cinder::mat3 get_world_matrix( );
 };

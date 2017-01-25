@@ -2,6 +2,10 @@
 #include "cinder/gl/gl.h"
 #include "jsoncpp/json.h"
 using namespace cinder;
+CREATE_CPP( toon2 )
+{
+    CREATE( toon2 );
+}
 bool toon2::init( )
 {
     Json::Value root;

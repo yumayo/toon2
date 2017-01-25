@@ -5,6 +5,5 @@ namespace meeting
     class room : public node
     {
     public:
-        CREATE( room );
     };
 }
