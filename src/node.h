@@ -63,18 +63,6 @@ public:
     bool get_schedule_update( );
 
 protected:
-    bool _schedule_mouse_event = false;
-public:
-    void set_schedule_mouse_event( bool value = true );
-    bool get_schedule_mouse_event( );
-
-protected:
-    bool _schedule_touch_event = false;
-public:
-    void set_schedule_touch_event( bool value = true );
-    bool get_schedule_touch_event( );
-
-protected:
     cinder::vec2 _position = cinder::vec2( 0 );
 public:
     void set_position( cinder::vec2 value );

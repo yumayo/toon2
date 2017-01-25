@@ -2,6 +2,7 @@
 #include "cinder/gl/gl.h"
 #include "renderer/rect.h"
 #include "renderer/button.h"
+#include "renderer/sprite.h"
 using namespace cinder;
 app_delegate::app_delegate( )
 {
@@ -22,14 +23,13 @@ void app_delegate::setup( )
         p->set_name( "blue rect" );
         add_child( p );
     }
-    
-    if ( auto p = renderer::button::create( vec2( 100, 100 ) ) )
+
+    if ( auto p = renderer::sprite::create( "hogehoge.png" ) )
     {
-        p->set_position( { 300, 300 } );
-        p->set_color( { 1, 0, 0, 1 } );
-        p->set_scale( { 2, 2 } );
-        p->set_rotation( M_PI / 3 );
-        p->set_name( "red rect" );
+        p->set_position( getWindowSize( ) );
+        //p->set_scale( { 2, 2 } );
+        //p->set_rotation( M_PI / 3 );
+        p->set_name( "hogehoge sprite" );
         p->set_anchor_point( { 0.5, 0.5 } );
         p->set_pivot( { 0, 0 } );
         add_child( p );

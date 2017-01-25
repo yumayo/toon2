@@ -44,12 +44,11 @@ bool node::_mouse_began( cinder::app::MouseEvent event )
 {
     for ( auto const& c : _children )
     {
-        if ( c->_schedule_mouse_event )
-            if ( c->_mouse_began( event ) )
-            {
-                c->_swallow = true;
-                return false;
-            }
+        if ( c->_mouse_began( event ) )
+        {
+            c->_swallow = true;
+            return false;
+        }
     }
     return mouse_began( event );
 }
@@ -58,7 +57,7 @@ void node::_mouse_moved( cinder::app::MouseEvent event )
     node* object = nullptr;
     for ( auto const& c : _children )
     {
-        if ( c->_schedule_mouse_event && c->_swallow )
+        if ( c->_swallow )
         {
             object = c.get( );
             break;
@@ -76,7 +75,7 @@ void node::_mouse_moved( cinder::app::MouseEvent event )
     {
         for ( auto const& c : _children )
         {
-            if ( c->_schedule_mouse_event ) c->_mouse_moved( event );
+            c->_mouse_moved( event );
         }
         mouse_moved( event );
     }
@@ -86,7 +85,7 @@ void node::_mouse_ended( cinder::app::MouseEvent event )
     node* object = nullptr;
     for ( auto const& c : _children )
     {
-        if ( c->_schedule_mouse_event && c->_swallow )
+        if ( c->_swallow )
         {
             object = c.get( );
             break;
@@ -105,7 +104,7 @@ void node::_mouse_ended( cinder::app::MouseEvent event )
     {
         for ( auto const& c : _children )
         {
-            if ( c->_schedule_mouse_event ) c->_mouse_ended( event );
+            c->_mouse_ended( event );
         }
         mouse_ended( event );
     }
@@ -114,12 +113,11 @@ bool node::_touches_began( cinder::app::TouchEvent event )
 {
     for ( auto const& c : _children )
     {
-        if ( c->_schedule_touch_event )
-            if ( c->_touches_began( event ) )
-            {
-                c->_swallow = true;
-                return false;
-            }
+        if ( c->_touches_began( event ) )
+        {
+            c->_swallow = true;
+            return false;
+        }
     }
     return touches_began( event );
 }
@@ -128,7 +126,7 @@ void node::_touches_moved( cinder::app::TouchEvent event )
     node* object = nullptr;
     for ( auto const& c : _children )
     {
-        if ( c->_schedule_touch_event && c->_swallow )
+        if ( c->_swallow )
         {
             object = c.get( );
             break;
@@ -146,7 +144,7 @@ void node::_touches_moved( cinder::app::TouchEvent event )
     {
         for ( auto const& c : _children )
         {
-            if ( c->_schedule_touch_event ) c->_touches_moved( event );
+            c->_touches_moved( event );
         }
         touches_moved( event );
     }
@@ -156,7 +154,7 @@ void node::_touches_ended( cinder::app::TouchEvent event )
     node* object = nullptr;
     for ( auto const& c : _children )
     {
-        if ( c->_schedule_touch_event && c->_swallow )
+        if ( c->_swallow )
         {
             object = c.get( );
             break;
@@ -175,7 +173,7 @@ void node::_touches_ended( cinder::app::TouchEvent event )
     {
         for ( auto const& c : _children )
         {
-            if ( c->_schedule_touch_event ) c->_touches_ended( event );
+            c->_touches_ended( event );
         }
         touches_ended( event );
     }
@@ -211,22 +209,6 @@ void node::set_schedule_update( bool value )
 bool node::get_schedule_update( )
 {
     return _schedule_update;
-}
-void node::set_schedule_mouse_event( bool value )
-{
-    _schedule_mouse_event = value;
-}
-bool node::get_schedule_mouse_event( )
-{
-    return _schedule_mouse_event;
-}
-void node::set_schedule_touch_event( bool value )
-{
-    _schedule_touch_event = value;
-}
-bool node::get_schedule_touch_event( )
-{
-    return _schedule_touch_event;
 }
 void node::set_position( cinder::vec2 value )
 {

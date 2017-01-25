@@ -120,6 +120,7 @@
     <ClCompile Include="..\src\app_delegate.cpp" />
     <ClCompile Include="..\src\renderer\button.cpp" />
     <ClCompile Include="..\src\renderer\rect.cpp" />
+    <ClCompile Include="..\src\renderer\sprite.cpp" />
     <ClCompile Include="..\src\toon2.cpp" />
     <ClCompile Include="..\src\utility.cpp" />
   </ItemGroup>
@@ -132,6 +133,7 @@
     <ClInclude Include="..\src\app_delegate.h" />
     <ClInclude Include="..\src\renderer\button.h" />
     <ClInclude Include="..\src\renderer\rect.h" />
+    <ClInclude Include="..\src\renderer\sprite.h" />
     <ClInclude Include="..\src\toon2.h" />
     <ClInclude Include="..\src\utility.h" />
   </ItemGroup>

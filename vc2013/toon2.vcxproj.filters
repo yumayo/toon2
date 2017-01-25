@@ -57,6 +57,9 @@
     <ClInclude Include="..\src\renderer\button.h">
       <Filter>Source Files\renderer</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\renderer\sprite.h">
+      <Filter>Source Files\renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -91,6 +94,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\renderer\button.cpp">
+      <Filter>Source Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\renderer\sprite.cpp">
       <Filter>Source Files\renderer</Filter>
     </ClCompile>
   </ItemGroup>
