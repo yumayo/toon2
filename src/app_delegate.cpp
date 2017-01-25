@@ -24,22 +24,31 @@ void app_delegate::setup( )
         add_child( p );
     }
 
-    if ( auto p = renderer::sprite::create( "hogehoge.png" ) )
+    if ( auto p1 = renderer::button::create( vec2( 100, 100 ) ) )
     {
-        p->set_position( getWindowSize( ) );
-        //p->set_scale( { 2, 2 } );
-        //p->set_rotation( M_PI / 3 );
-        p->set_name( "hogehoge sprite" );
-        p->set_anchor_point( { 0.5, 0.5 } );
-        p->set_pivot( { 0, 0 } );
-        add_child( p );
+        p1->set_position( { 200, 200 } );
+        p1->set_color( { 1, 0, 1, 1 } );
+        //p1->set_scale( { 2, 2 } );
+        //p1->set_rotation( M_PI / 3 );
+        p1->set_name( "p1 sprite" );
+        p1->set_anchor_point( { 0.5, 0.5 } );
+        p1->set_pivot( { 0, 0 } );
+        add_child( p1 );
 
-        if ( auto pp = renderer::button::create( vec2( 50, 50 ) ) )
+        if ( auto p2 = renderer::button::create( vec2( 50, 50 ) ) )
         {
-            pp->set_position( { 0, 0 } );
-            pp->set_color( { 0, 1, 0, 1 } );
-            pp->set_name( "green rect" );
-            p->add_child( pp );
+            p2->set_position( { 0, 0 } );
+            p2->set_color( { 0, 1, 0, 1 } );
+            p2->set_name( "p2 rect" );
+            p1->add_child( p2 );
+
+            if ( auto p3 = renderer::button::create( vec2( 100, 100 ) ) )
+            {
+                p3->set_position( { 100, 0 } );
+                p3->set_color( { 0.2F, 1, 0.5F, 1 } );
+                p3->set_name( "p3 rect" );
+                p2->add_child( p3 );
+            }
         }
     }
 }

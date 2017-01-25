@@ -47,10 +47,10 @@ public:
     virtual void update( float delta );
     virtual void render( );
 protected:
-    virtual bool _mouse_began( cinder::app::MouseEvent event );
+    virtual void _mouse_began( cinder::app::MouseEvent event );
     virtual void _mouse_moved( cinder::app::MouseEvent event );
     virtual void _mouse_ended( cinder::app::MouseEvent event );
-    virtual bool _touches_began( cinder::app::TouchEvent event );
+    virtual void _touches_began( cinder::app::TouchEvent event );
     virtual void _touches_moved( cinder::app::TouchEvent event );
     virtual void _touches_ended( cinder::app::TouchEvent event );
     virtual void _update( float delta );
@@ -61,6 +61,18 @@ protected:
 public:
     void set_schedule_update( bool value = true );
     bool get_schedule_update( );
+
+protected:
+    bool _schedule_mouse_event = false;
+public:
+    void set_schedule_mouse_event( bool value = true );
+    bool get_schedule_mouse_event( );
+
+protected:
+    bool _schedule_touch_event = false;
+public:
+    void set_schedule_touch_event( bool value = true );
+    bool get_schedule_touch_event( );
 
 protected:
     cinder::vec2 _position = cinder::vec2( 0 );
@@ -148,12 +160,6 @@ public:
     void set_visible( bool value );
     bool get_visible( );
 
-protected:
-    bool _swallow = false;
-public:
-    void set_swallow( bool value = true );
-    bool get_swallow( );
-
 public:
     void add_child( node_ref value );
     node_ref get_child_by_name( std::string const& name );
@@ -164,9 +170,11 @@ public:
     void remove_all_children( );
     void remove_from_parent( );
 
+protected:
+    node* _event_target = nullptr;
 public:
-    node_ref get_root( );
-    node_ref _get_root( );
+    node* get_root( );
+    node* _get_root( );
 
 public:
     cinder::mat3 get_world_matrix( );

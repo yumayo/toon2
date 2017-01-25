@@ -40,143 +40,101 @@ void node::update( float delta )
 void node::render( )
 {
 }
-bool node::_mouse_began( cinder::app::MouseEvent event )
+void node::_mouse_began( cinder::app::MouseEvent event )
 {
     for ( auto const& c : _children )
     {
-        if ( c->_mouse_began( event ) )
+        c->_mouse_began( event );
+    }
+
+    if ( _schedule_mouse_event && !get_root( )->_event_target )
+    {
+        if ( mouse_began( event ) )
         {
-            c->_swallow = true;
-            return false;
+            get_root( )->_event_target = this;
         }
     }
-    return mouse_began( event );
 }
 void node::_mouse_moved( cinder::app::MouseEvent event )
 {
-    node* object = nullptr;
+    // ルートの時点でイベントがあったらその処理をして、イベントを終了します。
+    if ( _event_target )
+    {
+        _event_target->mouse_moved( event );
+        return;
+    }
+
+    // 上を通過した時点で全てのオブジェクトを通せるので、再帰的に処理をします。
     for ( auto const& c : _children )
     {
-        if ( c->_swallow )
-        {
-            object = c.get( );
-            break;
-        }
+        c->_mouse_moved( event );
     }
-    if ( this->_swallow ) object = this;
-
-    // ターゲットのオブジェクトが見つかった場合はそのオブジェクトのみイベントを起こします。
-    if ( object )
-    {
-        object->mouse_moved( event );
-    }
-    // 見つからなかった場合は、全てのオブジェクトにイベントを通します。
-    else
-    {
-        for ( auto const& c : _children )
-        {
-            c->_mouse_moved( event );
-        }
-        mouse_moved( event );
-    }
+    if ( _schedule_mouse_event ) mouse_moved( event );
 }
 void node::_mouse_ended( cinder::app::MouseEvent event )
 {
-    node* object = nullptr;
+    // ルートの時点でイベントがあったらその処理をして、イベントを終了します。
+    if ( _event_target )
+    {
+        _event_target->mouse_ended( event );
+        _event_target = nullptr;
+        return;
+    }
+
+    // 上を通過した時点で全てのオブジェクトを通せるので、再帰的に処理をします。
     for ( auto const& c : _children )
     {
-        if ( c->_swallow )
-        {
-            object = c.get( );
-            break;
-        }
+        c->_mouse_ended( event );
     }
-    if ( this->_swallow ) object = this;
-
-    // ターゲットのオブジェクトが見つかった場合はそのオブジェクトのみイベントを起こします。
-    if ( object )
-    {
-        object->mouse_ended( event );
-        object->_swallow = false;
-    }
-    // 見つからなかった場合は、全てのオブジェクトにイベントを通します。
-    else
-    {
-        for ( auto const& c : _children )
-        {
-            c->_mouse_ended( event );
-        }
-        mouse_ended( event );
-    }
+    if ( _schedule_mouse_event ) mouse_ended( event );
 }
-bool node::_touches_began( cinder::app::TouchEvent event )
+void node::_touches_began( cinder::app::TouchEvent event )
 {
     for ( auto const& c : _children )
     {
-        if ( c->_touches_began( event ) )
+        c->_touches_began( event );
+    }
+
+    if ( _schedule_touch_event && !get_root( )->_event_target )
+    {
+        if ( touches_began( event ) )
         {
-            c->_swallow = true;
-            return false;
+            get_root( )->_event_target = this;
         }
     }
-    return touches_began( event );
 }
 void node::_touches_moved( cinder::app::TouchEvent event )
 {
-    node* object = nullptr;
+    // ルートの時点でイベントがあったらその処理をして、イベントを終了します。
+    if ( _event_target )
+    {
+        _event_target->touches_moved( event );
+        return;
+    }
+
+    // 上を通過した時点で全てのオブジェクトを通せるので、再帰的に処理をします。
     for ( auto const& c : _children )
     {
-        if ( c->_swallow )
-        {
-            object = c.get( );
-            break;
-        }
+        c->_touches_moved( event );
     }
-    if ( this->_swallow ) object = this;
-
-    // ターゲットのオブジェクトが見つかった場合はそのオブジェクトのみイベントを起こします。
-    if ( object )
-    {
-        object->touches_moved( event );
-    }
-    // 見つからなかった場合は、全てのオブジェクトにイベントを通します。
-    else
-    {
-        for ( auto const& c : _children )
-        {
-            c->_touches_moved( event );
-        }
-        touches_moved( event );
-    }
+    if ( _schedule_mouse_event ) touches_moved( event );
 }
 void node::_touches_ended( cinder::app::TouchEvent event )
 {
-    node* object = nullptr;
+    // ルートの時点でイベントがあったらその処理をして、イベントを終了します。
+    if ( _event_target )
+    {
+        _event_target->touches_ended( event );
+        _event_target = nullptr;
+        return;
+    }
+
+    // 上を通過した時点で全てのオブジェクトを通せるので、再帰的に処理をします。
     for ( auto const& c : _children )
     {
-        if ( c->_swallow )
-        {
-            object = c.get( );
-            break;
-        }
+        c->_touches_ended( event );
     }
-    if ( this->_swallow ) object = this;
-
-    // ターゲットのオブジェクトが見つかった場合はそのオブジェクトのみイベントを起こします。
-    if ( object )
-    {
-        object->touches_ended( event );
-        object->_swallow = false;
-    }
-    // 見つからなかった場合は、全てのオブジェクトにイベントを通します。
-    else
-    {
-        for ( auto const& c : _children )
-        {
-            c->_touches_ended( event );
-        }
-        touches_ended( event );
-    }
+    if ( _schedule_mouse_event ) touches_ended( event );
 }
 void node::_update( float delta )
 {
@@ -209,6 +167,22 @@ void node::set_schedule_update( bool value )
 bool node::get_schedule_update( )
 {
     return _schedule_update;
+}
+void node::set_schedule_mouse_event( bool value )
+{
+    _schedule_mouse_event = value;
+}
+bool node::get_schedule_mouse_event( )
+{
+    return _schedule_mouse_event;
+}
+void node::set_schedule_touch_event( bool value )
+{
+    _schedule_touch_event = value;
+}
+bool node::get_schedule_touch_event( )
+{
+    return _schedule_touch_event;
 }
 void node::set_position( cinder::vec2 value )
 {
@@ -321,14 +295,6 @@ bool node::get_visible( )
 {
     return _visible;
 }
-void node::set_swallow( bool value )
-{
-    _swallow = value;
-}
-bool node::get_swallow( )
-{
-    return _swallow;
-}
 void node::add_child( node_ref value )
 {
     value->_parent = this;
@@ -418,12 +384,12 @@ void node::remove_from_parent( )
         _parent->remove_child( shared_from_this( ) );
     }
 }
-node_ref node::get_root( )
+node* node::get_root( )
 {
     return _get_root( );
 }
 
-node_ref node::_get_root( )
+node* node::_get_root( )
 {
     if ( _parent )
     {
@@ -431,7 +397,7 @@ node_ref node::_get_root( )
     }
     else
     {
-        return shared_from_this( );
+        return this;
     }
 }
 
