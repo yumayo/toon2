@@ -8,7 +8,7 @@ CREATE_CPP( node )
 }
 node::~node( )
 {
-    log( "~node(): [%s]", _name.c_str( ) );
+    log( "Destroy node: [%s]", _name.c_str( ) );
 }
 bool node::mouse_began( cinder::app::MouseEvent event )
 {
@@ -43,20 +43,20 @@ void node::_mouse_began( cinder::app::MouseEvent event )
         c->_mouse_began( event );
     }
 
-    if ( _schedule_mouse_event && !get_root( )->_event_target )
+    if ( _schedule_mouse_event && !get_root( ).lock( )->_event_target.lock( ) )
     {
         if ( mouse_began( event ) )
         {
-            get_root( )->_event_target = this;
+            get_root( ).lock( )->_event_target = shared_from_this( );
         }
     }
 }
 void node::_mouse_moved( cinder::app::MouseEvent event )
 {
     // ルートの時点でイベントがあったらその処理をして、イベントを終了します。
-    if ( _event_target )
+    if ( _event_target.lock( ) )
     {
-        _event_target->mouse_moved( event );
+        _event_target.lock( )->mouse_moved( event );
         return;
     }
 
@@ -70,10 +70,10 @@ void node::_mouse_moved( cinder::app::MouseEvent event )
 void node::_mouse_ended( cinder::app::MouseEvent event )
 {
     // ルートの時点でイベントがあったらその処理をして、イベントを終了します。
-    if ( _event_target )
+    if ( _event_target.lock( ) )
     {
-        _event_target->mouse_ended( event );
-        _event_target = nullptr;
+        _event_target.lock( )->mouse_ended( event );
+        _event_target.reset( );
         return;
     }
 
@@ -91,20 +91,20 @@ void node::_touches_began( cinder::app::TouchEvent event )
         c->_touches_began( event );
     }
 
-    if ( _schedule_touch_event && !get_root( )->_event_target )
+    if ( _schedule_touch_event && !get_root( ).lock( )->_event_target.lock( ) )
     {
         if ( touches_began( event ) )
         {
-            get_root( )->_event_target = this;
+            get_root( ).lock( )->_event_target = shared_from_this( );
         }
     }
 }
 void node::_touches_moved( cinder::app::TouchEvent event )
 {
     // ルートの時点でイベントがあったらその処理をして、イベントを終了します。
-    if ( _event_target )
+    if ( _event_target.lock( ) )
     {
-        _event_target->touches_moved( event );
+        _event_target.lock( )->touches_moved( event );
         return;
     }
 
@@ -118,10 +118,10 @@ void node::_touches_moved( cinder::app::TouchEvent event )
 void node::_touches_ended( cinder::app::TouchEvent event )
 {
     // ルートの時点でイベントがあったらその処理をして、イベントを終了します。
-    if ( _event_target )
+    if ( _event_target.lock( ) )
     {
-        _event_target->touches_ended( event );
-        _event_target = nullptr;
+        _event_target.lock( )->touches_ended( event );
+        _event_target.reset( );
         return;
     }
 
@@ -136,9 +136,10 @@ void node::_update( float delta )
 {
     for ( auto const& c : _children )
     {
-        if ( c->_schedule_update ) c->_update( delta );
+        c->_update( delta );
     }
-    update( delta );
+    _action_manager.update( delta );
+    if ( _schedule_update ) update( delta );
 }
 void node::_render( )
 {
@@ -244,11 +245,11 @@ std::vector<node_ref> const & node::get_children( )
 {
     return _children;
 }
-void node::set_parent( node* value )
+void node::set_parent( node_weak const& value )
 {
     _parent = value;
 }
-node* node::get_parent( )
+node_weak node::get_parent( )
 {
     return _parent;
 }
@@ -268,7 +269,7 @@ int node::get_order( )
 {
     return _order;
 }
-void node::set_name( std::string value )
+void node::set_name( std::string const& value )
 {
     _name = value;
 
@@ -295,14 +296,14 @@ bool node::get_visible( )
 {
     return _visible;
 }
-void node::add_child( node_ref value )
+void node::add_child( node_weak const& value )
 {
-    value->_parent = this;
-    _children.emplace_back( value );
+    value.lock( )->_parent = shared_from_this( );
+    _children.emplace_back( std::move( value.lock( ) ) );
 }
-node_ref node::get_child_by_name( std::string const & name )
+node_weak node::get_child_by_name( std::string const & name )
 {
-    ASSERT( !name.empty( ), "無効な名前です。" );
+    assert_log( !name.empty( ), "無効な名前です。" );
 
     std::hash<std::string> h;
     size_t hash = h( name );
@@ -316,11 +317,11 @@ node_ref node::get_child_by_name( std::string const & name )
     {
         return *itr;
     }
-    return node_ref( );
+    return node_weak( );
 }
-node_ref node::get_child_by_tag( int tag )
+node_weak node::get_child_by_tag( int tag )
 {
-    ASSERT( tag != node::INVALID_TAG, "無効なタグです。" );
+    assert_log( tag != node::INVALID_TAG, "無効なタグです。" );
 
     auto itr = std::find_if( std::begin( _children ), std::end( _children ), [ this, tag ] ( node_ref& n )
     {
@@ -331,27 +332,27 @@ node_ref node::get_child_by_tag( int tag )
     {
         return *itr;
     }
-    return node_ref( );
+    return node_weak( );
 }
-void node::remove_child( node_ref child )
+void node::remove_child( node_weak const& child )
 {
     if ( _children.empty( ) ) return;
 
     auto itr = std::find_if( std::begin( _children ), std::end( _children ), [ this, child ] ( node_ref& n )
     {
-        return n == child;
+        return n == child.lock( );
     } );
     _children.erase( itr );
 }
 void node::remove_child_by_name( std::string const & name )
 {
-    ASSERT( !name.empty( ), "無効な名前です。" );
+    assert_log( !name.empty( ), "無効な名前です。" );
 
-    node_ref child = this->get_child_by_name( name );
+    node_weak child = this->get_child_by_name( name );
 
-    if ( child )
+    if ( child.lock( ) )
     {
-        this->remove_child( child );
+        this->remove_child( child.lock( ) );
     }
     else
     {
@@ -360,13 +361,13 @@ void node::remove_child_by_name( std::string const & name )
 }
 void node::remove_child_by_tag( int tag )
 {
-    ASSERT( tag != node::INVALID_TAG, "Invalid tag" );
+    assert_log( tag != node::INVALID_TAG, "無効なタグです。" );
 
-    node_ref child = this->get_child_by_tag( tag );
+    node_weak child = this->get_child_by_tag( tag );
 
-    if ( child )
+    if ( child.lock( ) )
     {
-        this->remove_child( child );
+        this->remove_child( child.lock( ) );
     }
     else
     {
@@ -379,41 +380,47 @@ void node::remove_all_children( )
 }
 void node::remove_from_parent( )
 {
-    if ( _parent )
+    if ( _parent.lock( ) )
     {
-        _parent->remove_child( shared_from_this( ) );
+        _parent.lock( )->remove_child( shared_from_this( ) );
     }
 }
-node* node::get_root( )
+node_weak node::get_root( )
 {
     return _get_root( );
 }
 
-node* node::_get_root( )
+node_weak node::_get_root( )
 {
-    if ( _parent )
+    if ( _parent.lock( ) )
     {
-        return _parent->_get_root( );
+        return _parent.lock( )->_get_root( );
     }
     else
     {
-        return this;
+        return shared_from_this( );
     }
+}
+
+void node::run_action( action::action_weak const & action )
+{
+    _action_manager.add_action( action, shared_from_this( ), !_running );
+    action.lock( )->setup( );
 }
 
 cinder::mat3 node::get_world_matrix( )
 {
     std::vector<mat3> mats;
     auto p = _parent;
-    while ( p )
+    while ( p.lock( ) )
     {
-        auto m = translate( mat3( ), p->_position );
-        m = scale( m, p->_scale );
-        m = rotate( m, p->_rotation );
-        m = translate( m, -p->_content_size * p->_anchor_point );
-        m = translate( m, p->_content_size * p->_pivot );
+        auto m = translate( mat3( ), p.lock( )->_position );
+        m = scale( m, p.lock( )->_scale );
+        m = rotate( m, p.lock( )->_rotation );
+        m = translate( m, -p.lock( )->_content_size * p.lock( )->_anchor_point );
+        m = translate( m, p.lock( )->_content_size * p.lock( )->_pivot );
         mats.emplace_back( std::move( m ) );
-        p = p->_parent;
+        p = p.lock( )->_parent;
     }
 
     mat3 result;

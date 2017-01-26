@@ -4,31 +4,12 @@
 #include "cinder/Color.h"
 #include <vector>
 #include <string>
-#include <memory>
-#define CREATE_H(__TYPE__, ...) static std::shared_ptr<__TYPE__> create(__VA_ARGS__)
-#define CREATE_CPP(__TYPE__, ...) std::shared_ptr<__TYPE__> __TYPE__::create(__VA_ARGS__)
-#define CREATE(__TYPE__, ...) \
-auto ret = std::make_shared<__TYPE__>( ); \
-if ( ret && ret->init( __VA_ARGS__ ) ); \
-else ret.reset( ); \
-return std::move( ret );
-#ifdef _DEBUG
-#define ASSERT(cond, msg) \
-do \
-{ \
-    if ( !( cond ) ) \
-    { \
-        log( "Assert failed: %s", msg ); \
-        assert( cond ); \
-    } \
-} while ( 0 )
-#else
-#define ASSERT(cond, msg)
-#endif
-class node;
-using node_ref = std::shared_ptr<node>;
+#include "forward.h"
+#include "action/action_manager.h"
+
 class node : public std::enable_shared_from_this<node>
 {
+    friend class app_delegate;
 public:
     static const int INVALID_TAG = -1;
 
@@ -45,15 +26,16 @@ public:
     virtual void touches_ended( cinder::app::TouchEvent event );
     virtual void update( float delta );
     virtual void render( );
-protected:
-    virtual void _mouse_began( cinder::app::MouseEvent event );
-    virtual void _mouse_moved( cinder::app::MouseEvent event );
-    virtual void _mouse_ended( cinder::app::MouseEvent event );
-    virtual void _touches_began( cinder::app::TouchEvent event );
-    virtual void _touches_moved( cinder::app::TouchEvent event );
-    virtual void _touches_ended( cinder::app::TouchEvent event );
-    virtual void _update( float delta );
-    virtual void _render( );
+private:
+    // à»â∫ÇÃä÷êîÇ≈ÉmÅ[Éhä‘ÇâÒÇµÇ‹Ç∑ÅB
+    void _mouse_began( cinder::app::MouseEvent event );
+    void _mouse_moved( cinder::app::MouseEvent event );
+    void _mouse_ended( cinder::app::MouseEvent event );
+    void _touches_began( cinder::app::TouchEvent event );
+    void _touches_moved( cinder::app::TouchEvent event );
+    void _touches_ended( cinder::app::TouchEvent event );
+    void _update( float delta );
+    void _render( );
 
 protected:
     bool init( );
@@ -124,10 +106,10 @@ public:
     std::vector<node_ref> const& get_children( );
 
 protected:
-    node* _parent = nullptr;
+    node_weak _parent;
 public:
-    void set_parent( node* value );
-    node* get_parent( );
+    void set_parent( node_weak const& value );
+    node_weak get_parent( );
 
 protected:
     int _tag = node::INVALID_TAG;
@@ -144,39 +126,44 @@ public:
 protected:
     std::string _name = u8"";
 public:
-    void set_name( std::string value );
+    void set_name( std::string const& value );
     std::string get_name( );
 
 private:
     size_t _hash = 0;
 
 protected:
-    bool _running = false;
+    bool _running = true;
 public:
     void set_running( bool value );
     bool get_running( );
 
 protected:
-    bool _visible = false;
+    bool _visible = true;
 public:
     void set_visible( bool value );
     bool get_visible( );
 
 public:
-    void add_child( node_ref value );
-    node_ref get_child_by_name( std::string const& name );
-    node_ref get_child_by_tag( int tag );
-    void remove_child( node_ref child );
+    void add_child( node_weak const& value );
+    node_weak get_child_by_name( std::string const& name );
+    node_weak get_child_by_tag( int tag );
+    void remove_child( node_weak const& child );
     void remove_child_by_name( std::string const& name );
     void remove_child_by_tag( int tag );
     void remove_all_children( );
     void remove_from_parent( );
 
 protected:
-    node* _event_target = nullptr;
+    node_weak _event_target;
 public:
-    node* get_root( );
-    node* _get_root( );
+    node_weak get_root( );
+    node_weak _get_root( );
+
+protected:
+    action::action_manager _action_manager;
+public:
+    void run_action( action::action_weak const& action );
 
 public:
     cinder::mat3 get_world_matrix( );

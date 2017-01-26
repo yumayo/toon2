@@ -113,6 +113,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ClCompile Include="..\src\action\action.cpp" />
+    <ClCompile Include="..\src\action\action_manager.cpp" />
+    <ClCompile Include="..\src\action\float_to.cpp" />
+    <ClCompile Include="..\src\action\move_to.cpp" />
     <ClCompile Include="..\src\event.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\meeting\room.cpp" />
@@ -127,7 +131,12 @@
   <ItemGroup>
     <ClInclude Include="..\include\cocoslike.h" />
     <ClInclude Include="..\include\Resources.h" />
+    <ClInclude Include="..\src\action\action.h" />
+    <ClInclude Include="..\src\action\action_manager.h" />
+    <ClInclude Include="..\src\action\float_to.h" />
+    <ClInclude Include="..\src\action\move_to.h" />
     <ClInclude Include="..\src\event.h" />
+    <ClInclude Include="..\src\forward.h" />
     <ClInclude Include="..\src\meeting\room.h" />
     <ClInclude Include="..\src\node.h" />
     <ClInclude Include="..\src\app_delegate.h" />

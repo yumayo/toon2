@@ -1,10 +1,7 @@
 #pragma once
 #include "node.h"
-class app_delegate : public node, public virtual cinder::app::App
+class app_delegate : public cinder::app::App
 {
-public:
-    app_delegate( );
-    ~app_delegate( );
 private:
     void setup( ) override;
     void update( ) override;
@@ -16,5 +13,6 @@ private:
     void touchesMoved( cinder::app::TouchEvent event ) override;
     void touchesEnded( cinder::app::TouchEvent event ) override;
 private:
+    node_ref root;
     double _prev_second = 0.0;
 };

@@ -22,6 +22,9 @@
     <Filter Include="Source Files\renderer">
       <UniqueIdentifier>{2ff79420-2004-4333-9938-55b8b2af6e06}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\action">
+      <UniqueIdentifier>{73f383e2-960f-403c-b204-26e836964973}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -59,6 +62,21 @@
     </ClInclude>
     <ClInclude Include="..\src\renderer\sprite.h">
       <Filter>Source Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\action\action.h">
+      <Filter>Source Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\action\action_manager.h">
+      <Filter>Source Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\action\move_to.h">
+      <Filter>Source Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\action\float_to.h">
+      <Filter>Source Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\forward.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -98,6 +116,18 @@
     </ClCompile>
     <ClCompile Include="..\src\renderer\sprite.cpp">
       <Filter>Source Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\action\action.cpp">
+      <Filter>Source Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\action\action_manager.cpp">
+      <Filter>Source Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\action\move_to.cpp">
+      <Filter>Source Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\action\float_to.cpp">
+      <Filter>Source Files\action</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
