@@ -20,5 +20,7 @@ namespace renderer
         bool _swallow = false;
         bool _touch = false;
         uint32_t _id = 0;
+    private:
+        bool hit_point( cinder::vec2 point );
     };
 }
