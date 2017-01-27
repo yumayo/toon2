@@ -8,34 +8,26 @@ class action
     friend class action_manager;
 public:
     static const int INVALID_TAG = -1;
+    // t ( 0.0 ~ 1.0 )
+    static float ease_liner( float t, float from, float to );
 
 public:
     CREATE_H( action );
-
-public:
     bool init( );
-    void update( float delta );
-    bool is_done( );
-    // t ( 0.0 ~ 1.0 )
-    static float ease_liner( float t, float from, float to );
+    void setup( node_weak target, bool pause );
 public:
     // ターゲットのノードが決定したら呼ばれます。
     virtual void setup( );
     // t ( 0.0 ~ 1.0 )
     virtual void step( float t );
-    virtual void stop( );
+    virtual bool is_done( );
+    virtual void update( float delta );
 
 protected:
     node_weak _target;
 public:
     void set_target( node_weak const& value );
     node_weak get_target( );
-
-protected:
-    float _time = 0.0F;
-
-protected:
-    float _duration = 0.0F;
 
 protected:
     int _tag = action::INVALID_TAG;

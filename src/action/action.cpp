@@ -10,14 +10,18 @@ bool action::init( )
 {
     return true;
 }
+void action::setup( node_weak target, bool pause )
+{
+    _target = target;
+    _pause = pause;
+    setup( );
+}
 void action::update( float delta )
 {
-    _time += delta;
-    step( _time / _duration );
 }
 bool action::is_done( )
 {
-    return _duration <= _time;
+    return true;
 }
 float action::ease_liner( float t, float from, float to )
 {
@@ -28,13 +32,6 @@ void action::setup( )
 }
 void action::step( float t )
 {
-}
-
-
-
-void action::stop( )
-{
-    _target.reset( );
 }
 
 void action::set_target( node_weak const & value )

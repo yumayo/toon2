@@ -1,9 +1,9 @@
 #pragma once
-#include "action.h"
+#include "finite_time_action.h"
 #include "cinder/Vector.h"
 namespace action
 {
-class move_to : public action
+class move_to : public finite_time_action
 {
 public:
     CREATE_H( move_to, float duration, cinder::vec2 position );

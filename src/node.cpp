@@ -140,6 +140,9 @@ void node::_update( float delta )
     }
     _action_manager.update( delta );
     if ( _schedule_update ) update( delta );
+
+    for ( auto const& rem : _remove_signal ) rem( );
+    _remove_signal.clear( );
 }
 void node::_render( )
 {
@@ -382,7 +385,11 @@ void node::remove_from_parent( )
 {
     if ( _parent.lock( ) )
     {
-        _parent.lock( )->remove_child( shared_from_this( ) );
+        node_weak ptr = shared_from_this( );
+        _parent.lock( )->_remove_signal.emplace_back( [ this, ptr ]
+        {
+            _parent.lock( )->remove_child( ptr );
+        } );
     }
 }
 node_weak node::get_root( )

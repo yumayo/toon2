@@ -78,6 +78,24 @@
     <ClInclude Include="..\src\forward.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\action\finite_time_action.h">
+      <Filter>Source Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\action\delay.h">
+      <Filter>Source Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\action\remove_self.h">
+      <Filter>Source Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\action\sequence.h">
+      <Filter>Source Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\action\spawn.h">
+      <Filter>Source Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\action\timeline.h">
+      <Filter>Source Files\action</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -127,6 +145,24 @@
       <Filter>Source Files\action</Filter>
     </ClCompile>
     <ClCompile Include="..\src\action\float_to.cpp">
+      <Filter>Source Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\action\finite_time_action.cpp">
+      <Filter>Source Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\action\delay.cpp">
+      <Filter>Source Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\action\remove_self.cpp">
+      <Filter>Source Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\action\sequence.cpp">
+      <Filter>Source Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\action\spawn.cpp">
+      <Filter>Source Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\action\timeline.cpp">
       <Filter>Source Files\action</Filter>
     </ClCompile>
   </ItemGroup>

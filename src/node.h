@@ -153,6 +153,8 @@ public:
     void remove_child_by_tag( int tag );
     void remove_all_children( );
     void remove_from_parent( );
+protected:
+    std::vector<std::function<void( )>> _remove_signal;
 
 protected:
     node_weak _event_target;

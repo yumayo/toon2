@@ -1,8 +1,8 @@
 #pragma once
-#include "action.h"
+#include "finite_time_action.h"
 namespace action
 {
-class float_to : public action
+class float_to : public finite_time_action
 {
 public:
     using float_to_callback = std::function<void( float value )>;

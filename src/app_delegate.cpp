@@ -4,6 +4,10 @@
 #include "renderer/button.h"
 #include "renderer/sprite.h"
 #include "action/move_to.h"
+#include "action/sequence.h"
+#include "action/spawn.h"
+#include "action/delay.h"
+#include "action/remove_self.h"
 using namespace cinder;
 void app_delegate::setup( )
 {
@@ -29,8 +33,10 @@ void app_delegate::setup( )
         p1->set_name( "p1 sprite" );
         p1->set_anchor_point( { 0.5, 0.5 } );
         p1->set_pivot( { 0, 0 } );
-        auto act = action::move_to::create( 2.0F, vec2( 400, 200 ) );
-        p1->run_action( act );
+        auto act1 = action::move_to::create( 2.0F, vec2( 400, 200 ) );
+        auto act2 = action::move_to::create( 2.0F, vec2( 200, 200 ) );
+        auto seq = action::sequence::create( act1, action::delay::create( 1.0F ), act2, action::remove_self::create( ) );
+        p1->run_action( seq );
         root->add_child( p1 );
 
         if ( auto p2 = renderer::sprite::create( "hogehoge.png" ) )

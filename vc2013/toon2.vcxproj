@@ -115,8 +115,14 @@
   <ItemGroup>
     <ClCompile Include="..\src\action\action.cpp" />
     <ClCompile Include="..\src\action\action_manager.cpp" />
+    <ClCompile Include="..\src\action\delay.cpp" />
+    <ClCompile Include="..\src\action\finite_time_action.cpp" />
     <ClCompile Include="..\src\action\float_to.cpp" />
     <ClCompile Include="..\src\action\move_to.cpp" />
+    <ClCompile Include="..\src\action\remove_self.cpp" />
+    <ClCompile Include="..\src\action\sequence.cpp" />
+    <ClCompile Include="..\src\action\spawn.cpp" />
+    <ClCompile Include="..\src\action\timeline.cpp" />
     <ClCompile Include="..\src\event.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\meeting\room.cpp" />
@@ -133,8 +139,14 @@
     <ClInclude Include="..\include\Resources.h" />
     <ClInclude Include="..\src\action\action.h" />
     <ClInclude Include="..\src\action\action_manager.h" />
+    <ClInclude Include="..\src\action\delay.h" />
+    <ClInclude Include="..\src\action\finite_time_action.h" />
     <ClInclude Include="..\src\action\float_to.h" />
     <ClInclude Include="..\src\action\move_to.h" />
+    <ClInclude Include="..\src\action\remove_self.h" />
+    <ClInclude Include="..\src\action\sequence.h" />
+    <ClInclude Include="..\src\action\spawn.h" />
+    <ClInclude Include="..\src\action\timeline.h" />
     <ClInclude Include="..\src\event.h" />
     <ClInclude Include="..\src\forward.h" />
     <ClInclude Include="..\src\meeting\room.h" />
