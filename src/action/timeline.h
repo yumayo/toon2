@@ -9,6 +9,6 @@ public:
     bool init( );
 
 protected:
-    std::vector<action_ref> _actions;
+    std::vector<std::shared_ptr<action>> _actions;
 };
 }

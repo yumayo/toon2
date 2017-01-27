@@ -114,6 +114,7 @@
   <ItemGroup />
   <ItemGroup>
     <ClCompile Include="..\src\action\action.cpp" />
+    <ClCompile Include="..\src\action\ease.cpp" />
     <ClCompile Include="..\src\action\action_manager.cpp" />
     <ClCompile Include="..\src\action\delay.cpp" />
     <ClCompile Include="..\src\action\finite_time_action.cpp" />
@@ -138,6 +139,7 @@
     <ClInclude Include="..\include\cocoslike.h" />
     <ClInclude Include="..\include\Resources.h" />
     <ClInclude Include="..\src\action\action.h" />
+    <ClInclude Include="..\src\action\ease.h" />
     <ClInclude Include="..\src\action\action_manager.h" />
     <ClInclude Include="..\src\action\delay.h" />
     <ClInclude Include="..\src\action\finite_time_action.h" />

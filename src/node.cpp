@@ -244,7 +244,7 @@ cinder::ColorA node::get_color( )
 {
     return _color;
 }
-std::vector<node_ref> const & node::get_children( )
+std::vector<std::shared_ptr<node>> const & node::get_children( )
 {
     return _children;
 }
@@ -311,7 +311,7 @@ node_weak node::get_child_by_name( std::string const & name )
     std::hash<std::string> h;
     size_t hash = h( name );
 
-    auto itr = std::find_if( std::begin( _children ), std::end( _children ), [ this, hash, name ] ( node_ref& child )
+    auto itr = std::find_if( std::begin( _children ), std::end( _children ), [ this, hash, name ] ( std::shared_ptr<node>& child )
     {
         return child->_hash == hash && child->_name.compare( name ) == 0;
     } );
@@ -326,7 +326,7 @@ node_weak node::get_child_by_tag( int tag )
 {
     assert_log( tag != node::INVALID_TAG, "無効なタグです。" );
 
-    auto itr = std::find_if( std::begin( _children ), std::end( _children ), [ this, tag ] ( node_ref& n )
+    auto itr = std::find_if( std::begin( _children ), std::end( _children ), [ this, tag ] ( std::shared_ptr<node>& n )
     {
         return n->_tag == tag;
     } );
@@ -341,7 +341,7 @@ void node::remove_child( node_weak const& child )
 {
     if ( _children.empty( ) ) return;
 
-    auto itr = std::find_if( std::begin( _children ), std::end( _children ), [ this, child ] ( node_ref& n )
+    auto itr = std::find_if( std::begin( _children ), std::end( _children ), [ this, child ] ( std::shared_ptr<node>& n )
     {
         return n == child.lock( );
     } );

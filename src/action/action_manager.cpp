@@ -19,7 +19,7 @@ action_weak action_manager::get_action_by_name( std::string const & name )
     std::hash<std::string> h;
     size_t hash = h( name );
 
-    auto itr = boost::find_if( _actions, [ this, hash, name ] ( action_ref& act )
+    auto itr = boost::find_if( _actions, [ this, hash, name ] ( std::shared_ptr<action>& act )
     {
         return act->_hash == hash && act->_name.compare( name ) == 0;
     } );
@@ -35,7 +35,7 @@ action_weak action_manager::get_action_by_tag( int tag )
 {
     assert_log( tag != node::INVALID_TAG, "無効なタグです。" );
 
-    auto itr = boost::find_if( _actions, [ this, tag ] ( action_ref& act )
+    auto itr = boost::find_if( _actions, [ this, tag ] ( std::shared_ptr<action>& act )
     {
         return act->_tag == tag;
     } );
@@ -52,13 +52,13 @@ void action_manager::remove_all_actions( )
     _actions.clear( );
 }
 
-void action_manager::remove_action( action_weak const& action )
+void action_manager::remove_action( action_weak const& act_weak )
 {
     if ( _actions.empty( ) ) return;
 
-    auto itr = boost::find_if( _actions, [ this, action ] ( action_ref& act )
+    auto itr = boost::find_if( _actions, [ this, act_weak ] ( std::shared_ptr<action>& act )
     {
-        return act == action.lock( );
+        return act == act_weak.lock( );
     } );
     _actions.erase( itr );
 }
@@ -97,7 +97,7 @@ void action_manager::remove_action_by_name( std::string const & name )
 
 void action_manager::update( float delta )
 {
-    auto erase = boost::remove_if( _actions, [ ] ( action_ref& act )
+    auto erase = boost::remove_if( _actions, [ ] ( std::shared_ptr<action>& act )
     {
         return act->is_done( );
     } );

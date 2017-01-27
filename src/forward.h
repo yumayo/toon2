@@ -19,12 +19,10 @@ do \
 } while ( 0 )
 
 class node;
-using node_ref = std::shared_ptr<node>;
 using node_weak = std::weak_ptr<node>;
 
 namespace action
 {
 class action;
-using action_ref = std::shared_ptr<action>;
 using action_weak = std::weak_ptr<action>;
 }

@@ -14,6 +14,6 @@ public:
     void remove_action_by_name( std::string const& name );
     void update( float delta );
 private:
-    std::vector<action_ref> _actions;
+    std::vector<std::shared_ptr<action>> _actions;
 };
 }

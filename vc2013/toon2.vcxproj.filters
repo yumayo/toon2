@@ -96,6 +96,9 @@
     <ClInclude Include="..\src\action\timeline.h">
       <Filter>Source Files\action</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\action\ease.h">
+      <Filter>Source Files\action</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -163,6 +166,9 @@
       <Filter>Source Files\action</Filter>
     </ClCompile>
     <ClCompile Include="..\src\action\timeline.cpp">
+      <Filter>Source Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\action\ease.cpp">
       <Filter>Source Files\action</Filter>
     </ClCompile>
   </ItemGroup>

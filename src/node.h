@@ -101,9 +101,9 @@ public:
     cinder::ColorA get_color( );
 
 protected:
-    std::vector<node_ref> _children;
+    std::vector<std::shared_ptr<node>> _children;
 public:
-    std::vector<node_ref> const& get_children( );
+    std::vector<std::shared_ptr<node>> const& get_children( );
 
 protected:
     node_weak _parent;

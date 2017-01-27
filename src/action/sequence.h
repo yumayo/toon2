@@ -15,7 +15,7 @@ public:
     bool is_done( ) override;
     void update( float delta ) override;
 private:
-    std::vector<action_ref>::iterator _target_action;
+    std::vector<std::shared_ptr<action>>::iterator _target_action;
 };
 
 template<class Head, class... Tail>

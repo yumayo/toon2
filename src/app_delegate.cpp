@@ -8,6 +8,7 @@
 #include "action/spawn.h"
 #include "action/delay.h"
 #include "action/remove_self.h"
+#include "action/ease.h"
 using namespace cinder;
 void app_delegate::setup( )
 {
@@ -35,7 +36,10 @@ void app_delegate::setup( )
         p1->set_pivot( { 0, 0 } );
         auto act1 = action::move_to::create( 2.0F, vec2( 400, 200 ) );
         auto act2 = action::move_to::create( 2.0F, vec2( 200, 200 ) );
-        auto seq = action::sequence::create( act1, action::delay::create( 1.0F ), act2, action::remove_self::create( ) );
+        auto seq = action::sequence::create( action::ease<cinder::EaseInOutQuart>::create( act1 ),
+                                             action::delay::create( 1.0F ), 
+                                             action::ease<cinder::EaseInOutQuart>::create( act2 ),
+                                             action::remove_self::create( ) );
         p1->run_action( seq );
         root->add_child( p1 );
 

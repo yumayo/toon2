@@ -13,6 +13,6 @@ private:
     void touchesMoved( cinder::app::TouchEvent event ) override;
     void touchesEnded( cinder::app::TouchEvent event ) override;
 private:
-    node_ref root;
+    std::shared_ptr<node> root;
     double _prev_second = 0.0;
 };
