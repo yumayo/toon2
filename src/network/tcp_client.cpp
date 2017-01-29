@@ -48,10 +48,8 @@ void tcp_client::connect( )
         else
         {
             log( "connect correct!" );
-            asio::async_write(
-                _m->socket,
+            _m->socket.async_write_some(
                 asio::buffer( "hello" ),
-                asio::transfer_all( ),
                 [ this ] ( const asio::error_code& error, size_t bytes_transferred )
             {
                 if ( error )
