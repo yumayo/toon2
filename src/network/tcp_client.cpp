@@ -41,6 +41,9 @@ void tcp_client::connect( )
         tcp::endpoint( asio::ip::address::from_string( _m->ip_address ), boost::lexical_cast<int>( _m->port ) ),
         [ this ] ( const asio::error_code& error )
     {
+        auto s = _m->socket.available( );
+        auto o = _m->socket.is_open( );
+
         if ( error )
         {
             log( "connect failed: %s", error.message( ).c_str( ) );
@@ -48,7 +51,9 @@ void tcp_client::connect( )
         else
         {
             log( "connect correct!" );
-            _m->socket.async_write_some(
+
+            asio::async_write(
+                _m->socket,
                 asio::buffer( "hello" ),
                 [ this ] ( const asio::error_code& error, size_t bytes_transferred )
             {
