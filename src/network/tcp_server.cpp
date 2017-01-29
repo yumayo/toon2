@@ -21,7 +21,7 @@ struct tcp_server::_member
     asio::io_service io_service;
     tcp::acceptor acceptor;
     tcp::socket socket;
-    asio::streambuf buffer;
+    boost::array<char, 128> buffer;
 };
 CREATE_CPP( tcp_server, std::string const& port )
 {
@@ -45,11 +45,8 @@ void tcp_server::start_accept( )
         else
         {
             log( "accept correct!" );
-
-            asio::async_read(
-                _m->socket,
-                _m->buffer,
-                asio::transfer_all( ),
+            _m->socket.async_read_some(
+                asio::buffer( _m->buffer ),
                 [ this ] ( const asio::error_code& error, size_t bytes_transferred )
             {
                 if ( error && error != asio::error::eof )
@@ -58,9 +55,8 @@ void tcp_server::start_accept( )
                 }
                 else
                 {
-                    const char* data = asio::buffer_cast<const char*>( _m->buffer.data( ) );
+                    const char* data = _m->buffer.data( );
                     log( "receive data: %s", data );
-                    _m->buffer.consume( _m->buffer.size( ) );
                 }
             } );
         }
