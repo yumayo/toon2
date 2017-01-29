@@ -9,58 +9,87 @@ using asio::ip::tcp;
 #include "../utility.h"
 namespace network
 {
-struct tcp_server::_member
+struct socket_object
 {
-    _member( std::string const& port )
-        : io_service( )
-        , acceptor( io_service, tcp::endpoint( tcp::v4( ), boost::lexical_cast<int>( port ) ) )
-        , socket( io_service )
+    socket_object( asio::io_service& io )
+        : socket( io )
     {
 
     }
-    asio::io_service io_service;
-    tcp::acceptor acceptor;
     tcp::socket socket;
-    boost::array<char, 128> buffer;
+    boost::array<char, 512> buffer;
 };
-CREATE_CPP( tcp_server, std::string const& port )
+struct tcp_server::_member
 {
-    CREATE( tcp_server, port );
+    _member( std::string const& port, int num_of_client )
+        : io( )
+        , acceptor( io, tcp::endpoint( tcp::v4( ), boost::lexical_cast<int>( port ) ) )
+        , sockets( )
+    {
+        for ( int i = 0; i < num_of_client; ++i )
+        {
+            sockets.emplace_back( io );
+        }
+    }
+    asio::io_service io;
+    tcp::acceptor acceptor;
+    std::vector<socket_object> sockets;
+    bool stop = false;
+    std::shared_ptr<std::thread> thread;
+};
+CREATE_CPP( tcp_server, std::string const& port, int num_of_client )
+{
+    CREATE( tcp_server, port, num_of_client );
 }
-bool tcp_server::init( std::string const& port )
+tcp_server::~tcp_server( )
+{
+    _m->io.stop( );
+    _m->stop = true;
+    _m->thread->join( );
+}
+bool tcp_server::init( std::string const& port, int num_of_client )
 {
     _m.reset( );
-    _m = std::make_shared<_member>( port );
+    _m = std::make_shared<_member>( port, num_of_client );
 
-    return true;
-}
-void tcp_server::start_accept( )
-{
-    _m->acceptor.async_accept( _m->socket, [ this ] ( asio::error_code const& error )
+    _m->thread = std::make_shared<std::thread>( [ this ]
     {
-        if ( error )
+        while ( !_m->stop )
         {
-            log( "accept failed: %s", error.message( ).c_str( ) );
-        }
-        else
-        {
-            log( "accept correct!" );
-            _m->socket.async_read_some(
-                asio::buffer( _m->buffer ),
-                [ this ] ( const asio::error_code& error, size_t bytes_transferred )
+            for ( auto& obj : _m->sockets )
             {
-                if ( error && error != asio::error::eof )
+                _m->acceptor.async_accept( obj.socket, [ this, &obj ] ( asio::error_code const& error )
                 {
-                    log( "receive failed: %s", error.message( ).c_str( ) );
-                }
-                else
-                {
-                    const char* data = _m->buffer.data( );
-                    log( "receive data: %s", data );
-                }
-            } );
+                    if ( error )
+                    {
+                        log( "accept failed: %s", error.message( ).c_str( ) );
+                    }
+                    else
+                    {
+                        log( "accept correct!" );
+
+                        asio::async_read(
+                            obj.socket,
+                            asio::buffer( obj.buffer ),
+                            asio::transfer_at_least( 4 ),
+                            [ this, &obj ] ( const asio::error_code& error, size_t bytes_transferred )
+                        {
+                            if ( error && error != asio::error::eof )
+                            {
+                                log( "receive failed: %s", error.message( ).c_str( ) );
+                            }
+                            else
+                            {
+                                const char* data = obj.buffer.data( );
+                                log( "receive data: %s", data );
+                            }
+                        } );
+                    }
+                } );
+            }
+            _m->io.run( );
         }
     } );
-    _m->io_service.run( );
+    return true;
 }
 }
