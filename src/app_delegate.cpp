@@ -1,14 +1,7 @@
 ﻿#include "app_delegate.h"
 #include "cinder/gl/gl.h"
-#include "renderer/rect.h"
-#include "renderer/button.h"
-#include "renderer/sprite.h"
-#include "action/move_to.h"
-#include "action/sequence.h"
-#include "action/spawn.h"
-#include "action/delay.h"
-#include "action/remove_self.h"
-#include "action/ease.h"
+#include "cocoslike.h"
+#include "network/tcp_server.h"
 using namespace cinder;
 void app_delegate::setup( )
 {
@@ -37,7 +30,7 @@ void app_delegate::setup( )
         auto act1 = action::move_to::create( 2.0F, vec2( 400, 200 ) );
         auto act2 = action::move_to::create( 2.0F, vec2( 200, 200 ) );
         auto seq = action::sequence::create( action::ease<cinder::EaseInOutQuart>::create( act1 ),
-                                             action::delay::create( 1.0F ), 
+                                             action::delay::create( 1.0F ),
                                              action::ease<cinder::EaseInOutQuart>::create( act2 ),
                                              action::remove_self::create( ) );
         //p1->run_action( seq );
@@ -59,6 +52,12 @@ void app_delegate::setup( )
                 p2->add_child( p3 );
             }
         }
+    }
+
+    if ( auto t = network::tcp_server::create( "25565" ) )
+    {
+        t->start_accept( );
+        root->add_child( t );
     }
 }
 void app_delegate::update( )

@@ -7,7 +7,7 @@
 auto ret = std::make_shared<__TYPE__>( ); \
 if ( ret && ret->init( __VA_ARGS__ ) ); \
 else ret.reset( ); \
-return std::move( ret );
+return std::move( ret )
 #define assert_log(cond, msg) \
 do \
 { \

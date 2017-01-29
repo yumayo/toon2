@@ -33,9 +33,6 @@
     <ClCompile Include="..\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\toon2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClInclude Include="..\src\meeting\room.h">
       <Filter>Source Files\meeting</Filter>
     </ClInclude>
@@ -53,9 +50,6 @@
     </ClInclude>
     <ClInclude Include="..\src\renderer\rect.h">
       <Filter>Source Files\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\event.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\renderer\button.h">
       <Filter>Source Files\renderer</Filter>
@@ -99,13 +93,22 @@
     <ClInclude Include="..\src\action\ease.h">
       <Filter>Source Files\action</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\renderer\renderers.h">
+      <Filter>Source Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\action\actions.h">
+      <Filter>Source Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\network\tcp_server.h">
+      <Filter>Source Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\network\tcp_client.h">
+      <Filter>Source Files\network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\toon2.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -128,9 +131,6 @@
     </ClCompile>
     <ClCompile Include="..\src\renderer\rect.cpp">
       <Filter>Source Files\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\event.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\renderer\button.cpp">
       <Filter>Source Files\renderer</Filter>
@@ -170,6 +170,12 @@
     </ClCompile>
     <ClCompile Include="..\src\action\ease.cpp">
       <Filter>Source Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\network\tcp_server.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\network\tcp_client.cpp">
+      <Filter>Source Files\network</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

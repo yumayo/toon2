@@ -1,5 +1,6 @@
 ﻿#include "button.h"
 #include "cinder/gl/gl.h"
+#include "../utility.h"
 using namespace cinder;
 namespace renderer
 {
@@ -30,27 +31,15 @@ void button::render( )
 }
 bool button::mouse_began( cinder::app::MouseEvent event )
 {
-    if ( hit_point( event.getPos( ) ) )
-    {
-        _touch = true;
-        _swallow = true;
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    _touch = hit_point( event.getPos( ) );
+    return _touch;
 }
 void button::mouse_moved( cinder::app::MouseEvent event )
 {
-    if ( !_swallow ) return;
     _touch = hit_point( event.getPos( ) );
 }
 void button::mouse_ended( cinder::app::MouseEvent event )
 {
-    if ( !_swallow ) return;
-
-    _swallow = false;
     _touch = false;
 }
 bool button::touches_began( cinder::app::TouchEvent event )

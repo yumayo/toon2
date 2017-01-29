@@ -1,7 +1,5 @@
 #pragma once
-#include "cocoslike.h"
-#include "rect.h"
-
+#include "../node.h"
 namespace renderer
 {
     class button : public node
