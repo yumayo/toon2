@@ -14,7 +14,7 @@ struct socket_object
     socket_object( asio::io_service& io )
         : socket( io )
     {
-
+        buffer.fill( 0 );
     }
     tcp::socket socket;
     boost::array<char, 512> buffer;
@@ -23,24 +23,30 @@ struct tcp_server::_member
 {
     _member( std::string const& port, int num_of_client )
         : io( )
-        , acceptor( io, tcp::endpoint( tcp::v4( ), boost::lexical_cast<int>( port ) ) )
+        , acceptor( )
         , sockets( )
+        , thread( )
+        , port( port )
     {
-        for ( int i = 0; i < num_of_client; ++i )
+        assert_log( 1 <= num_of_client, "クライアントの数は一つ以上でないといけません。" );
+        acceptor = std::make_shared<tcp::acceptor>( io, tcp::endpoint( tcp::v4( ), boost::lexical_cast<int>( port ) ) );
+        for ( int i = 0; i < num_of_client + 1; ++i )
         {
             sockets.emplace_back( io );
         }
     }
     void async_accept( socket_object& sock_obj );
+    bool is_max( );
     asio::io_service io;
-    tcp::acceptor acceptor;
+    std::shared_ptr<tcp::acceptor> acceptor;
     std::vector<socket_object> sockets;
     std::shared_ptr<std::thread> thread;
+    std::string port;
 };
 void tcp_server::_member::async_accept( socket_object& sock_obj )
 {
     log( "socket accept" );
-    acceptor.async_accept( sock_obj.socket, [ this, &sock_obj ] ( asio::error_code const& error )
+    acceptor->async_accept( sock_obj.socket, [ this, &sock_obj ] ( asio::error_code const& error )
     {
         if ( error )
         {
@@ -50,35 +56,67 @@ void tcp_server::_member::async_accept( socket_object& sock_obj )
         {
             log( "accept correct!" );
 
-            asio::async_read(
-                sock_obj.socket,
-                asio::buffer( sock_obj.buffer ),
-                asio::transfer_at_least( 4 ),
-                [ this, &sock_obj ] ( const asio::error_code& error, size_t bytes_transferred )
+            if ( is_max( ) )
             {
-                if ( error )
+                asio::async_write( sock_obj.socket, asio::buffer( "満員です。" ),
+                                   [ ] ( const asio::error_code& error, size_t bytes_transferred )
                 {
-                    if ( error == asio::error::eof )
+                    if ( error )
                     {
-                        log( "client close: %s", error.message( ).c_str( ) );
-
-                        // クライアントがいなくなったソケットは、もう一度接続します。
-                        sock_obj.socket.close( );
-                        async_accept( sock_obj );
+                        log( "send falid: %s", error.message( ).c_str( ) );
                     }
                     else
                     {
-                        log( "receive failed: %s", error.message( ).c_str( ) );
+                        log( "accept max clients!" );
                     }
-                }
-                else
+                } );
+                sock_obj.socket.close( );
+                async_accept( sock_obj );
+            }
+            else
+            {
+                asio::async_read(
+                    sock_obj.socket,
+                    asio::buffer( sock_obj.buffer ),
+                    asio::transfer_at_least( 4 ),
+                    [ this, &sock_obj ] ( const asio::error_code& error, size_t bytes_transferred )
                 {
-                    const char* data = sock_obj.buffer.data( );
-                    log( "receive data: %s", data );
-                }
-            } );
+                    if ( error )
+                    {
+                        if ( error == asio::error::eof )
+                        {
+                            log( "client close: %s", error.message( ).c_str( ) );
+
+                            // クライアントがいなくなったソケットは、もう一度接続します。
+                            sock_obj.socket.close( );
+                            async_accept( sock_obj );
+                        }
+                        else
+                        {
+                            log( "receive failed: %s", error.message( ).c_str( ) );
+                        }
+                    }
+                    else
+                    {
+                        const char* data = sock_obj.buffer.data( );
+                        log( "receive data: %s", data );
+                        std::fill_n( sock_obj.buffer.begin( ), bytes_transferred, 0 );
+                        sock_obj.socket.close( );
+                        async_accept( sock_obj );
+                    }
+                } );
+            }
         }
     } );
+}
+bool tcp_server::_member::is_max( )
+{
+    int num = 0;
+    for ( auto& obj : sockets )
+    {
+        if ( obj.socket.is_open( ) ) num++;
+    }
+    return sockets.size( ) == num;
 }
 CREATE_CPP( tcp_server, std::string const& port, int num_of_client )
 {
@@ -94,14 +132,15 @@ bool tcp_server::init( std::string const& port, int num_of_client )
     _m.reset( );
     _m = std::make_shared<_member>( port, num_of_client );
 
-    _m->thread = std::make_shared<std::thread>( [ this ]
+    _m->thread = std::make_shared<std::thread>( [ this, num_of_client ]
     {
-        for ( auto& obj : _m->sockets )
+        for ( int i = 0; i < num_of_client + 1; ++i )
         {
-            _m->async_accept( obj );
+            _m->async_accept( _m->sockets[i] );
         }
         _m->io.run( );
     } );
+
     return true;
 }
 }
