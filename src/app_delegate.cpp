@@ -40,7 +40,7 @@ void app_delegate::setup( )
                                              action::delay::create( 1.0F ), 
                                              action::ease<cinder::EaseInOutQuart>::create( act2 ),
                                              action::remove_self::create( ) );
-        p1->run_action( seq );
+        //p1->run_action( seq );
         root->add_child( p1 );
 
         if ( auto p2 = renderer::sprite::create( "hogehoge.png" ) )

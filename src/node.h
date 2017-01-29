@@ -28,12 +28,12 @@ public:
     virtual void render( );
 private:
     // ˆÈ‰º‚ÌŠÖ”‚Åƒm[ƒhŠÔ‚ğ‰ñ‚µ‚Ü‚·B
-    void _mouse_began( cinder::app::MouseEvent event );
-    void _mouse_moved( cinder::app::MouseEvent event );
-    void _mouse_ended( cinder::app::MouseEvent event );
-    void _touches_began( cinder::app::TouchEvent event );
-    void _touches_moved( cinder::app::TouchEvent event );
-    void _touches_ended( cinder::app::TouchEvent event );
+    bool _mouse_began( cinder::app::MouseEvent event );
+    bool _mouse_moved( cinder::app::MouseEvent event );
+    bool _mouse_ended( cinder::app::MouseEvent event );
+    bool _touches_began( cinder::app::TouchEvent event );
+    bool _touches_moved( cinder::app::TouchEvent event );
+    bool _touches_ended( cinder::app::TouchEvent event );
     void _update( float delta );
     void _render( );
 
@@ -157,7 +157,8 @@ protected:
     std::vector<std::function<void( )>> _remove_signal;
 
 protected:
-    node_weak _event_target;
+    bool _swallow = false;
+
 public:
     node_weak get_root( );
     node_weak _get_root( );

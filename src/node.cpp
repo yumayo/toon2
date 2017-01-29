@@ -1,6 +1,7 @@
 ﻿#include "node.h"
 #include "cinder/gl/gl.h"
 #include "utility.h"
+#include "boost/range/algorithm/for_each.hpp"
 using namespace cinder;
 CREATE_CPP( node )
 {
@@ -36,101 +37,130 @@ void node::update( float delta )
 void node::render( )
 {
 }
-void node::_mouse_began( cinder::app::MouseEvent event )
+bool node::_mouse_began( cinder::app::MouseEvent event )
 {
-    for ( auto const& c : _children )
+    for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
     {
-        c->_mouse_began( event );
-    }
-
-    if ( _schedule_mouse_event && !get_root( ).lock( )->_event_target.lock( ) )
-    {
-        if ( mouse_began( event ) )
+        // 子供がモーダルオブジェクトだった場合
+        if ( ( *itr )->_mouse_began( event ) )
         {
-            get_root( ).lock( )->_event_target = shared_from_this( );
+            return true;
         }
     }
+    if ( _schedule_mouse_event )
+    {
+        log( "mouse_began: %s", _name.c_str( ) );
+        if ( mouse_began( event ) )
+        {
+            _swallow = true;
+            return true;
+        }
+    }
+    return false;
 }
-void node::_mouse_moved( cinder::app::MouseEvent event )
+bool node::_mouse_moved( cinder::app::MouseEvent event )
 {
-    // ルートの時点でイベントがあったらその処理をして、イベントを終了します。
-    if ( _event_target.lock( ) )
+    for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
     {
-        _event_target.lock( )->mouse_moved( event );
-        return;
+        if ( ( *itr )->_mouse_moved( event ) )
+        {
+            return true;
+        }
     }
-
-    // 上を通過した時点で全てのオブジェクトを通せるので、再帰的に処理をします。
-    for ( auto const& c : _children )
+    if ( _schedule_mouse_event )
     {
-        c->_mouse_moved( event );
+        log( "mouse_moved: %s", _name.c_str( ) );
+        mouse_moved( event );
+        return _swallow;
     }
-    if ( _schedule_mouse_event ) mouse_moved( event );
+    return false;
 }
-void node::_mouse_ended( cinder::app::MouseEvent event )
+bool node::_mouse_ended( cinder::app::MouseEvent event )
 {
-    // ルートの時点でイベントがあったらその処理をして、イベントを終了します。
-    if ( _event_target.lock( ) )
+    for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
     {
-        _event_target.lock( )->mouse_ended( event );
-        _event_target.reset( );
-        return;
+        if ( ( *itr )->_mouse_ended( event ) )
+        {
+            return true;
+        }
     }
-
-    // 上を通過した時点で全てのオブジェクトを通せるので、再帰的に処理をします。
-    for ( auto const& c : _children )
+    if ( _schedule_mouse_event )
     {
-        c->_mouse_ended( event );
+        log( "mouse_ended: %s", _name.c_str( ) );
+        if ( _swallow )
+        {
+            mouse_ended( event );
+            _swallow = false;
+            return true;
+        }
+        else
+        {
+            mouse_ended( event );
+            return false;
+        }
     }
-    if ( _schedule_mouse_event ) mouse_ended( event );
+    return false;
 }
-void node::_touches_began( cinder::app::TouchEvent event )
+bool node::_touches_began( cinder::app::TouchEvent event )
 {
-    for ( auto const& c : _children )
+    for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
     {
-        c->_touches_began( event );
+        // 子供がモーダルオブジェクトだった場合
+        if ( ( *itr )->_touches_began( event ) )
+        {
+            return true;
+        }
     }
-
-    if ( _schedule_touch_event && !get_root( ).lock( )->_event_target.lock( ) )
+    if ( _schedule_mouse_event )
     {
         if ( touches_began( event ) )
         {
-            get_root( ).lock( )->_event_target = shared_from_this( );
+            _swallow = true;
+            return true;
         }
     }
+    return false;
 }
-void node::_touches_moved( cinder::app::TouchEvent event )
+bool node::_touches_moved( cinder::app::TouchEvent event )
 {
-    // ルートの時点でイベントがあったらその処理をして、イベントを終了します。
-    if ( _event_target.lock( ) )
+    for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
     {
-        _event_target.lock( )->touches_moved( event );
-        return;
+        if ( ( *itr )->_touches_moved( event ) )
+        {
+            return true;
+        }
     }
-
-    // 上を通過した時点で全てのオブジェクトを通せるので、再帰的に処理をします。
-    for ( auto const& c : _children )
+    if ( _schedule_mouse_event )
     {
-        c->_touches_moved( event );
+        touches_moved( event );
+        return _swallow;
     }
-    if ( _schedule_mouse_event ) touches_moved( event );
+    return false;
 }
-void node::_touches_ended( cinder::app::TouchEvent event )
+bool node::_touches_ended( cinder::app::TouchEvent event )
 {
-    // ルートの時点でイベントがあったらその処理をして、イベントを終了します。
-    if ( _event_target.lock( ) )
+    for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
     {
-        _event_target.lock( )->touches_ended( event );
-        _event_target.reset( );
-        return;
+        if ( ( *itr )->_touches_ended( event ) )
+        {
+            return true;
+        }
     }
-
-    // 上を通過した時点で全てのオブジェクトを通せるので、再帰的に処理をします。
-    for ( auto const& c : _children )
+    if ( _schedule_mouse_event )
     {
-        c->_touches_ended( event );
+        if ( _swallow )
+        {
+            touches_ended( event );
+            _swallow = false;
+            return true;
+        }
+        else
+        {
+            touches_ended( event );
+            return false;
+        }
     }
-    if ( _schedule_mouse_event ) touches_ended( event );
+    return false;
 }
 void node::_update( float delta )
 {

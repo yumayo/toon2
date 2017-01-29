@@ -1,5 +1,5 @@
 #pragma once
-#include "../node.h"
+#include "cocoslike.h"
 namespace meeting
 {
     class room : public node

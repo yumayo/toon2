@@ -52,3 +52,14 @@ int hit_point_polygon_2d( cinder::vec2 A, cinder::vec2 B, cinder::vec2 C, cinder
         return 0;
     }
 }
+
+namespace cinder 
+{
+namespace app 
+{
+std::string cinder::app::loadString( std::string const & relative_path )
+{
+    return std::string( static_cast<char*>( loadAsset( relative_path )->getBuffer( )->getData( ) ) );
+}
+}
+}
