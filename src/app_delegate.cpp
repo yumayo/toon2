@@ -2,6 +2,7 @@
 #include "cinder/gl/gl.h"
 #include "cocoslike.h"
 #include "network/tcp_server.h"
+#include "network/tcp_client.h"
 using namespace cinder;
 void app_delegate::setup( )
 {
@@ -54,9 +55,8 @@ void app_delegate::setup( )
         }
     }
 
-    if ( auto t = network::tcp_server::create( "25565" ) )
+    if ( auto t = network::tcp_server::create( "25565", 7 ) )
     {
-        t->start_accept( );
         root->add_child( t );
     }
 }
