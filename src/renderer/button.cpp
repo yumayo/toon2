@@ -1,6 +1,7 @@
 ﻿#include "button.h"
 #include "cinder/gl/gl.h"
 #include "../utility.h"
+#include "boost/range/algorithm/find_if.hpp"
 using namespace cinder;
 namespace renderer
 {
@@ -47,7 +48,6 @@ bool button::touches_began( cinder::app::TouchEvent event )
     if ( hit_point( event.getTouches( )[0].getPos( ) ) )
     {
         _touch = true;
-        _swallow = true;
         _id = event.getTouches( )[0].getId( );
 
         return true;
@@ -59,20 +59,24 @@ bool button::touches_began( cinder::app::TouchEvent event )
 }
 void button::touches_moved( cinder::app::TouchEvent event )
 {
-    if ( !_swallow ) return;
-
-    _touch = hit_point( event.getTouches( )[0].getPos( ) );
+    auto itr = boost::find_if( event.getTouches( ), [ this ] ( cinder::app::TouchEvent::Touch& touch )
+    {
+        return touch.getId( ) == _id;
+    } );
+    if ( itr != boost::end( event.getTouches( ) ) )
+    {
+        _touch = hit_point( itr->getPos( ) );
+    }
 }
 void button::touches_ended( cinder::app::TouchEvent event )
 {
-    if ( !_swallow ) return;
-
-    for ( auto& touch : event.getTouches( ) )
+    auto itr = boost::find_if( event.getTouches( ), [ this ] ( cinder::app::TouchEvent::Touch& touch )
     {
-        if ( touch.getId( ) == _id )
-        {
-            _touch = false;
-        }
+        return touch.getId( ) == _id;
+    } );
+    if ( itr != boost::end( event.getTouches( ) ) )
+    {
+        _touch = false;
     }
 }
 bool button::hit_point( cinder::vec2 point )

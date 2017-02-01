@@ -46,11 +46,11 @@ void tcp_client::connect( )
 
         if ( error )
         {
-            log( "connect failed: %s", error.message( ).c_str( ) );
+            log( "接続できませんでした。: %s", error.message( ).c_str( ) );
         }
         else
         {
-            log( "connect correct!" );
+            log( "接続成功！" );
 
             asio::async_write(
                 _m->socket,
@@ -59,11 +59,11 @@ void tcp_client::connect( )
             {
                 if ( error )
                 {
-                    log( "send failed: %s", error.message( ).c_str( ) );
+                    log( "送信できませんでした。: %s", error.message( ).c_str( ) );
                 }
                 else
                 {
-                    log( "send correct!" );
+                    log( "送信成功！" );
                 }
             } );
         }

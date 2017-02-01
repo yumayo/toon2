@@ -24,9 +24,13 @@ tcp_server::connect_data::connect_data( std::string const & ip_address, int port
     : ip_address( ip_address )
     , port( port )
 { }
-bool tcp_server::connect_data::operator==( connet_data & other )
+bool tcp_server::connect_data::operator==( connect_data const& other ) const
 {
-    return (this->ip_address == other.ip_address) && ( this->port == other.port );
+    return this->port == other.port;
+}
+bool tcp_server::connect_data::operator<( connect_data const& other ) const
+{
+    return this->port < other.port;
 }
 struct tcp_server::_member
 {
@@ -52,7 +56,7 @@ struct tcp_server::_member
     std::vector<socket_object> sockets;
     std::shared_ptr<std::thread> thread;
     std::string port;
-    std::set<connet_data> ip_addresses;
+    std::set<connect_data> ip_data;
 };
 void tcp_server::_member::async_accept( socket_object& sock_obj )
 {
@@ -86,8 +90,8 @@ void tcp_server::_member::async_accept( socket_object& sock_obj )
             else
             {
                 log( "接続成功！: %s, %d", sock_obj.socket.remote_endpoint( ).address( ).to_string( ).c_str( ), sock_obj.socket.remote_endpoint( ).port( ) );
-                ip_addresses.insert( connet_data( sock_obj.socket.remote_endpoint( ).address( ).to_string( ),
-                                                  sock_obj.socket.remote_endpoint( ).port( ) ) );
+                ip_data.insert( connect_data( sock_obj.socket.remote_endpoint( ).address( ).to_string( ),
+                                              sock_obj.socket.remote_endpoint( ).port( ) ) );
 
                 asio::async_read(
                     sock_obj.socket,
@@ -100,8 +104,8 @@ void tcp_server::_member::async_accept( socket_object& sock_obj )
                         if ( error == asio::error::eof )
                         {
                             log( "クライアントが接続を切りました。: %s", error.message( ).c_str( ) );
-                            ip_addresses.erase( connet_data( sock_obj.socket.remote_endpoint( ).address( ).to_string( ),
-                                                             sock_obj.socket.remote_endpoint( ).port( ) ) );
+                            ip_data.erase( connect_data( sock_obj.socket.remote_endpoint( ).address( ).to_string( ),
+                                                         sock_obj.socket.remote_endpoint( ).port( ) ) );
 
                             // クライアントがいなくなったソケットは、もう一度接続します。
                             sock_obj.socket.close( );
@@ -162,7 +166,7 @@ bool tcp_server::init( std::string const& port, int num_of_client )
 std::vector<std::string> tcp_server::get_ip_addresses( )
 {
     std::vector<std::string> ret;
-    for ( auto& obj : _m->ip_addresses ) ret.emplace_back( obj );
+    for ( auto& obj : _m->ip_data ) ret.emplace_back( obj.ip_address );
     return ret;
 }
 }

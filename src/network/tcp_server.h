@@ -10,8 +10,8 @@ public:
     struct connect_data
     {
         connect_data( std::string const& ip_address, int port );
-        bool operator==( connect_data& other );
-        bool operator<( connect_data& other );
+        bool operator==( connect_data const& other ) const;
+        bool operator<( connect_data const& other ) const;
         std::string ip_address;
         int port;
     };
