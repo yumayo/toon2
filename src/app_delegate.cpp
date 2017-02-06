@@ -3,11 +3,22 @@
 #include "cocoslike.h"
 #include "network/tcp_server.h"
 #include "network/tcp_client.h"
+#include "cinder/Font.h"
 using namespace cinder;
+
 void app_delegate::setup( )
 {
     root = node::create( );
     root->set_name( "root" );
+
+    sol::state lua;
+    lua["root"] = root;
+    node::lua_setup( lua );
+    renderer::button::lua_setup( lua );
+    lua.script_file( getAssetPath( "sample.lua" ).string( ) );
+    node* hoge = lua["hoge"];
+    renderer::button* but = lua["but"];
+
 
     if ( auto p = renderer::button::create( vec2( 100, 100 ) ) )
     {
@@ -30,11 +41,11 @@ void app_delegate::setup( )
         p1->set_pivot( { 0, 0 } );
         auto act1 = action::move_to::create( 2.0F, vec2( 400, 200 ) );
         auto act2 = action::move_to::create( 2.0F, vec2( 200, 200 ) );
-        auto seq = action::sequence::create( action::ease<cinder::EaseInOutQuart>::create( act1 ),
+        auto seq = action::sequence::create( act1,
                                              action::delay::create( 1.0F ),
                                              action::ease<cinder::EaseInOutQuart>::create( act2 ),
                                              action::remove_self::create( ) );
-        //p1->run_action( seq );
+        p1->run_action( seq );
         root->add_child( p1 );
 
         if ( auto p2 = renderer::sprite::create( "hogehoge.png" ) )

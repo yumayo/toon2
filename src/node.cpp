@@ -468,3 +468,12 @@ cinder::mat3 node::get_world_matrix( )
 
     return result;
 }
+
+LUA_SETUP_CPP( node )
+{
+    lua.new_usertype<node>( "node",
+                            "create", &node::create,
+                            "position", sol::property( &node::get_position, &node::set_position ),
+                            "name", sol::property( &node::get_name, &node::set_name ),
+                            "add_child", &node::add_child );
+}

@@ -9,6 +9,10 @@ CREATE_CPP( button, cinder::vec2 const & size )
 {
     CREATE( button, size );
 }
+CREATE_CPP( button, float x, float y )
+{
+    CREATE( button, { x, y } );
+}
 bool button::init( cinder::vec2 const& size )
 {
     set_schedule_mouse_event( );
@@ -102,5 +106,15 @@ bool button::hit_point( cinder::vec2 point )
     hit += hit_point_polygon_2d( a, c, d, point );
 
     return hit != 0;
+}
+
+LUA_SETUP_CPP( button )
+{
+    lua.new_usertype<button>( "button",
+                              "create", [ ] ( vec2 const& size ) { return button::create( size ); },
+                              "create", [ ] ( float size_x, float size_y ) { return button::create( { size_x, size_y } ); },
+                              "position", sol::property( &node::get_position, &node::set_position ),
+                              "name", sol::property( &node::get_name, &node::set_name ),
+                              "add_child", &node::add_child );
 }
 }

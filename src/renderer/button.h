@@ -6,6 +6,7 @@ namespace renderer
     {
     public:
         CREATE_H( button, cinder::vec2 const& size );
+        CREATE_H( button, float x, float y );
         bool init( cinder::vec2 const& size );
         virtual void render( ) override;
         virtual bool mouse_began( cinder::app::MouseEvent event ) override;
@@ -20,5 +21,7 @@ namespace renderer
         uint32_t _id = 0;
     private:
         bool hit_point( cinder::vec2 point );
+    public:
+        LUA_SETUP_H( button );
     };
 }
