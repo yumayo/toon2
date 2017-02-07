@@ -26,4 +26,15 @@ void move_to::step( float t )
     auto const pos = vec2( ease_liner( t, from.x, to.x ), ease_liner( t, from.y, to.y ) );
     _target.lock( )->set_position( pos );
 }
+
+#define l_class move_to
+#include "lua_define.h"
+LUA_SETUP_CPP( l_class )
+{
+    l_new( move_to
+           , l_base( finite_time_action )
+           , l_set( create )
+    );
+}
+#include "lua_undef.h"
 }

@@ -11,5 +11,7 @@ public:
     bool init( );
 public:
     void update( float delta ) override;
+public:
+    LUA_SETUP_H( remove_self );
 };
 }

@@ -108,13 +108,15 @@ bool button::hit_point( cinder::vec2 point )
     return hit != 0;
 }
 
-LUA_SETUP_CPP( button )
+#define l_class button
+#include "lua_define.h"
+LUA_SETUP_CPP( l_class )
 {
-    lua.new_usertype<button>( "button",
-                              "create", [ ] ( vec2 const& size ) { return button::create( size ); },
-                              "create", [ ] ( float size_x, float size_y ) { return button::create( { size_x, size_y } ); },
-                              "position", sol::property( &node::get_position, &node::set_position ),
-                              "name", sol::property( &node::get_name, &node::set_name ),
-                              "add_child", &node::add_child );
+    l_new( button
+           , l_base( node )
+           , "create", sol::overload( [ ] ( vec2 const& size ) { return l_class::create( size ); }, 
+                                      [ ] ( float size_x, float size_y ) { return l_class::create( { size_x, size_y } ); } )
+    );
 }
+#include "lua_undef.h"
 }

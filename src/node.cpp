@@ -329,10 +329,10 @@ bool node::get_visible( )
 {
     return _visible;
 }
-void node::add_child( node_weak const& value )
+void node::add_child( std::shared_ptr<node> const& value )
 {
-    value.lock( )->_parent = shared_from_this( );
-    _children.emplace_back( std::move( value.lock( ) ) );
+    value->_parent = shared_from_this( );
+    _children.emplace_back( std::move( value ) );
 }
 node_weak node::get_child_by_name( std::string const & name )
 {
@@ -439,10 +439,10 @@ node_weak node::_get_root( )
     }
 }
 
-void node::run_action( action::action_weak const & action )
+void node::run_action( std::shared_ptr<action::action> const & action )
 {
-    _action_manager.add_action( action, shared_from_this( ), !_running );
-    action.lock( )->setup( );
+    _action_manager.add_action( std::move( action ), shared_from_this( ), !_running );
+    action->setup( );
 }
 
 cinder::mat3 node::get_world_matrix( )
@@ -469,11 +469,40 @@ cinder::mat3 node::get_world_matrix( )
     return result;
 }
 
-LUA_SETUP_CPP( node )
+#define l_class node
+#include "lua_define.h"
+LUA_SETUP_CPP( l_class )
 {
-    lua.new_usertype<node>( "node",
-                            "create", &node::create,
-                            "position", sol::property( &node::get_position, &node::set_position ),
-                            "name", sol::property( &node::get_name, &node::set_name ),
-                            "add_child", &node::add_child );
+    l_new( node
+           , l_set( create )
+           , l_prop( schedule_update )
+           , l_prop( schedule_mouse_event )
+           , l_prop( schedule_touch_event )
+           , l_prop( position )
+           , l_prop( scale )
+           , l_prop( content_size )
+           , l_prop( rotation )
+           , l_prop( anchor_point )
+           , l_prop( pivot )
+           , l_prop( color )
+           , l_readonly( children )
+           , l_prop( parent )
+           , l_prop( tag )
+           , l_prop( order )
+           , l_prop( name )
+           , l_prop( running )
+           , l_prop( visible )
+           , l_set( add_child )
+           , l_set( get_child_by_name )
+           , l_set( get_child_by_tag )
+           , l_set( remove_child )
+           , l_set( remove_child_by_name )
+           , l_set( remove_child_by_tag )
+           , l_set( remove_all_children )
+           , l_set( remove_from_parent )
+           , l_set( get_root )
+           , l_set( run_action )
+           , l_set( get_world_matrix )
+    );
 }
+#include "lua_undef.h"

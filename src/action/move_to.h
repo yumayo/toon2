@@ -14,5 +14,7 @@ private:
 private:
     cinder::vec2 _start_position;
     cinder::vec2 _position;
+public:
+    LUA_SETUP_H( move_to );
 };
 }

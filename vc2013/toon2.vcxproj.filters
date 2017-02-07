@@ -96,12 +96,6 @@
     <ClInclude Include="..\src\action\ease.h">
       <Filter>Source Files\action</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\renderer\renderers.h">
-      <Filter>Source Files\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\actions.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\network\tcp_server.h">
       <Filter>Source Files\network</Filter>
     </ClInclude>
@@ -191,6 +185,18 @@
     </ClInclude>
     <ClInclude Include="..\src\lualib\lzio.h">
       <Filter>Source Files\lualib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\lua_define.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\lua_undef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\action\action.hpp">
+      <Filter>Source Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\renderer\renderer.hpp">
+      <Filter>Source Files\renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

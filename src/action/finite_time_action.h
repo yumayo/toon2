@@ -6,6 +6,7 @@ class finite_time_action : public action
 {
 public:
     CREATE_H( finite_time_action );
+    virtual ~finite_time_action( ) { }
 
 public:
     bool init( );
@@ -24,5 +25,7 @@ protected:
 public:
     void set_duration( float value );
     float get_duration( );
+public:
+    LUA_SETUP_H( finite_time_action );
 };
 }

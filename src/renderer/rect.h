@@ -1,5 +1,5 @@
 #pragma once
-#include "cocoslike.h"
+#include "../node.h"
 
 namespace renderer
 {
@@ -9,5 +9,7 @@ namespace renderer
         CREATE_H( rect, cinder::vec2 const& size );
         bool init( cinder::vec2 const& size );
         void render( ) override;
+    public:
+        LUA_SETUP_H( rect );
     };
 }

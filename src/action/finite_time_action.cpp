@@ -35,4 +35,17 @@ bool finite_time_action::is_done( )
 {
     return _duration <= _time;
 }
+
+#define l_class finite_time_action
+#include "lua_define.h"
+LUA_SETUP_CPP( l_class )
+{
+    l_new( finite_time_action
+           , l_base( action )
+           , l_set( create )
+           , l_prop( time )
+           , l_prop( duration )
+    );
+}
+#include "lua_undef.h"
 }

@@ -146,7 +146,7 @@ public:
     bool get_visible( );
 
 public:
-    void add_child( node_weak const& value );
+    void add_child( std::shared_ptr<node> const& value );
     node_weak get_child_by_name( std::string const& name );
     node_weak get_child_by_tag( int tag );
     void remove_child( node_weak const& child );
@@ -167,7 +167,7 @@ public:
 protected:
     action::action_manager _action_manager;
 public:
-    void run_action( action::action_weak const& action );
+    void run_action( std::shared_ptr<action::action> const& action );
 
 public:
     cinder::mat3 get_world_matrix( );

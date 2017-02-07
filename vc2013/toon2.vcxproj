@@ -173,10 +173,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\cocoslike.h" />
+    <ClInclude Include="..\include\lua_define.h" />
+    <ClInclude Include="..\include\lua_undef.h" />
     <ClInclude Include="..\include\Resources.h" />
     <ClInclude Include="..\include\sol.hpp" />
     <ClInclude Include="..\src\action\action.h" />
-    <ClInclude Include="..\src\action\actions.h" />
+    <ClInclude Include="..\src\action\action.hpp" />
     <ClInclude Include="..\src\action\ease.h" />
     <ClInclude Include="..\src\action\action_manager.h" />
     <ClInclude Include="..\src\action\delay.h" />
@@ -222,7 +224,7 @@
     <ClInclude Include="..\src\app_delegate.h" />
     <ClInclude Include="..\src\renderer\button.h" />
     <ClInclude Include="..\src\renderer\rect.h" />
-    <ClInclude Include="..\src\renderer\renderers.h" />
+    <ClInclude Include="..\src\renderer\renderer.hpp" />
     <ClInclude Include="..\src\renderer\sprite.h" />
     <ClInclude Include="..\src\utility.h" />
   </ItemGroup>

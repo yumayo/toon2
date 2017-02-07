@@ -76,4 +76,18 @@ bool action::get_pause( )
 {
     return _pause;
 }
+
+#define l_class action
+#include "lua_define.h"
+LUA_SETUP_CPP( l_class )
+{
+    l_new( action
+           , l_set( create )
+           , l_prop( target )
+           , l_prop( tag )
+           , l_prop( name )
+           , l_prop( pause )
+    );
+}
+#include "lua_undef.h"
 }

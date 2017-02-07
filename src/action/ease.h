@@ -8,7 +8,7 @@ template<typename ease_type>
 class ease : public action
 {
 public:
-    static std::shared_ptr<ease<ease_type>> create( std::shared_ptr<finite_time_action> const& time_action );
+    CREATE_H( ease<ease_type>, std::shared_ptr<finite_time_action> const& time_action );
     bool init( std::shared_ptr<finite_time_action> const& time_action );
 public:
     virtual void setup( ) override;
@@ -17,15 +17,14 @@ public:
 protected:
     ease_type ease_object;
     std::shared_ptr<finite_time_action> _time_action;
+public:
+    LUA_SETUP_H( ease<ease_type> );
 };
 
 template<typename ease_type>
-inline std::shared_ptr<ease<ease_type>> ease<ease_type>::create( std::shared_ptr<finite_time_action> const & time_action )
+inline CREATE_CPP( ease<ease_type>, std::shared_ptr<finite_time_action> const & time_action )
 {
-    auto ret = std::make_shared<ease<ease_type>>( );
-    if ( ret && ret->init( time_action ) );
-    else ret.reset( );
-    return std::move( ret );
+    CREATE( ease<ease_type>, time_action );
 }
 template<typename ease_type>
 inline bool ease<ease_type>::init( std::shared_ptr<finite_time_action> const & time_action )

@@ -1,6 +1,7 @@
 #pragma once
 #include "cinder/app/App.h"
 #include "../forward.h"
+#include "sol.hpp"
 namespace action
 {
 class action
@@ -13,6 +14,7 @@ public:
 
 public:
     CREATE_H( action );
+    virtual ~action( ) { }
     bool init( );
     void setup( node_weak target, bool pause );
 public:
@@ -49,5 +51,7 @@ public:
 
 protected:
     size_t _hash = 0;
+public:
+    LUA_SETUP_H( action );
 };
 }

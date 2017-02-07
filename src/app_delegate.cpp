@@ -13,63 +13,77 @@ void app_delegate::setup( )
 
     sol::state lua;
     lua["root"] = root;
-    node::lua_setup( lua );
-    renderer::button::lua_setup( lua );
+    lua.new_usertype<vec2>( "vec2"
+                            , sol::constructors< sol::types<>
+                            , sol::types<vec2>
+                            , sol::types<float>
+                            , sol::types<float, float>
+                            >( )
+                            );
+    lua.new_usertype<ColorA>( "color"
+                              , sol::constructors< sol::types<>
+                              , sol::types<ColorA>
+                              , sol::types<float, float, float, float>
+                              >( )
+                              );
+    lua["pi"] = M_PI;
+
+    renderer::lua_setup( lua );
+    action::lua_setup( lua );
+   
     lua.script_file( getAssetPath( "sample.lua" ).string( ) );
-    node* hoge = lua["hoge"];
-    renderer::button* but = lua["but"];
 
 
-    if ( auto p = renderer::button::create( vec2( 100, 100 ) ) )
-    {
-        p->set_color( { 0, 0, 1, 1 } );
-        p->set_position( { 100, 100 } );
-        p->set_scale( { 0.5, 0.5 } );
-        p->set_rotation( M_PI / 4 );
-        p->set_name( "blue rect" );
-        root->add_child( p );
-    }
+    //if ( auto p = renderer::button::create( vec2( 100, 100 ) ) )
+    //{
+    //    p->set_color( { 0, 0, 1, 1 } );
+    //    p->set_position( { 100, 100 } );
+    //    p->set_scale( { 0.5, 0.5 } );
+    //    p->set_rotation( M_PI / 4 );
+    //    p->set_name( "blue rect" );
+    //    root->add_child( p );
+    //}
 
-    if ( auto p1 = renderer::button::create( vec2( 100, 100 ) ) )
-    {
-        p1->set_position( { 200, 200 } );
-        p1->set_color( { 1, 0, 1, 1 } );
-        p1->set_scale( { 2, 2 } );
-        p1->set_rotation( M_PI / 3 );
-        p1->set_name( "p1 sprite" );
-        p1->set_anchor_point( { 0.5, 0.5 } );
-        p1->set_pivot( { 0, 0 } );
-        auto act1 = action::move_to::create( 2.0F, vec2( 400, 200 ) );
-        auto act2 = action::move_to::create( 2.0F, vec2( 200, 200 ) );
-        auto seq = action::sequence::create( act1,
-                                             action::delay::create( 1.0F ),
-                                             action::ease<cinder::EaseInOutQuart>::create( act2 ),
-                                             action::remove_self::create( ) );
-        p1->run_action( seq );
-        root->add_child( p1 );
+    //if ( auto p1 = renderer::button::create( vec2( 100, 100 ) ) )
+    //{
+    //    p1->set_position( { 200, 200 } );
+    //    p1->set_color( { 1, 0, 1, 1 } );
+    //    p1->set_scale( { 2, 2 } );
+    //    p1->set_rotation( M_PI / 3 );
+    //    p1->set_name( "p1 sprite" );
+    //    p1->set_anchor_point( { 0.5, 0.5 } );
+    //    p1->set_pivot( { 0, 0 } );
+    //    auto act1 = action::move_to::create( 2.0F, vec2( 400, 200 ) );
+    //    auto act2 = action::move_to::create( 2.0F, vec2( 200, 200 ) );
+    //    auto seq = action::sequence::create( act1,
+    //                                         action::delay::create( 1.0F ),
+    //                                         action::ease<cinder::EaseInOutQuart>::create( act2 ),
+    //                                         action::remove_self::create( ) );
+    //    p1->run_action( seq );
+    //    root->add_child( p1 );
 
-        if ( auto p2 = renderer::sprite::create( "hogehoge.png" ) )
-        {
-            p2->set_position( { 0, 0 } );
-            p2->set_scale( { 0.25F, 0.25F } );
-            //p2->set_color( { 0, 1, 0, 1 } );
-            p2->set_name( "p2 rect" );
-            p1->add_child( p2 );
+    //    if ( auto p2 = renderer::sprite::create( "hogehoge.png" ) )
+    //    {
+    //        p2->set_position( { 0, 0 } );
+    //        p2->set_scale( { 0.25F, 0.25F } );
+    //        //p2->set_color( { 0, 1, 0, 1 } );
+    //        p2->set_name( "p2 rect" );
+    //        p1->add_child( p2 );
 
-            if ( auto p3 = renderer::button::create( vec2( 100, 100 ) ) )
-            {
-                p3->set_position( { 100, 0 } );
-                p3->set_color( { 0.2F, 1, 0.5F, 1 } );
-                p3->set_name( "p3 rect" );
-                p2->add_child( p3 );
-            }
-        }
-    }
+    //        if ( auto p3 = renderer::button::create( vec2( 100, 100 ) ) )
+    //        {
+    //            p3->set_position( { 100, 0 } );
+    //            p3->set_color( { 0.2F, 1, 0.5F, 1 } );
+    //            p3->set_name( "p3 rect" );
+    //            p2->add_child( p3 );
+    //        }
+    //    }
+    //}
 
-    if ( auto t = network::tcp_server::create( "25565", 7 ) )
-    {
-        root->add_child( t );
-    }
+    //if ( auto t = network::tcp_server::create( "25565", 7 ) )
+    //{
+    //    root->add_child( t );
+    //}
 }
 void app_delegate::update( )
 {

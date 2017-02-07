@@ -12,4 +12,14 @@ bool delay::init( float duration )
     _duration = duration;
     return true;
 }
+#define l_class delay
+#include "lua_define.h"
+LUA_SETUP_CPP( l_class )
+{
+    l_new( delay
+           , l_base( finite_time_action )
+           , l_set( create )
+    );
+}
+#include "lua_undef.h"
 }
