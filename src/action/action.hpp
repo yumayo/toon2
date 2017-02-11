@@ -6,6 +6,7 @@
 #include "remove_self.h"
 #include "sequence.h"
 #include "spawn.h"
+#include "repeat_forever.h"
 
 namespace action
 {
@@ -27,6 +28,8 @@ inline void lua_setup( sol::state& lua )
     remove_self::lua_setup( lua );
 
     move_to::lua_setup( lua );
+
+    repeat_forever::lua_setup( lua );
 
     ease<cinder::EaseNone>::lua_setup( lua );
     ease<cinder::EaseInQuad>::lua_setup( lua );

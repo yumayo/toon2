@@ -2,6 +2,8 @@
 #include "timeline.h"
 namespace action
 {
+// 複数のアクションを並列に実行します。
+// final class
 class spawn : public timeline
 {
 public:
@@ -14,9 +16,10 @@ public:
     CREATE_H( spawn, sol::variadic_args const& args );
     bool init( sol::variadic_args const& args );
 public:
-    void setup( ) override;
-    bool is_done( ) override;
-    void update( float delta ) override;
+    void setup( ) final override;
+    bool is_done( )  final override;
+    void update( float delta )  final override;
+    void restart( )  final override;
 public:
     LUA_SETUP_H( spawn );
 };

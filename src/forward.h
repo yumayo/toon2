@@ -10,15 +10,20 @@ auto ret = std::make_shared<__TYPE__>( ); \
 if ( ret && ret->init( __VA_ARGS__ ) ); \
 else ret.reset( ); \
 return std::move( ret )
-#define assert_log(cond, msg) \
+#ifdef assert_disable
+#define assert_log(cond, msg, return_value) ((void)0)
+#else
+#define assert_log(cond, msg, return_value) \
 do \
 { \
     if ( !( cond ) ) \
     { \
         log( "Assert failed: %s", msg ); \
         assert( cond ); \
+        return_value; \
     } \
 } while ( 0 )
+#endif
 
 class node;
 using node_weak = std::weak_ptr<node>;

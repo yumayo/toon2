@@ -15,6 +15,10 @@ void finite_time_action::update( float delta )
     _time += delta;
     step( _time / _duration );
 }
+void finite_time_action::restart( )
+{
+    _time = 0.0F;
+}
 void finite_time_action::set_time( float value )
 {
     _time = value;

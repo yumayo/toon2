@@ -12,7 +12,10 @@ private:
     void touchesBegan( cinder::app::TouchEvent event ) override;
     void touchesMoved( cinder::app::TouchEvent event ) override;
     void touchesEnded( cinder::app::TouchEvent event ) override;
+    void keyDown( cinder::app::KeyEvent event ) override;
 private:
-    std::shared_ptr<node> root;
+    void lua_run( );
+private:
+    std::shared_ptr<node> _root;
     double _prev_second = 0.0;
 };

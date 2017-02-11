@@ -20,7 +20,7 @@ void remove_self::update( float delta )
 LUA_SETUP_CPP( l_class )
 {
     l_new( remove_self
-           , l_base( action )
+           , l_base( finite_time_action )
            , l_set( create )
     );
 }

@@ -41,7 +41,7 @@ struct tcp_server::_member
         , thread( )
         , port( port )
     {
-        assert_log( 1 <= num_of_client, "クライアントの数は一つ以上でないといけません。" );
+        assert_log( 1 <= num_of_client, "クライアントの数は一つ以上でないといけません。", return );
         acceptor = std::make_shared<tcp::acceptor>( io, tcp::endpoint( tcp::v4( ), boost::lexical_cast<int>( port ) ) );
         // 一つはクライアントの接続を切る役割を持たせています。
         for ( int i = 0; i < num_of_client + 1; ++i )

@@ -19,7 +19,7 @@ bool sprite::init( std::string const& relative_path )
 {
     if ( !init( ) ) return false;
 
-    assert_log( !app::getAssetPath( relative_path ).empty( ), "ファイルが見つかりません。" );
+    assert_log( !app::getAssetPath( relative_path ).empty( ), "ファイルが見つかりません。", return false );
 
     _texture = gl::Texture::create( loadImage( app::loadAsset( relative_path ) ) );
     _content_size = _texture->getSize( );

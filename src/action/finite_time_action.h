@@ -13,6 +13,9 @@ public:
 public:
     virtual bool is_done( ) override;
     virtual void update( float delta ) override;
+public:
+    // 新しいバーチャル関数
+    virtual void restart( );
 
 protected:
     float _time = 0.0F;

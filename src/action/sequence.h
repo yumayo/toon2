@@ -2,6 +2,8 @@
 #include "timeline.h"
 namespace action
 {
+// 複数のアクションを直列に実行します。
+// final class
 class sequence : public timeline
 {
 public:
@@ -11,14 +13,15 @@ public:
     template <class Head, class... Tail>
     bool init( Head const& head, Tail const& ...tail );
 public:
-    void setup( ) override;
-    bool is_done( ) override;
-    void update( float delta ) override;
+    void setup( ) final override;
+    bool is_done( ) final override;
+    void update( float delta ) final override;
+    void restart( ) final override;
 public:
     CREATE_H( sequence, sol::variadic_args const& args );
     bool init( sol::variadic_args const& args );
 private:
-    std::vector<std::shared_ptr<action>>::iterator _target_action;
+    std::vector<std::shared_ptr<finite_time_action>>::iterator _target_action;
 public:
     LUA_SETUP_H( sequence );
 };

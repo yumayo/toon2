@@ -13,7 +13,7 @@ bool spawn::init( sol::variadic_args const & args )
 {
     for ( auto& act : args )
     {
-        std::shared_ptr<action> sa = act;
+        std::shared_ptr<finite_time_action> sa = act;
         _actions.emplace_back( std::move( sa ) );
     }
     return init( );
@@ -41,17 +41,27 @@ void spawn::update( float delta )
         act->update( delta );
     }
 }
-
+void spawn::restart( )
+{
+    timeline::restart( );
+    if ( is_done( ) )
+    {
+        for ( auto const& act : _actions )
+        {
+            act->restart( );
+        }
+        init( );
+        setup( );
+    }
+}
 #define l_class spawn
 #include "lua_define.h"
 LUA_SETUP_CPP( l_class )
 {
-    using sa = std::shared_ptr<action> const&;
     l_new( spawn,
            l_base( timeline ),
            "create", [ ] ( sol::variadic_args const& args ) { return spawn::create( args ); }
     );
-    sol::table t;
 }
 #include "lua_undef.h"
 }

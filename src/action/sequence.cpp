@@ -32,27 +32,36 @@ void sequence::update( float delta )
         setup( );
     }
 }
-
+void sequence::restart( )
+{
+    timeline::restart( );
+    if ( is_done( ) )
+    {
+        for ( auto const& act : _actions )
+        {
+            act->restart( );
+        }
+        init( );
+        setup( );
+    }
+}
 bool sequence::init( sol::variadic_args const& args )
 {
     for ( auto& act : args )
     {
-        std::shared_ptr<action> sa = act;
+        std::shared_ptr<finite_time_action> sa = act;
         _actions.emplace_back( std::move( sa ) );
     }
     return init( );
 }
-
 #define l_class sequence
 #include "lua_define.h"
 LUA_SETUP_CPP( l_class )
 {
-    using sa = std::shared_ptr<action> const&;
     l_new( sequence,
            l_base( timeline ),
            "create", [ ] ( sol::variadic_args const& args ) { return sequence::create( args ); }
     );
-    sol::table t;
 }
 #include "lua_undef.h"
 }

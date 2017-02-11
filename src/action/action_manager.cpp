@@ -14,7 +14,7 @@ void action_manager::add_action( action_weak const& action, node_weak const& tar
 
 action_weak action_manager::get_action_by_name( std::string const & name )
 {
-    assert_log( !name.empty( ), "無効な名前です。" );
+    assert_log( !name.empty( ), "無効な名前です。", return action_weak( ) );
 
     std::hash<std::string> h;
     size_t hash = h( name );
@@ -33,7 +33,7 @@ action_weak action_manager::get_action_by_name( std::string const & name )
 
 action_weak action_manager::get_action_by_tag( int tag )
 {
-    assert_log( tag != node::INVALID_TAG, "無効なタグです。" );
+    assert_log( tag != node::INVALID_TAG, "無効なタグです。", return action_weak( ) );
 
     auto itr = boost::find_if( _actions, [ this, tag ] ( std::shared_ptr<action>& act )
     {
@@ -65,7 +65,7 @@ void action_manager::remove_action( action_weak const& act_weak )
 
 void action_manager::remove_action_by_tag( int tag )
 {
-    assert_log( tag != node::INVALID_TAG, "無効なタグです。" );
+    assert_log( tag != node::INVALID_TAG, "無効なタグです。", return );
 
     auto act = this->get_action_by_tag( tag );
 
@@ -81,7 +81,7 @@ void action_manager::remove_action_by_tag( int tag )
 
 void action_manager::remove_action_by_name( std::string const & name )
 {
-    assert_log( !name.empty( ), "無効な名前です。" );
+    assert_log( !name.empty( ), "無効な名前です。", return );
 
     auto act = this->get_action_by_name( name );
 

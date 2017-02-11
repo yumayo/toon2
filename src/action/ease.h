@@ -1,11 +1,10 @@
 #pragma once
-#include "action.h"
 #include "finite_time_action.h"
 #include "cinder/Easing.h"
 namespace action
 {
 template<typename ease_type>
-class ease : public action
+class ease : public finite_time_action
 {
 public:
     CREATE_H( ease<ease_type>, std::shared_ptr<finite_time_action> const& time_action );
@@ -14,6 +13,7 @@ public:
     virtual void setup( ) override;
     virtual bool is_done( ) override;
     virtual void update( float delta ) override;
+    virtual void restart( ) override;
 protected:
     ease_type ease_object;
     std::shared_ptr<finite_time_action> _time_action;
@@ -47,5 +47,11 @@ inline void ease<ease_type>::update( float delta )
 {
     _time_action->set_time( _time_action->get_time( ) + delta );
     _time_action->step( ease_object( _time_action->get_time( ) / _time_action->get_duration( ) ) );
+}
+template<typename ease_type>
+inline void ease<ease_type>::restart( )
+{
+    finite_time_action::restart( );
+    _time_action->restart( );
 }
 }
