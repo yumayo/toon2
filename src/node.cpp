@@ -1,6 +1,6 @@
 ﻿#include "node.h"
 #include "cinder/gl/gl.h"
-#include "utility.h"
+#include "utility/assert_log.h"
 #include "boost/range/algorithm/for_each.hpp"
 using namespace cinder;
 CREATE_CPP( node )

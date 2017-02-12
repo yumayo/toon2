@@ -28,6 +28,9 @@
     <Filter Include="Source Files\lualib">
       <UniqueIdentifier>{7e660624-a177-47fc-8696-6bc66ce58848}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\utility">
+      <UniqueIdentifier>{ddce2b48-5ad8-46ab-904c-1f5777ac9d2e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -43,9 +46,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\app_delegate.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\utility.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\cocoslike.h">
@@ -198,6 +198,27 @@
     <ClInclude Include="..\src\renderer\renderer.hpp">
       <Filter>Source Files\renderer</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\renderer\label.h">
+      <Filter>Source Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\renderer\letter.h">
+      <Filter>Source Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utility\utf8.h">
+      <Filter>Source Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utility\assert_log.h">
+      <Filter>Source Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utility\collision.h">
+      <Filter>Source Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utility\string_utility.h">
+      <Filter>Source Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lua_setup_cinder.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -217,9 +238,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\app_delegate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\utility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\renderer\rect.cpp">
@@ -377,6 +395,24 @@
     </ClCompile>
     <ClCompile Include="..\src\lualib\lzio.c">
       <Filter>Source Files\lualib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\renderer\label.cpp">
+      <Filter>Source Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\renderer\letter.cpp">
+      <Filter>Source Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\utility\utf8.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\utility\collision.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\utility\string_utility.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lua_setup_cinder.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

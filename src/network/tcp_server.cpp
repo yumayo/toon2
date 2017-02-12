@@ -6,7 +6,7 @@
 using asio::ip::tcp;
 #include "boost/lexical_cast.hpp"
 #include "boost/bind.hpp"
-#include "../utility.h"
+#include "../utility/assert_log.h"
 #include <set>
 namespace network
 {

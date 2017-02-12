@@ -1,6 +1,6 @@
 ﻿#include "button.h"
 #include "cinder/gl/gl.h"
-#include "../utility.h"
+#include "../utility/collision.h"
 #include "boost/range/algorithm/find_if.hpp"
 using namespace cinder;
 namespace renderer

@@ -8,9 +8,13 @@ p0.rotation = pi / 4.0
 p0.name = "blue rect"
 root:add_child(p0)
 
+text = label.create( "ほげほげ", "sample.otf", 48 )
+text.position = vec2.new(100, 100)
+root:add_child(text)
+
 p1 = button.create( size )
 if p1 then
-    p1.position = vec2.new(200, 200)
+    p1.position = vec2.new( 200, 200 )
     p1.color = color.new(1, 0, 1, 1)
     p1.scale = vec2.new(2, 2)
     p1.rotation = pi / 3
@@ -23,7 +27,7 @@ if p1 then
     seq = sequence.create(  EaseNone.create(act1),
                             delay.create(1.0),
                             EaseInOutQuart.create(act2) )
-    p1:run_action( EaseInOutQuart.create(act1) )
+    p1:run_action( repeat_forever.create( seq ) )
     root:add_child(p1)
 
     p2 = sprite.create( "hogehoge.png" )

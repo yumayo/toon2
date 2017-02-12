@@ -1,7 +1,7 @@
 ﻿#include "action_manager.h"
 #include "boost/range/algorithm/find_if.hpp"
 #include "boost/range/algorithm/remove_if.hpp"
-#include "../utility.h"
+#include "../utility/assert_log.h"
 #include "../node.h"
 namespace action
 {
