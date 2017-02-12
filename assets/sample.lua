@@ -28,6 +28,13 @@ if p1 then
                             delay.create(1.0),
                             EaseInOutQuart.create(act2) )
     p1:run_action( repeat_forever.create( seq ) )
+
+    -- コールバックのアクションが難しい。
+    -- 本当は出来るんだけど、weak_ptrとか使っちゃってごちゃごちゃしてる。
+    -- ナマポのほうがいいのかな？
+    -- ft = float_to.create(2.0, 100.0, 200.0, function(t) p0.position = vec2.new(t, p0.position.y) end )
+    -- p1:run_action(ft)
+
     root:add_child(p1)
 
     p2 = sprite.create( "hogehoge.png" )

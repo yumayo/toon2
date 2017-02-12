@@ -35,7 +35,7 @@ inline bool ease<ease_type>::init( std::shared_ptr<finite_time_action> const & t
 template<typename ease_type>
 inline void ease<ease_type>::setup( )
 {
-    _time_action->setup( _target, _pause );
+    _time_action->setup( _target.lock( ), _pause );
 }
 template<typename ease_type>
 inline bool ease<ease_type>::is_done( )

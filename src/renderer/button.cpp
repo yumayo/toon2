@@ -102,8 +102,8 @@ bool button::hit_point( cinder::vec2 point )
     auto d = vec2( md[2][0], md[2][1] );
 
     int hit = 0;
-    hit += hit_point_polygon_2d( a, b, c, point );
-    hit += hit_point_polygon_2d( a, c, d, point );
+    hit += utility::hit_point_polygon_2d( a, b, c, point );
+    hit += utility::hit_point_polygon_2d( a, c, d, point );
 
     return hit != 0;
 }

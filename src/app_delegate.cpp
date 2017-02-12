@@ -8,93 +8,18 @@
 #include "utility/assert_log.h"
 #include "utility/utf8.h"
 using namespace cinder;
-
-namespace sol
-{
-template <>
-struct lua_size<cinder::vec2> : std::integral_constant<int, 2> {};
-template <>
-struct lua_size<cinder::ColorA> : std::integral_constant<int, 4> {};
-namespace stack
-{
-template <>
-struct checker<cinder::vec2> {
-    template <typename Handler>
-    static bool check( lua_State* L, int index, Handler&& handler, record& tracking )
-    {
-        int absolute_index = lua_absindex( L, index );
-        bool success =
-            stack::check<float>( L, absolute_index - 1, handler ) &&
-            stack::check<float>( L, absolute_index - 0, handler );
-        tracking.use( 2 );
-        return success;
-    }
-};
-template <>
-struct getter<cinder::vec2> {
-    static cinder::vec2 get( lua_State* L, int index, record& tracking ) {
-        int absolute_index = lua_absindex( L, index );
-        float x = stack::get<float>( L, absolute_index - 1 );
-        float y = stack::get<float>( L, absolute_index - 0 );
-        tracking.use( 2 );
-        return cinder::vec2 { x, y };
-    }
-};
-template <>
-struct pusher<cinder::vec2> {
-    static int push( lua_State* L, const cinder::vec2& things ) {
-        int amount;
-        amount += stack::push( L, things.x );
-        amount += stack::push( L, things.y );
-        return amount;
-    }
-};
-template <>
-struct checker<cinder::ColorA> {
-    template <typename Handler>
-    static bool check( lua_State* L, int index, Handler&& handler, record& tracking )
-    {
-        int absolute_index = lua_absindex( L, index );
-        bool success =
-            stack::check<float>( L, absolute_index - 3, handler ) &&
-            stack::check<float>( L, absolute_index - 2, handler ) &&
-            stack::check<float>( L, absolute_index - 1, handler ) &&
-            stack::check<float>( L, absolute_index - 0, handler );
-        tracking.use( 4 );
-        return success;
-    }
-};
-template <>
-struct getter<cinder::ColorA> {
-    static cinder::ColorA get( lua_State* L, int index, record& tracking ) {
-        int absolute_index = lua_absindex( L, index );
-        float r = stack::get<float>( L, absolute_index - 3 );
-        float g = stack::get<float>( L, absolute_index - 2 );
-        float b = stack::get<float>( L, absolute_index - 1 );
-        float a = stack::get<float>( L, absolute_index - 0 );
-        tracking.use( 4 );
-        return cinder::ColorA { r, g, b, a };
-    }
-};
-template <>
-struct pusher<cinder::ColorA> {
-    static int push( lua_State* L, const cinder::ColorA& things ) {
-        int amount;
-        amount += stack::push( L, things.r );
-        amount += stack::push( L, things.g );
-        amount += stack::push( L, things.b );
-        amount += stack::push( L, things.a );
-        return amount;
-    }
-};
-}
-}
-
+using namespace utility;
 void app_delegate::setup( )
 {
     _root = node::create( );
     _root->set_name( "root" );
     lua_run( );
+
+    //auto test = renderer::rect::create( { 100, 100 } );
+    //test->set_name( "test" );
+    //test->run_action( action::float_to::create( 2.0, 100.0, 200.0, [ test ] ( float t ) { test->set_position( { t, 0 } );
+    //} ) );
+    //_root->add_child( test );
 
     //if ( auto t = network::tcp_server::create( "25565", 7 ) )
     //{
@@ -144,17 +69,11 @@ void app_delegate::keyDown( cinder::app::KeyEvent event )
         lua_run( );
     }
 }
-#include "lua_setup_cinder.h"
+#include "utility/lua_setup_all.h"
 void app_delegate::lua_run( )
 {
-    sol::state lua;
+    auto lua = utility::lua_make( );
     lua["root"] = _root;
-    cinder::lua_setup( lua );
-    lua["pi"] = M_PI;
-
-    node::lua_setup( lua );
-    renderer::lua_setup( lua );
-    action::lua_setup( lua );
 
     try
     {

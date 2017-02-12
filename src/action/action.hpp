@@ -20,6 +20,8 @@ inline void lua_setup( sol::state& lua )
 
     timeline::lua_setup( lua );
 
+    float_to::lua_setup( lua );
+
     sequence::lua_setup( lua );
     spawn::lua_setup( lua );
 

@@ -1,6 +1,7 @@
 ﻿#include "string_utility.h"
 #include <stdarg.h>
-
+namespace utility
+{
 std::string format( char const * str, ... )
 {
     const int max_string_length = ( 1024 * 100 );
@@ -26,6 +27,7 @@ void log( char const * str, ... )
     va_end( args );
     #endif
 }
+}
 
 namespace cinder
 {
@@ -33,7 +35,7 @@ namespace app
 {
 std::string cinder::app::loadString( std::string const & relative_path )
 {
-    return std::move( std::string( static_cast<char*>( loadAsset( relative_path )->getBuffer( )->getData( ) ) ) );
+    return static_cast<char*>( loadAsset( relative_path )->getBuffer( )->getData( ) );
 }
 }
 }

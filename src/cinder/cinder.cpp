@@ -1,5 +1,4 @@
-﻿#include "lua_setup_cinder.h"
-#include "forward.h"
+﻿#include "cinder.hpp"
 #include "cinder/Vector.h"
 #include "cinder/Color.h"
 namespace cinder

@@ -1,5 +1,6 @@
 ﻿#include "collision.h"
-
+namespace utility
+{
 int hit_point_polygon_2d( cinder::vec2 a, cinder::vec2 b, cinder::vec2 c, cinder::vec2 point )
 {
     cinder::vec2 AB = b - a;
@@ -23,4 +24,5 @@ int hit_point_polygon_2d( cinder::vec2 a, cinder::vec2 b, cinder::vec2 c, cinder
     {
         return 0;
     }
+}
 }

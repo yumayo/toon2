@@ -7,6 +7,7 @@ using asio::ip::tcp;
 #include "boost/lexical_cast.hpp"
 #include "boost/bind.hpp"
 #include "../utility/assert_log.h"
+using namespace utility;
 namespace network
 {
 struct tcp_client::_member

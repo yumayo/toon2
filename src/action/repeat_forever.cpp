@@ -12,7 +12,7 @@ bool repeat_forever::init( std::shared_ptr<finite_time_action> time_action )
 }
 void repeat_forever::setup( )
 {
-    _time_action->setup( _target, _pause );
+    _time_action->setup( _target.lock( ), _pause );
 }
 bool repeat_forever::is_done( )
 {

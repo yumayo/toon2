@@ -8,6 +8,7 @@ using asio::ip::tcp;
 #include "boost/bind.hpp"
 #include "../utility/assert_log.h"
 #include <set>
+using namespace utility;
 namespace network
 {
 struct socket_object

@@ -10,7 +10,7 @@ bool action::init( )
 {
     return true;
 }
-void action::setup( node_weak target, bool pause )
+void action::setup( std::shared_ptr<node> const& target, bool pause )
 {
     _target = target;
     _pause = pause;
@@ -34,7 +34,7 @@ void action::step( float t )
 {
 }
 
-void action::set_target( node_weak const & value )
+void action::set_target( std::shared_ptr<node> const& value )
 {
     _target = value;
 }

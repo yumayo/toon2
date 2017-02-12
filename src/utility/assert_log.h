@@ -8,7 +8,7 @@ do \
 { \
     if ( !( cond ) ) \
     { \
-        log( "Assert failed: %s", msg ); \
+        utility::log( "Assert failed: %s", msg ); \
         assert( cond ); \
         return_value; \
     } \

@@ -3,6 +3,7 @@
 #include "utility/assert_log.h"
 #include "boost/range/algorithm/for_each.hpp"
 using namespace cinder;
+using namespace utility;
 CREATE_CPP( node )
 {
     CREATE( node );
@@ -336,7 +337,7 @@ void node::add_child( std::shared_ptr<node> const& value )
 }
 node_weak node::get_child_by_name( std::string const & name )
 {
-    assert_log( name.empty( ), "無効な名前です。", return node_weak( ) );
+    assert_log( !name.empty( ), "無効な名前です。", return node_weak( ) );
 
     std::hash<std::string> h;
     size_t hash = h( name );
@@ -354,7 +355,7 @@ node_weak node::get_child_by_name( std::string const & name )
 }
 node_weak node::get_child_by_tag( int tag )
 {
-    assert_log( tag != node::INVALID_TAG, "無効なタグです。", return node_weak( ) );
+    assert_log( tag == node::INVALID_TAG, "無効なタグです。", return node_weak( ) );
 
     auto itr = std::find_if( std::begin( _children ), std::end( _children ), [ this, tag ] ( std::shared_ptr<node>& n )
     {
@@ -379,7 +380,7 @@ void node::remove_child( node_weak const& child )
 }
 void node::remove_child_by_name( std::string const & name )
 {
-    assert_log( name.empty( ), "無効な名前です。", return );
+    assert_log( !name.empty( ), "無効な名前です。", return );
 
     node_weak child = this->get_child_by_name( name );
 
@@ -394,7 +395,7 @@ void node::remove_child_by_name( std::string const & name )
 }
 void node::remove_child_by_tag( int tag )
 {
-    assert_log( tag != node::INVALID_TAG, "無効なタグです。", return );
+    assert_log( tag == node::INVALID_TAG, "無効なタグです。", return );
 
     node_weak child = this->get_child_by_tag( tag );
 
@@ -441,7 +442,7 @@ node_weak node::_get_root( )
 
 void node::run_action( std::shared_ptr<action::action> const & action )
 {
-    _action_manager.add_action( std::move( action ), shared_from_this( ), !_running );
+    _action_manager.add_action( action, shared_from_this( ), !_running );
     action->setup( );
 }
 

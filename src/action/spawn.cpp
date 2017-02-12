@@ -22,7 +22,7 @@ void spawn::setup( )
 {
     for ( auto& act : _actions )
     {
-        act->setup( _target, _pause );
+        act->setup( _target.lock( ), _pause );
     }
 }
 bool spawn::is_done( )

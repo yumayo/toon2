@@ -1,6 +1,7 @@
 ﻿#include "utf8.h"
 #include "../utility/assert_log.h"
-
+namespace utility
+{
 bool utf8::isLegalUTF8( const utf8_head *source, int length )
 {
     utf8_head a;
@@ -73,4 +74,5 @@ utf8::utf8( const std::string& newStr )
             push_back( charUTF8 );
         }
     }
+}
 }

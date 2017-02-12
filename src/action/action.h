@@ -16,7 +16,7 @@ public:
     CREATE_H( action );
     virtual ~action( ) { }
     bool init( );
-    void setup( node_weak target, bool pause );
+    void setup( std::shared_ptr<node> const& target, bool pause );
 public:
     // ターゲットのノードが決定したら呼ばれます。
     virtual void setup( );
@@ -28,7 +28,7 @@ public:
 protected:
     node_weak _target;
 public:
-    void set_target( node_weak const& value );
+    void set_target( std::shared_ptr<node> const& value );
     node_weak get_target( );
 
 protected:

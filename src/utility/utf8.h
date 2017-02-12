@@ -1,7 +1,8 @@
 #pragma once
 #include <vector>
 #include <string>
-
+namespace utility
+{
 // cocos2d-xより、UTF-8の文字列を一文字一文字に分割する関数群。
 // cocos2d/cocos/base/ccUTF8.* などを参考にしました。
 class utf8 : public std::vector<std::string>
@@ -25,3 +26,4 @@ public:
     utf8( );
     utf8( const std::string& newStr );
 };
+}

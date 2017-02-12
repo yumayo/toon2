@@ -31,6 +31,9 @@
     <Filter Include="Source Files\utility">
       <UniqueIdentifier>{ddce2b48-5ad8-46ab-904c-1f5777ac9d2e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\cinder">
+      <UniqueIdentifier>{95da217f-eea7-463c-9e5d-dea5cb7f38b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -216,8 +219,11 @@
     <ClInclude Include="..\src\utility\string_utility.h">
       <Filter>Source Files\utility</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\lua_setup_cinder.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="..\src\utility\lua_setup_all.h">
+      <Filter>Source Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\cinder\cinder.hpp">
+      <Filter>Source Files\cinder</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -411,8 +417,11 @@
     <ClCompile Include="..\src\utility\string_utility.cpp">
       <Filter>Source Files\utility</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\lua_setup_cinder.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\utility\lua_setup_all.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cinder\cinder.cpp">
+      <Filter>Source Files\cinder</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
