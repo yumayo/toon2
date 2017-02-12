@@ -72,12 +72,12 @@ void app_delegate::keyDown( cinder::app::KeyEvent event )
 #include "utility/lua_setup_all.h"
 void app_delegate::lua_run( )
 {
-    auto lua = utility::lua_make( );
-    lua["root"] = _root;
+    lua = utility::lua_make( );
+    ( *lua )["root"] = _root;
 
     try
     {
-        lua.script_file( getAssetPath( "sample.lua" ).string( ) );
+        ( *lua ).script_file( getAssetPath( "sample.lua" ).string( ) );
     }
     catch ( sol::error const& error )
     {

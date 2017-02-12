@@ -16,6 +16,7 @@ private:
 private:
     void lua_run( );
 private:
+    std::shared_ptr<sol::state> lua;
     std::shared_ptr<node> _root;
     double _prev_second = 0.0;
 };

@@ -2,5 +2,5 @@
 #include "sol.hpp"
 namespace utility
 {
-sol::state lua_make( );
+std::shared_ptr<sol::state> lua_make( );
 }

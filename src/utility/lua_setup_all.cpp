@@ -5,15 +5,15 @@
 #include "../action/action.hpp"
 namespace utility
 {
-sol::state lua_make( )
+std::shared_ptr<sol::state> lua_make( )
 {
-    sol::state lua;
-    lua["pi"] = M_PI;
+    std::shared_ptr<sol::state> lua = std::make_shared<sol::state>( );
+    ( *lua )["pi"] = M_PI;
 
-    node::lua_setup( lua );
-    cinder::lua_setup( lua );
-    renderer::lua_setup( lua );
-    action::lua_setup( lua );
+    node::lua_setup( ( *lua ) );
+    cinder::lua_setup( ( *lua ) );
+    renderer::lua_setup( ( *lua ) );
+    action::lua_setup( ( *lua ) );
 
     return lua;
 }

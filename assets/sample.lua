@@ -6,6 +6,7 @@ p0.position = vec2.new(100, 100)
 p0.scale = vec2.new(0.5, 0.5)
 p0.rotation = pi / 4.0
 p0.name = "blue rect"
+
 root:add_child(p0)
 
 text = label.create( "ほげほげ", "sample.otf", 48 )
@@ -24,16 +25,18 @@ if p1 then
 
     act1 = move_to.create(2.0, vec2.new(400, 200))
     act2 = move_to.create(2.0, vec2.new(200, 200))
-    seq = sequence.create(  EaseNone.create(act1),
-                            delay.create(1.0),
-                            EaseInOutQuart.create(act2) )
-    p1:run_action( repeat_forever.create( seq ) )
 
     -- コールバックのアクションが難しい。
     -- 本当は出来るんだけど、weak_ptrとか使っちゃってごちゃごちゃしてる。
     -- ナマポのほうがいいのかな？
-    -- ft = float_to.create(2.0, 100.0, 200.0, function(t) p0.position = vec2.new(t, p0.position.y) end )
-    -- p1:run_action(ft)
+    -- luaのステートが破壊されるとコールバックも破壊されてしまう。
+    -- すべての実行が終わるまで破壊しないようにしよう。
+    ft = float_to.create(2.0, 100.0, 200.0, function(t) p0.position = vec2.new(t, p0.position.y) end )
+    seq = sequence.create(  ft,
+                            EaseNone.create(act1),
+                            delay.create(1.0),
+                            EaseInOutQuart.create(act2) )
+    p1:run_action( repeat_forever.create( seq ) )
 
     root:add_child(p1)
 
