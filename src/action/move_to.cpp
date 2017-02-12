@@ -23,8 +23,8 @@ void move_to::step( float t )
 
     auto const to = _position;
     auto const from = _start_position;
-    auto const pos = vec2( ease_liner( t, from.x, to.x ), ease_liner( t, from.y, to.y ) );
-    _target.lock( )->set_position( pos );
+    auto const temp = vec2( ease_liner( t, from.x, to.x ), ease_liner( t, from.y, to.y ) );
+    _target.lock( )->set_position( temp );
 }
 
 #define l_class move_to

@@ -279,13 +279,13 @@ std::vector<std::shared_ptr<node>> const & node::get_children( )
 {
     return _children;
 }
-void node::set_parent( node_weak const& value )
+void node::set_parent( std::shared_ptr<node> const& value )
 {
     _parent = value;
 }
-node_weak node::get_parent( )
+std::shared_ptr<node> node::get_parent( )
 {
-    return _parent;
+    return _parent.lock( );
 }
 void node::set_tag( int value )
 {
@@ -335,9 +335,9 @@ void node::add_child( std::shared_ptr<node> const& value )
     value->_parent = shared_from_this( );
     _children.emplace_back( std::move( value ) );
 }
-node_weak node::get_child_by_name( std::string const & name )
+std::shared_ptr<node> node::get_child_by_name( std::string const & name )
 {
-    assert_log( !name.empty( ), "無効な名前です。", return node_weak( ) );
+    assert_log( !name.empty( ), "無効な名前です。", return nullptr );
 
     std::hash<std::string> h;
     size_t hash = h( name );
@@ -351,11 +351,11 @@ node_weak node::get_child_by_name( std::string const & name )
     {
         return *itr;
     }
-    return node_weak( );
+    return nullptr;
 }
-node_weak node::get_child_by_tag( int tag )
+std::shared_ptr<node> node::get_child_by_tag( int tag )
 {
-    assert_log( tag == node::INVALID_TAG, "無効なタグです。", return node_weak( ) );
+    assert_log( tag == node::INVALID_TAG, "無効なタグです。", return nullptr );
 
     auto itr = std::find_if( std::begin( _children ), std::end( _children ), [ this, tag ] ( std::shared_ptr<node>& n )
     {
@@ -366,15 +366,15 @@ node_weak node::get_child_by_tag( int tag )
     {
         return *itr;
     }
-    return node_weak( );
+    return nullptr;
 }
-void node::remove_child( node_weak const& child )
+void node::remove_child( std::shared_ptr<node> const& child )
 {
     if ( _children.empty( ) ) return;
 
     auto itr = std::find_if( std::begin( _children ), std::end( _children ), [ this, child ] ( std::shared_ptr<node>& n )
     {
-        return n == child.lock( );
+        return n == child;
     } );
     _children.erase( itr );
 }
@@ -416,19 +416,19 @@ void node::remove_from_parent( )
 {
     if ( _parent.lock( ) )
     {
-        node_weak ptr = shared_from_this( );
+        std::shared_ptr<node> ptr = shared_from_this( );
         _parent.lock( )->_remove_signal.emplace_back( [ this, ptr ]
         {
             _parent.lock( )->remove_child( ptr );
         } );
     }
 }
-node_weak node::get_root( )
+std::shared_ptr<node> node::get_root( )
 {
     return _get_root( );
 }
 
-node_weak node::_get_root( )
+std::shared_ptr<node> node::_get_root( )
 {
     if ( _parent.lock( ) )
     {

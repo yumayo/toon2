@@ -39,9 +39,9 @@ void action::set_target( std::shared_ptr<node> const& value )
     _target = value;
 }
 
-node_weak action::get_target( )
+std::shared_ptr<node> action::get_target( )
 {
-    return _target;
+    return _target.lock( );
 }
 
 void action::set_tag( int value )

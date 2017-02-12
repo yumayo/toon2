@@ -98,16 +98,15 @@ void action_manager::remove_action_by_name( std::string const & name )
 
 void action_manager::update( float delta )
 {
+    for ( auto const& obj : _actions )
+    {
+        obj->update( delta );
+    }
     auto erase = boost::remove_if( _actions, [ ] ( std::shared_ptr<action>& act )
     {
         return act->is_done( );
     } );
     if ( erase != boost::end( _actions ) )
         _actions.erase( erase );
-
-    for ( auto const& obj : _actions )
-    {
-        obj->update( delta );
-    }
 }
 }

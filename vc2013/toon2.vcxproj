@@ -114,14 +114,20 @@
   <ItemGroup />
   <ItemGroup>
     <ClCompile Include="..\src\action\action.cpp" />
+    <ClCompile Include="..\src\action\call_func.cpp" />
     <ClCompile Include="..\src\action\ease.cpp" />
     <ClCompile Include="..\src\action\action_manager.cpp" />
     <ClCompile Include="..\src\action\delay.cpp" />
     <ClCompile Include="..\src\action\finite_time_action.cpp" />
     <ClCompile Include="..\src\action\float_to.cpp" />
+    <ClCompile Include="..\src\action\move_by.cpp" />
     <ClCompile Include="..\src\action\move_to.cpp" />
     <ClCompile Include="..\src\action\remove_self.cpp" />
     <ClCompile Include="..\src\action\repeat_forever.cpp" />
+    <ClCompile Include="..\src\action\rotate_by.cpp" />
+    <ClCompile Include="..\src\action\rotate_to.cpp" />
+    <ClCompile Include="..\src\action\scale_by.cpp" />
+    <ClCompile Include="..\src\action\scale_to.cpp" />
     <ClCompile Include="..\src\action\sequence.cpp" />
     <ClCompile Include="..\src\action\spawn.cpp" />
     <ClCompile Include="..\src\action\timeline.cpp" />
@@ -185,14 +191,20 @@
     <ClInclude Include="..\include\sol.hpp" />
     <ClInclude Include="..\src\action\action.h" />
     <ClInclude Include="..\src\action\action.hpp" />
+    <ClInclude Include="..\src\action\call_func.h" />
     <ClInclude Include="..\src\action\ease.h" />
     <ClInclude Include="..\src\action\action_manager.h" />
     <ClInclude Include="..\src\action\delay.h" />
     <ClInclude Include="..\src\action\finite_time_action.h" />
     <ClInclude Include="..\src\action\float_to.h" />
+    <ClInclude Include="..\src\action\move_by.h" />
     <ClInclude Include="..\src\action\move_to.h" />
     <ClInclude Include="..\src\action\remove_self.h" />
     <ClInclude Include="..\src\action\repeat_forever.h" />
+    <ClInclude Include="..\src\action\rotate_by.h" />
+    <ClInclude Include="..\src\action\rotate_to.h" />
+    <ClInclude Include="..\src\action\scale_by.h" />
+    <ClInclude Include="..\src\action\scale_to.h" />
     <ClInclude Include="..\src\action\sequence.h" />
     <ClInclude Include="..\src\action\spawn.h" />
     <ClInclude Include="..\src\action\timeline.h" />

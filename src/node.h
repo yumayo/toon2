@@ -109,8 +109,8 @@ public:
 protected:
     node_weak _parent;
 public:
-    void set_parent( node_weak const& value );
-    node_weak get_parent( );
+    void set_parent( std::shared_ptr<node> const& value );
+    std::shared_ptr<node> get_parent( );
 
 protected:
     int _tag = node::INVALID_TAG;
@@ -147,9 +147,9 @@ public:
 
 public:
     void add_child( std::shared_ptr<node> const& value );
-    node_weak get_child_by_name( std::string const& name );
-    node_weak get_child_by_tag( int tag );
-    void remove_child( node_weak const& child );
+    std::shared_ptr<node> get_child_by_name( std::string const& name );
+    std::shared_ptr<node> get_child_by_tag( int tag );
+    void remove_child( std::shared_ptr<node> const& child );
     void remove_child_by_name( std::string const& name );
     void remove_child_by_tag( int tag );
     void remove_all_children( );
@@ -161,8 +161,8 @@ protected:
     bool _swallow = false;
 
 public:
-    node_weak get_root( );
-    node_weak _get_root( );
+    std::shared_ptr<node> get_root( );
+    std::shared_ptr<node> _get_root( );
 
 protected:
     action::action_manager _action_manager;

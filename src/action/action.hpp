@@ -7,6 +7,12 @@
 #include "sequence.h"
 #include "spawn.h"
 #include "repeat_forever.h"
+#include "call_func.h"
+#include "move_by.h"
+#include "scale_to.h"
+#include "scale_by.h"
+#include "rotate_to.h"
+#include "rotate_by.h"
 
 namespace action
 {
@@ -32,6 +38,15 @@ inline void lua_setup( sol::state& lua )
     move_to::lua_setup( lua );
 
     repeat_forever::lua_setup( lua );
+
+    call_func::lua_setup( lua );
+
+    move_by::lua_setup( lua );
+
+    scale_to::lua_setup( lua );
+    scale_by::lua_setup( lua );
+    rotate_to::lua_setup( lua );
+    rotate_by::lua_setup( lua );
 
     ease<cinder::EaseNone>::lua_setup( lua );
     ease<cinder::EaseInQuad>::lua_setup( lua );

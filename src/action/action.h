@@ -29,7 +29,7 @@ protected:
     node_weak _target;
 public:
     void set_target( std::shared_ptr<node> const& value );
-    node_weak get_target( );
+    std::shared_ptr<node> get_target( );
 
 protected:
     int _tag = action::INVALID_TAG;

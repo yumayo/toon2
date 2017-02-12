@@ -11,7 +11,7 @@ public:
 private:
     void setup( ) override;
     void step( float t ) override;
-private:
+protected:
     cinder::vec2 _start_position;
     cinder::vec2 _position;
 public:

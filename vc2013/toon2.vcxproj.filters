@@ -225,6 +225,24 @@
     <ClInclude Include="..\src\cinder\cinder.hpp">
       <Filter>Source Files\cinder</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\action\call_func.h">
+      <Filter>Source Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\action\move_by.h">
+      <Filter>Source Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\action\scale_to.h">
+      <Filter>Source Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\action\scale_by.h">
+      <Filter>Source Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\action\rotate_to.h">
+      <Filter>Source Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\action\rotate_by.h">
+      <Filter>Source Files\action</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -422,6 +440,24 @@
     </ClCompile>
     <ClCompile Include="..\src\cinder\cinder.cpp">
       <Filter>Source Files\cinder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\action\call_func.cpp">
+      <Filter>Source Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\action\move_by.cpp">
+      <Filter>Source Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\action\scale_to.cpp">
+      <Filter>Source Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\action\scale_by.cpp">
+      <Filter>Source Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\action\rotate_to.cpp">
+      <Filter>Source Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\action\rotate_by.cpp">
+      <Filter>Source Files\action</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
