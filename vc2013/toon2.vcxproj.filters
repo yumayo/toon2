@@ -243,6 +243,9 @@
     <ClInclude Include="..\src\action\rotate_by.h">
       <Filter>Source Files\action</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\action\repeat_times.h">
+      <Filter>Source Files\action</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -457,6 +460,9 @@
       <Filter>Source Files\action</Filter>
     </ClCompile>
     <ClCompile Include="..\src\action\rotate_by.cpp">
+      <Filter>Source Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\action\repeat_times.cpp">
       <Filter>Source Files\action</Filter>
     </ClCompile>
   </ItemGroup>

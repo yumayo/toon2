@@ -23,20 +23,11 @@ if p1 then
     p1.anchor_point = vec2.new(0.5, 0.5)
     p1.pivot = vec2.new(0, 0)
 
-    -- コールバックのアクションが難しい。
-    -- 本当は出来るんだけど、weak_ptrとか使っちゃってごちゃごちゃしてる。
-    -- ナマポのほうがいいのかな？
-    -- luaのステートが破壊されるとコールバックも破壊されてしまう。
-    -- すべての実行が終わるまで破壊しないようにしよう。
-    seq = sequence.create(  call_func.create(function() text:set_text("ほげほげ") end),
-                            float_to.create(2.0, 100.0, 200.0, function(t) p0.position = vec2.new(t, p0.position.y) end ),
-                            call_func.create(function() text:set_text("テスト") end),
-                            spawn.create(   EaseInOutExpo.create( rotate_by.create(1.0, pi / 2 ) ),
-                                            EaseInOutExpo.create( scale_by.create(1.0, vec2.new( 1, 1 ) ) ) ),
+    seq = sequence.create(  spawn.create(   EaseInOutExpo.create( rotate_by.create(0.5, pi / 2 ) ),
+                                            EaseInOutExpo.create( scale_by.create(0.5, vec2.new( 1, 1 ) ) ) ),
                             EaseInOutExpo.create(move_to.create(1.0, vec2.new(400, 200))),
                             EaseInOutExpo.create( scale_by.create(0.5, vec2.new( -1, -1 ) ) ),
-                            delay.create(1.0),
-                            EaseInOutQuart.create(move_to.create(2.0, vec2.new(200, 200))) )
+                            EaseInOutExpo.create(move_to.create(1.0, vec2.new(200, 200))) )
     p1:run_action( repeat_forever.create( seq ) )
 
     root:add_child(p1)

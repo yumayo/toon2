@@ -13,6 +13,7 @@
 #include "scale_by.h"
 #include "rotate_to.h"
 #include "rotate_by.h"
+#include "repeat_times.h"
 
 namespace action
 {
@@ -21,28 +22,18 @@ void lua_setup( sol::state& lua );
 inline void lua_setup( sol::state& lua )
 {
     action::lua_setup( lua );
-
     finite_time_action::lua_setup( lua );
-
     timeline::lua_setup( lua );
-
     float_to::lua_setup( lua );
-
     sequence::lua_setup( lua );
     spawn::lua_setup( lua );
-
     delay::lua_setup( lua );
-
     remove_self::lua_setup( lua );
-
-    move_to::lua_setup( lua );
-
     repeat_forever::lua_setup( lua );
-
+    repeat_times::lua_setup( lua );
     call_func::lua_setup( lua );
-
+    move_to::lua_setup( lua );
     move_by::lua_setup( lua );
-
     scale_to::lua_setup( lua );
     scale_by::lua_setup( lua );
     rotate_to::lua_setup( lua );
