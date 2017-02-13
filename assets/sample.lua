@@ -8,6 +8,7 @@ p0.rotation = pi / 4.0
 p0.name = "blue rect"
 
 server = tcp_server.create( "25565", 6 )
+root:add_child(server)
 
 root:add_child(p0)
 

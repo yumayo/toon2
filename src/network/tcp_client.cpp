@@ -13,38 +13,27 @@ namespace network
 struct tcp_client::_member
 {
     _member( std::string const& ip_address, std::string const& port )
-        : io_service( )
-        , socket( io_service )
+        : io( )
+        , socket( io )
         , ip_address( ip_address )
         , port( port )
     {
-
+        buffer.fill( 0 );
     }
-    asio::io_service io_service;
+    void connect( );
+    asio::io_service io;
     tcp::socket socket;
+    boost::array<char, 512> buffer;
+    std::shared_ptr<std::thread> thread;
     std::string ip_address;
     std::string port;
 };
-CREATE_CPP( tcp_client, std::string const& ip_address, std::string const& port )
+void tcp_client::_member::connect( )
 {
-    CREATE( tcp_client, ip_address, port );
-}
-bool tcp_client::init( std::string const& ip_address, std::string const& port )
-{
-    _m.reset( );
-    _m = std::make_shared<_member>( ip_address, port );
-
-    return true;
-}
-void tcp_client::connect( )
-{
-    _m->socket.async_connect(
-        tcp::endpoint( asio::ip::address::from_string( _m->ip_address ), boost::lexical_cast<int>( _m->port ) ),
+    socket.async_connect(
+        tcp::endpoint( asio::ip::address::from_string( ip_address ), boost::lexical_cast<int>( port ) ),
         [ this ] ( const asio::error_code& error )
     {
-        auto s = _m->socket.available( );
-        auto o = _m->socket.is_open( );
-
         if ( error )
         {
             log( "接続できませんでした。: %s", error.message( ).c_str( ) );
@@ -54,7 +43,7 @@ void tcp_client::connect( )
             log( "接続成功！" );
 
             asio::async_write(
-                _m->socket,
+                socket,
                 asio::buffer( "hello" ),
                 [ this ] ( const asio::error_code& error, size_t bytes_transferred )
             {
@@ -67,9 +56,59 @@ void tcp_client::connect( )
                     log( "送信成功！" );
                 }
             } );
+            asio::async_read(
+                socket,
+                asio::buffer( buffer ),
+                asio::transfer_at_least( 1 ),
+                [ this ] ( const asio::error_code& error, size_t bytes_transferred )
+            {
+                if ( error )
+                {
+                    if ( error == asio::error::eof )
+                    {
+                        log( "サーバーが接続を切りました。: %s", error.message( ).c_str( ) );
+                    }
+                    else
+                    {
+                        log( "無効なアクセスです。: %s", error.message( ).c_str( ) );
+                    }
+                }
+                else
+                {
+                    const char* data = buffer.data( );
+                    log( "データ: %s", data );
+                    std::fill_n( buffer.begin( ), bytes_transferred, 0 );
+                    socket.close( );
+                }
+            } );
         }
     } );
-    _m->io_service.run( );
+}
+CREATE_CPP( tcp_client, std::string const& ip_address, std::string const& port )
+{
+    CREATE( tcp_client, ip_address, port );
+}
+bool tcp_client::init( std::string const& ip_address, std::string const& port )
+{
+    _m.reset( );
+    _m = std::make_shared<_member>( ip_address, port );
+
+    _m->thread = std::make_shared<std::thread>( [ this ]
+    {
+        _m->connect( );
+        _m->io.run( );
+    } );
+
+    return true;
+}
+tcp_client::~tcp_client( )
+{
+    _m->io.stop( );
+    _m->thread->join( );
+}
+void tcp_client::connect( )
+{
+    
 }
 #define l_class tcp_client
 #include "lua_define.h"

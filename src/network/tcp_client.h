@@ -9,6 +9,7 @@ class tcp_client : public node
 public:
     CREATE_H( tcp_client, std::string const& ip_address, std::string const& port );
     bool init( std::string const& ip_address, std::string const& port );
+    ~tcp_client( );
     void connect( );
 public:
     LUA_SETUP_H( tcp_client );
