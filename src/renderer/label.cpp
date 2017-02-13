@@ -28,18 +28,21 @@ void label::render( )
 }
 void label::set_text( std::string const & text )
 {
-    _layout = cinder::TextLayout( );
+    _layout = std::make_shared<cinder::TextLayout>( );
 
     // まれに例外が飛びますが、まあキャッチされているので気にしない。
     // 例外先: Windows Kits/8.1/Include/um/gdiplusfontfamily.h 143行目
     // 関数: inline BOOL FontFamily::IsStyleAvailable( IN INT style ) const
     // 内容: CacheOverflowException
-    _layout.setFont( Font( app::loadAsset( _relative_path ), _size ) );
-    _layout.setColor( Color( 1, 1, 1 ) );
-    _layout.append( text );
+    // やっぱりここやばいです。
+    // Fontの中で確保したメモリは開放されない模様。
+    // コメントでも、最初に作ってそれを使ってくださいって書いてある。
+    _layout->setFont( Font( app::loadAsset( _relative_path ), _size ) );
+    _layout->setColor( Color( 1, 1, 1 ) );
+    _layout->append( text );
 
     bool use_alpha = true;
-    _texture = gl::Texture2d::create( _layout.render( use_alpha ) );
+    _texture = gl::Texture2d::create( _layout->render( use_alpha ) );
     _content_size = _texture->getSize( );
 }
 #define l_class label

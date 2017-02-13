@@ -106,10 +106,6 @@ tcp_client::~tcp_client( )
     _m->io.stop( );
     _m->thread->join( );
 }
-void tcp_client::connect( )
-{
-    
-}
 #define l_class tcp_client
 #include "lua_define.h"
 LUA_SETUP_CPP( l_class )
@@ -117,7 +113,6 @@ LUA_SETUP_CPP( l_class )
     l_new( tcp_client
            , l_base( node )
            , l_set( create )
-           , l_set( connect )
     );
 }
 #include "lua_undef.h"

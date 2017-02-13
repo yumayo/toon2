@@ -13,7 +13,7 @@ public:
 public:
     void set_text( std::string const& text );
 private:
-    cinder::TextLayout _layout;
+    std::shared_ptr<cinder::TextLayout> _layout;
     cinder::gl::TextureRef _texture;
     std::string _relative_path;
     float _size;

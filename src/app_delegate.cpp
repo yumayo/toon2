@@ -20,6 +20,7 @@ void app_delegate::update( )
     auto delta = (float)getElapsedSeconds( ) - (float)_prev_second;
     _root->_update( delta );
     _prev_second = getElapsedSeconds( );
+    _lua->collect_garbage( );
 }
 void app_delegate::draw( )
 {
@@ -61,12 +62,12 @@ void app_delegate::keyDown( cinder::app::KeyEvent event )
 #include "utility/lua_setup_all.h"
 void app_delegate::lua_run( )
 {
-    lua = utility::lua_make( );
-    ( *lua )["root"] = _root;
+    _lua = utility::lua_make( );
+    ( *_lua )["root"] = _root;
 
     try
     {
-        ( *lua ).script_file( getAssetPath( "sample.lua" ).string( ) );
+        ( *_lua ).script_file( getAssetPath( "sample.lua" ).string( ) );
     }
     catch ( sol::error const& error )
     {
