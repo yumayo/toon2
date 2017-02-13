@@ -416,10 +416,9 @@ void node::remove_from_parent( )
 {
     if ( _parent.lock( ) )
     {
-        std::shared_ptr<node> ptr = shared_from_this( );
-        _parent.lock( )->_remove_signal.emplace_back( [ this, ptr ]
+        _parent.lock( )->_remove_signal.emplace_back( [ this ]
         {
-            _parent.lock( )->remove_child( ptr );
+            _parent.lock( )->remove_child( shared_from_this( ) );
         } );
     }
 }
