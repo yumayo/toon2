@@ -5,7 +5,7 @@ namespace action
 #define l_ease( __name) \
 LUA_SETUP_CPP( l_class )\
 {\
-    l_new( ##__name\
+    l_new( __name\
            , l_base( finite_time_action )\
            , l_set( create )\
     );\

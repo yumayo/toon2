@@ -7,21 +7,15 @@ p0.scale = vec2.new(0.5, 0.5)
 p0.rotation = pi / 4.0
 p0.name = "blue rect"
 
-server = tcp_server.create( "25565", 6 )
-root:add_child(server)
-
 root:add_child(p0)
 
 text = label.create( "ほげほげ", "sample.otf", 48 )
 text.position = vec2.new(100, 100)
 root:add_child(text)
 
-
-
 function make_client(p1)
-    client = tcp_client.create("127.0.0.1", "25565")
+    client = tcp_client.create("192.168.11.2", "25565")
     client.name = "クライアント"
-    client:connect()
     p1:add_child( client )
 end
 

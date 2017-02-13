@@ -36,7 +36,7 @@ namespace cinder
 {
 namespace app
 {
-std::string cinder::app::loadString( std::string const & relative_path )
+std::string loadString( std::string const & relative_path )
 {
     return static_cast<char*>( loadAsset( relative_path )->getBuffer( )->getData( ) );
 }
