@@ -7,11 +7,22 @@ p0.scale = vec2.new(0.5, 0.5)
 p0.rotation = pi / 4.0
 p0.name = "blue rect"
 
+server = tcp_server.create( "25565", 6 )
+
 root:add_child(p0)
 
 text = label.create( "ほげほげ", "sample.otf", 48 )
 text.position = vec2.new(100, 100)
 root:add_child(text)
+
+
+
+function make_client(p1)
+    client = tcp_client.create("127.0.0.1", "25565")
+    client.name = "クライアント"
+    client:connect()
+    p1:add_child( client )
+end
 
 p1 = button.create( size )
 if p1 then
@@ -24,10 +35,13 @@ if p1 then
     p1.pivot = vec2.new(0, 0)
 
     seq = sequence.create(  spawn.create(   EaseInOutExpo.create( rotate_by.create(0.5, pi / 2 ) ),
-                                            EaseInOutExpo.create( scale_by.create(0.5, vec2.new( 1, 1 ) ) ) ),
-                            EaseInOutExpo.create(move_to.create(1.0, vec2.new(400, 200))),
-                            EaseInOutExpo.create( scale_by.create(0.5, vec2.new( -1, -1 ) ) ),
-                            EaseInOutExpo.create(move_to.create(1.0, vec2.new(200, 200))) )
+                                            EaseInOutExpo.create( scale_by.create(0.5, vec2.new( 1, 1 ) ) ) )
+                            ,call_func.create(function() p1:remove_child_by_name("クライアント") end)
+                            ,EaseInOutExpo.create(move_to.create(1.0, vec2.new(400, 200)))
+                            ,EaseInOutExpo.create( scale_by.create(0.5, vec2.new( -1, -1 ) ) )
+                            ,EaseInOutExpo.create(move_to.create(1.0, vec2.new(200, 200)))
+                            ,call_func.create(function() make_client(p1) end)
+                         )
     p1:run_action( repeat_forever.create( seq ) )
 
     root:add_child(p1)

@@ -164,10 +164,21 @@ bool tcp_server::init( std::string const& port, int num_of_client )
 
     return true;
 }
-std::vector<std::string> tcp_server::get_ip_addresses( )
+std::vector<std::pair<std::string, int>> tcp_server::get_ip_datas( )
 {
-    std::vector<std::string> ret;
-    for ( auto& obj : _m->ip_data ) ret.emplace_back( obj.ip_address );
+    std::vector<std::pair<std::string, int>> ret;
+    for ( auto& obj : _m->ip_data ) ret.emplace_back( std::make_pair( obj.ip_address, obj.port ) );
     return ret;
 }
+#define l_class tcp_server
+#include "lua_define.h"
+LUA_SETUP_CPP( l_class )
+{
+    l_new( tcp_server
+           , l_base( node )
+           , l_set( create )
+           , l_set( get_ip_datas )
+    );
+}
+#include "lua_undef.h"
 }

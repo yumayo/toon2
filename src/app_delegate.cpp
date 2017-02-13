@@ -14,17 +14,6 @@ void app_delegate::setup( )
     _root = node::create( );
     _root->set_name( "root" );
     lua_run( );
-
-    //auto test = renderer::rect::create( { 100, 100 } );
-    //test->set_name( "test" );
-    //test->run_action( action::float_to::create( 2.0, 100.0, 200.0, [ test ] ( float t ) { test->set_position( { t, 0 } );
-    //} ) );
-    //_root->add_child( test );
-
-    //if ( auto t = network::tcp_server::create( "25565", 7 ) )
-    //{
-    //    root->add_child( t );
-    //}
 }
 void app_delegate::update( )
 {

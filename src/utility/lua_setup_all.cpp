@@ -3,6 +3,7 @@
 #include "../cinder/cinder.hpp"
 #include "../renderer/renderer.hpp"
 #include "../action/action.hpp"
+#include "../network/network.hpp"
 namespace utility
 {
 std::shared_ptr<sol::state> lua_make( )
@@ -14,6 +15,7 @@ std::shared_ptr<sol::state> lua_make( )
     cinder::lua_setup( ( *lua ) );
     renderer::lua_setup( ( *lua ) );
     action::lua_setup( ( *lua ) );
+    network::lua_setup( ( *lua ) );
 
     return lua;
 }

@@ -23,7 +23,10 @@ void log( char const * str, ... )
     va_start( args, str );
     char buf[max_string_length];
     vsnprintf( buf, max_string_length, str, args );
-    cinder::app::console( ) << buf << std::endl;
+    if ( cinder::app::isMainThread( ) )
+    {
+        cinder::app::console( ) << buf << std::endl;
+    }
     va_end( args );
     #endif
 }

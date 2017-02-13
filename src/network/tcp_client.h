@@ -10,5 +10,7 @@ public:
     CREATE_H( tcp_client, std::string const& ip_address, std::string const& port );
     bool init( std::string const& ip_address, std::string const& port );
     void connect( );
+public:
+    LUA_SETUP_H( tcp_client );
 };
 }

@@ -246,6 +246,9 @@
     <ClInclude Include="..\src\action\repeat_times.h">
       <Filter>Source Files\action</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\network\network.hpp">
+      <Filter>Source Files\network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -464,6 +467,9 @@
     </ClCompile>
     <ClCompile Include="..\src\action\repeat_times.cpp">
       <Filter>Source Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\network\network.cpp">
+      <Filter>Source Files\network</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
