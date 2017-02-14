@@ -8,13 +8,11 @@ bool utf8::isLegalUTF8( const utf8_head *source, int length )
     const utf8_head *srcptr = source + length;
     switch ( length ) {
     default: return false;
-        /* Everything else falls through when "true"... */
     case 4: if ( ( a = ( *--srcptr ) ) < 0x80 || a > 0xBF ) return false;
     case 3: if ( ( a = ( *--srcptr ) ) < 0x80 || a > 0xBF ) return false;
     case 2: if ( ( a = ( *--srcptr ) ) < 0x80 || a > 0xBF ) return false;
 
         switch ( *source ) {
-            /* no fall-through in this inner switch */
         case 0xE0: if ( a < 0xA0 ) return false; break;
         case 0xED: if ( a > 0x9F ) return false; break;
         case 0xF0: if ( a < 0x90 ) return false; break;
@@ -47,7 +45,7 @@ size_t utf8::getNumBytesForUTF8( utf8_head first )
 }
 utf8::utf8( )
 {
-
+    /*nothing*/
 }
 utf8::utf8( const std::string& newStr )
 {

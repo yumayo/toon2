@@ -107,7 +107,7 @@ public:
     std::vector<std::shared_ptr<node>> const& get_children( );
 
 protected:
-    node_weak _parent;
+    std::weak_ptr<node> _parent;
 public:
     void set_parent( std::shared_ptr<node> const& value );
     std::shared_ptr<node> get_parent( );

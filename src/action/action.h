@@ -26,7 +26,7 @@ public:
     virtual void update( float delta );
 
 protected:
-    node_weak _target;
+    std::weak_ptr<node> _target;
 public:
     void set_target( std::shared_ptr<node> const& value );
     std::shared_ptr<node> get_target( );

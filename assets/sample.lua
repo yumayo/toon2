@@ -3,7 +3,7 @@
 p0 = button.create( size )
 p0.color = color.new( 0, 0, 1, 1 )
 p0.position = vec2.new(100, 100)
-p0.scale = vec2.new(0.5, 0.5)
+p0.scale = vec2.new(2)
 p0.rotation = pi / 4.0
 p0.name = "blue rect"
 
@@ -31,14 +31,14 @@ if p1 then
 
     seq = sequence.create(  spawn.create(   EaseInOutExpo.create( rotate_by.create(0.5, pi / 2 ) ),
                                             EaseInOutExpo.create( scale_by.create(0.5, vec2.new( 1, 1 ) ) ) )
-                            -- ,call_func.create(function() p1:remove_child_by_name("client") end)
+                            ,call_func.create(function() make_client() end)
                             ,EaseInOutExpo.create(move_to.create(1.0, vec2.new(400, 200)))
                             ,EaseInOutExpo.create( scale_by.create(0.5, vec2.new( -1, -1 ) ) )
                             ,EaseInOutExpo.create(move_to.create(1.0, vec2.new(200, 200)))
-                            -- ,call_func.create(function() make_client() end)
-                            ,remove_self.create()
+                            ,call_func.create(function() p1:remove_child_by_name("client") end)
+                            -- ,remove_self.create()
                          )
-    p1:run_action( seq )
+    -- p1:run_action( repeat_forever.create( seq ) )
 
     root:add_child(p1)
 

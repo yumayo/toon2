@@ -25,6 +25,7 @@ void log( char const * str, ... )
     vsnprintf( buf, max_string_length, str, args );
     if ( cinder::app::isMainThread( ) )
     {
+        // 複数のスレッドから同時にconsoleにアクセスすると壊れてしまいます。
         cinder::app::console( ) << buf << std::endl;
     }
     va_end( args );

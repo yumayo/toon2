@@ -7,7 +7,7 @@ namespace utility
 // cocos2d/cocos/base/ccUTF8.* ‚È‚Ç‚ğQl‚É‚µ‚Ü‚µ‚½B
 class utf8 : public std::vector<std::string>
 {
-    typedef unsigned char utf8_head; /* typically 8 bits */
+    typedef unsigned char utf8_head;
     const char trailingBytesForUTF8[256] =
     {
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

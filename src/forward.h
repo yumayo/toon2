@@ -12,10 +12,3 @@ else ret.reset( ); \
 return std::move( ret )
 
 class node;
-using node_weak = std::weak_ptr<node>;
-
-namespace action
-{
-class action;
-using action_weak = std::weak_ptr<action>;
-}

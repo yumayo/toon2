@@ -71,8 +71,11 @@ bool node::_mouse_moved( cinder::app::MouseEvent event )
     if ( _schedule_mouse_event )
     {
         log( "mouse_moved: %s", _name.c_str( ) );
-        mouse_moved( event );
-        return _swallow;
+        if ( _swallow )
+        {
+            mouse_moved( event );
+            return true;
+        }
     }
     return false;
 }
@@ -93,11 +96,6 @@ bool node::_mouse_ended( cinder::app::MouseEvent event )
             mouse_ended( event );
             _swallow = false;
             return true;
-        }
-        else
-        {
-            mouse_ended( event );
-            return false;
         }
     }
     return false;
@@ -133,8 +131,11 @@ bool node::_touches_moved( cinder::app::TouchEvent event )
     }
     if ( _schedule_mouse_event )
     {
-        touches_moved( event );
-        return _swallow;
+        if ( _swallow )
+        {
+            touches_moved( event );
+            return true;
+        }
     }
     return false;
 }
@@ -154,11 +155,6 @@ bool node::_touches_ended( cinder::app::TouchEvent event )
             touches_ended( event );
             _swallow = false;
             return true;
-        }
-        else
-        {
-            touches_ended( event );
-            return false;
         }
     }
     return false;
@@ -382,11 +378,11 @@ void node::remove_child_by_name( std::string const & name )
 {
     assert_log( !name.empty( ), "無効な名前です。", return );
 
-    node_weak child = this->get_child_by_name( name );
+    auto child = this->get_child_by_name( name );
 
-    if ( child.lock( ) )
+    if ( child )
     {
-        this->remove_child( child.lock( ) );
+        this->remove_child( child );
     }
     else
     {
@@ -397,11 +393,11 @@ void node::remove_child_by_tag( int tag )
 {
     assert_log( tag == node::INVALID_TAG, "無効なタグです。", return );
 
-    node_weak child = this->get_child_by_tag( tag );
+    auto child = this->get_child_by_tag( tag );
 
-    if ( child.lock( ) )
+    if ( child )
     {
-        this->remove_child( child.lock( ) );
+        this->remove_child( child );
     }
     else
     {
