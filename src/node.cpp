@@ -59,7 +59,6 @@ bool node::_mouse_began( cinder::app::MouseEvent event )
     }
     if ( _schedule_mouse_event )
     {
-        log( "mouse_began: %s", _name.c_str( ) );
         if ( mouse_began( event ) )
         {
             _swallow = true;
@@ -79,7 +78,6 @@ bool node::_mouse_moved( cinder::app::MouseEvent event )
     }
     if ( _schedule_mouse_event )
     {
-        log( "mouse_moved: %s", _name.c_str( ) );
         if ( _swallow )
         {
             mouse_moved( event );
@@ -99,7 +97,6 @@ bool node::_mouse_ended( cinder::app::MouseEvent event )
     }
     if ( _schedule_mouse_event )
     {
-        log( "mouse_ended: %s", _name.c_str( ) );
         if ( _swallow )
         {
             mouse_ended( event );
@@ -119,7 +116,7 @@ bool node::_touch_began( cinder::app::TouchEvent::Touch event )
             return true;
         }
     }
-    if ( _schedule_mouse_event )
+    if ( _schedule_touch_event )
     {
         if ( touch_began( event ) )
         {
@@ -138,7 +135,7 @@ bool node::_touch_moved( cinder::app::TouchEvent::Touch event )
             return true;
         }
     }
-    if ( _schedule_mouse_event )
+    if ( _schedule_touch_event )
     {
         if ( _swallow )
         {
@@ -157,7 +154,7 @@ bool node::_touch_ended( cinder::app::TouchEvent::Touch event )
             return true;
         }
     }
-    if ( _schedule_mouse_event )
+    if ( _schedule_touch_event )
     {
         if ( _swallow )
         {
@@ -172,10 +169,9 @@ void node::_touches_began( cinder::app::TouchEvent event )
 {
     for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
     {
-        // 子供がモーダルオブジェクトだった場合
         ( *itr )->_touches_began( event );
     }
-    if ( _schedule_mouse_event )
+    if ( _schedule_touches_event )
     {
         touches_began( event );
     }
@@ -184,10 +180,9 @@ void node::_touches_moved( cinder::app::TouchEvent event )
 {
     for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
     {
-        // 子供がモーダルオブジェクトだった場合
         ( *itr )->_touches_moved( event );
     }
-    if ( _schedule_mouse_event )
+    if ( _schedule_touches_event )
     {
         touches_moved( event );
     }
@@ -196,10 +191,9 @@ void node::_touches_ended( cinder::app::TouchEvent event )
 {
     for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
     {
-        // 子供がモーダルオブジェクトだった場合
         ( *itr )->_touches_ended( event );
     }
-    if ( _schedule_mouse_event )
+    if ( _schedule_touches_event )
     {
         touches_ended( event );
     }
@@ -259,6 +253,14 @@ void node::set_schedule_touch_event( bool value )
 bool node::get_schedule_touch_event( )
 {
     return _schedule_touch_event;
+}
+void node::set_schedule_touches_event( bool value )
+{
+    _schedule_touches_event = value;
+}
+bool node::get_schedule_touches_event( )
+{
+    return _schedule_touches_event;
 }
 void node::set_position( cinder::vec2 value )
 {
@@ -519,6 +521,7 @@ LUA_SETUP_CPP( l_class )
            , l_prop( schedule_update )
            , l_prop( schedule_mouse_event )
            , l_prop( schedule_touch_event )
+           , l_prop( schedule_touches_event )
            , l_prop( position )
            , l_prop( scale )
            , l_prop( content_size )

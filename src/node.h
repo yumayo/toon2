@@ -66,6 +66,12 @@ public:
     bool get_schedule_touch_event( );
 
 protected:
+    bool _schedule_touches_event = false;
+public:
+    void set_schedule_touches_event( bool value = true );
+    bool get_schedule_touches_event( );
+
+protected:
     cinder::vec2 _position = cinder::vec2( 0 );
 public:
     void set_position( cinder::vec2 value );
