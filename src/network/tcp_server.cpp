@@ -112,7 +112,12 @@ void tcp_server::_member::async_accept( socket_object& sock_obj )
                         const char* data = sock_obj.buffer.data( );
                         log( "データ: %s", data );
                         std::fill_n( sock_obj.buffer.begin( ), bytes_transferred, 0 );
-                        close_message( "ほげほげ", sock_obj );
+
+                        ip_data.erase( connect_data( sock_obj.socket.remote_endpoint( ).address( ).to_string( ),
+                                                     sock_obj.socket.remote_endpoint( ).port( ) ) );
+
+                        // クライアントがいなくなったソケットは、もう一度接続します。
+                        sock_obj.socket.close( );
                         async_accept( sock_obj );
                     }
                 } );

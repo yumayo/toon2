@@ -18,6 +18,7 @@ public:
     CREATE_H( tcp_server, std::string const& port, int num_of_client );
     ~tcp_server( );
     bool init( std::string const& port, int num_of_client );
+public:
     std::vector<std::pair<std::string, int>> get_ip_datas( );
 public:
     LUA_SETUP_H( tcp_server );

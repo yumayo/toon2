@@ -12,19 +12,25 @@ namespace network
 {
 struct tcp_client::_member
 {
-    _member( std::string const& ip_address, std::string const& port )
-        : io( )
+    _member( tcp_client& parent, std::string const& ip_address, std::string const& port, std::function<void( std::string const& )>& on_readed_call )
+        : parent( parent )
+        , io( )
         , socket( io )
         , ip_address( ip_address )
         , port( port )
+        , on_readed_call( on_readed_call )
     {
         buffer.fill( 0 );
     }
+    tcp_client& parent;
     void connect( );
+    void write( std::string const& message, std::function<void( bool )> on_writed_call );
+    void write( char const* message, size_t size, std::function<void( bool )> on_writed_call );
+    void read( );
     asio::io_service io;
     tcp::socket socket;
     boost::array<char, 512> buffer;
-    std::shared_ptr<std::thread> thread;
+    std::function<void( std::string const& )>& on_readed_call;
     std::string ip_address;
     std::string port;
 };
@@ -37,50 +43,85 @@ void tcp_client::_member::connect( )
         if ( error )
         {
             log( "接続できませんでした。: %s", error.message( ).c_str( ) );
+            parent.remove_from_parent( );
         }
         else
         {
             log( "接続成功！" );
+            read( );
+        }
+    } );
+}
+void tcp_client::_member::write( std::string const& message, std::function<void( bool )> on_writed_call )
+{
+    asio::async_write(
+        socket,
+        asio::buffer( message ),
+        [ this, on_writed_call ] ( const asio::error_code& error, size_t bytes_transferred )
+    {
+        bool e = false;
+        if ( error )
+        {
+            log( "送信できませんでした。: %s", error.message( ).c_str( ) );
+            e = true;
+        }
+        else
+        {
+            log( "送信成功！" );
+        }
+        if ( on_writed_call ) on_writed_call( e );
+    } );
+}
+void tcp_client::_member::write( char const * message, size_t size, std::function<void( bool )> on_writed_call )
+{
+    asio::async_write(
+        socket,
+        asio::buffer( message, size ),
+        [ this, on_writed_call ] ( const asio::error_code& error, size_t bytes_transferred )
+    {
+        bool e = false;
+        if ( error )
+        {
+            log( "送信できませんでした。: %s", error.message( ).c_str( ) );
+            e = true;
+        }
+        else
+        {
+            log( "送信成功！" );
+        }
+        if ( on_writed_call ) on_writed_call( e );
+    } );
+}
+void tcp_client::_member::read( )
+{
+    asio::async_read(
+        socket,
+        asio::buffer( buffer ),
+        asio::transfer_at_least( 1 ),
+        [ this ] ( const asio::error_code& error, size_t bytes_transferred )
+    {
+        const char* data = nullptr;
+        if ( error )
+        {
+            if ( error == asio::error::eof )
+            {
+                log( "サーバーが接続を切りました。: %s", error.message( ).c_str( ) );
+                parent.remove_from_parent( );
+            }
+            else
+            {
+                log( "無効なアクセスです。: %s", error.message( ).c_str( ) );
+            }
+        }
+        else
+        {
+            data = buffer.data( );
+            log( "データ: %s", data );
+            if ( on_readed_call ) on_readed_call( data );
+            std::fill_n( buffer.begin( ), bytes_transferred, 0 );
 
-            asio::async_write(
-                socket,
-                asio::buffer( "hello" ),
-                [ this ] ( const asio::error_code& error, size_t bytes_transferred )
-            {
-                if ( error )
-                {
-                    log( "送信できませんでした。: %s", error.message( ).c_str( ) );
-                }
-                else
-                {
-                    log( "送信成功！" );
-                }
-            } );
-            asio::async_read(
-                socket,
-                asio::buffer( buffer ),
-                asio::transfer_at_least( 1 ),
-                [ this ] ( const asio::error_code& error, size_t bytes_transferred )
-            {
-                if ( error )
-                {
-                    if ( error == asio::error::eof )
-                    {
-                        log( "サーバーが接続を切りました。: %s", error.message( ).c_str( ) );
-                    }
-                    else
-                    {
-                        log( "無効なアクセスです。: %s", error.message( ).c_str( ) );
-                    }
-                }
-                else
-                {
-                    const char* data = buffer.data( );
-                    log( "データ: %s", data );
-                    std::fill_n( buffer.begin( ), bytes_transferred, 0 );
-                    socket.close( );
-                }
-            } );
+            // エラーじゃない限り無限に受け取りを続けます。
+            read( );
         }
     } );
 }
@@ -91,20 +132,39 @@ CREATE_CPP( tcp_client, std::string const& ip_address, std::string const& port )
 bool tcp_client::init( std::string const& ip_address, std::string const& port )
 {
     _m.reset( );
-    _m = std::make_shared<_member>( ip_address, port );
+    _m = std::make_shared<_member>( *this, ip_address, port, on_readed_call );
 
-    _m->thread = std::make_shared<std::thread>( [ this ]
-    {
-        _m->connect( );
-        _m->io.run( );
-    } );
+    set_schedule_update( );
+
+    _m->connect( );
 
     return true;
 }
 tcp_client::~tcp_client( )
 {
+    _m->socket.close( );
     _m->io.stop( );
-    _m->thread->join( );
+}
+void tcp_client::update( float delta )
+{
+    _m->io.reset( );
+    _m->io.poll( );
+}
+void tcp_client::write( std::string const & message, std::function<void( bool )> on_writed_call )
+{
+    _m->write( message, on_writed_call );
+}
+void tcp_client::write( char const * message, size_t size, std::function<void( bool )> on_writed_call )
+{
+    _m->write( message, size, on_writed_call );
+}
+void tcp_client::write_string( std::string const & message, std::function<void( bool )> on_writed_call )
+{
+    write( message, on_writed_call );
+}
+void tcp_client::write_binary( char const * message, size_t size, std::function<void( bool )> on_writed_call )
+{
+    write( message, size, on_writed_call );
 }
 #define l_class tcp_client
 #include "lua_define.h"
@@ -113,6 +173,7 @@ LUA_SETUP_CPP( l_class )
     l_new( tcp_client
            , l_base( node )
            , l_set( create )
+           , "write", sol::overload( &tcp_client::write_string, &tcp_client::write_binary )
     );
 }
 #include "lua_undef.h"
