@@ -24,8 +24,7 @@ struct tcp_client::_member
     }
     tcp_client& parent;
     void connect( );
-    void write( std::string const& message, std::function<void( bool )> on_writed_call );
-    void write( char const* message, size_t size, std::function<void( bool )> on_writed_call );
+    void write( asio::const_buffers_1 buffer, std::function<void( bool )> on_writed_call );
     void read( );
     asio::io_service io;
     tcp::socket socket;
@@ -42,52 +41,32 @@ void tcp_client::_member::connect( )
     {
         if ( error )
         {
-            log( "接続できませんでした。: %s", error.message( ).c_str( ) );
+            log( "【tcp_client】接続できませんでした。: %s", error.message( ).c_str( ) );
             parent.remove_from_parent( );
         }
         else
         {
-            log( "接続成功！" );
+            log( "【tcp_client】接続成功！" );
             read( );
         }
     } );
 }
-void tcp_client::_member::write( std::string const& message, std::function<void( bool )> on_writed_call )
+void tcp_client::_member::write( asio::const_buffers_1 buffer, std::function<void( bool )> on_writed_call )
 {
     asio::async_write(
         socket,
-        asio::buffer( message ),
-        [ this, on_writed_call ] ( const asio::error_code& error, size_t bytes_transferred )
+        buffer,
+        [ this, on_writed_call, buffer ] ( const asio::error_code& error, size_t bytes_transferred )
     {
         bool e = false;
         if ( error )
         {
-            log( "送信できませんでした。: %s", error.message( ).c_str( ) );
+            log( "【tcp_client】送信できませんでした。: %s", error.message( ).c_str( ) );
             e = true;
         }
         else
         {
-            log( "送信成功！" );
-        }
-        if ( on_writed_call ) on_writed_call( e );
-    } );
-}
-void tcp_client::_member::write( char const * message, size_t size, std::function<void( bool )> on_writed_call )
-{
-    asio::async_write(
-        socket,
-        asio::buffer( message, size ),
-        [ this, on_writed_call ] ( const asio::error_code& error, size_t bytes_transferred )
-    {
-        bool e = false;
-        if ( error )
-        {
-            log( "送信できませんでした。: %s", error.message( ).c_str( ) );
-            e = true;
-        }
-        else
-        {
-            log( "送信成功！" );
+            log( "【tcp_client】送信成功！" );
         }
         if ( on_writed_call ) on_writed_call( e );
     } );
@@ -105,12 +84,12 @@ void tcp_client::_member::read( )
         {
             if ( error == asio::error::eof )
             {
-                log( "サーバーが接続を切りました。: %s", error.message( ).c_str( ) );
+                log( "【tcp_client】サーバーが接続を切りました。: %s", error.message( ).c_str( ) );
                 parent.remove_from_parent( );
             }
             else
             {
-                log( "無効なアクセスです。: %s", error.message( ).c_str( ) );
+                log( "【tcp_client】無効なアクセスです。: %s", error.message( ).c_str( ) );
             }
         }
         else
@@ -152,11 +131,12 @@ void tcp_client::update( float delta )
 }
 void tcp_client::write( std::string const & message, std::function<void( bool )> on_writed_call )
 {
-    _m->write( message, on_writed_call );
+    write( message.c_str( ), message.size( ), on_writed_call );
 }
 void tcp_client::write( char const * message, size_t size, std::function<void( bool )> on_writed_call )
 {
-    _m->write( message, size, on_writed_call );
+    log( "【tcp_client】送信中..." );
+    _m->write( asio::buffer( message, size ), on_writed_call );
 }
 void tcp_client::write_string( std::string const & message, std::function<void( bool )> on_writed_call )
 {

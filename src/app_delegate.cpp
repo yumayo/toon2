@@ -12,20 +12,20 @@ void app_delegate::setup( )
     _root->set_name( "root" );
     lua_run( );
 
-    if ( auto s = network::tcp_server::create( "25565", 6 ) )
-    {
-        s->set_name( "server" );
-        _root->add_child( s );
-    }
+    //if ( auto s = network::tcp_server::create( "25565", 6 ) )
+    //{
+    //    s->set_name( "server" );
+    //    _root->add_child( s );
+    //}
 
-    char* d = new char[16];
-    d = "hello";
-    if ( auto c = network::tcp_client::create( "127.0.0.1", "25565" ) )
-    {
-        c->set_name( "client" );
-        c->write( d, 16 );
-        _root->add_child( c );
-    }
+    //char* d = new char[16];
+    //d = "hello";
+    //if ( auto c = network::tcp_client::create( "127.0.0.1", "25565" ) )
+    //{
+    //    c->set_name( "client" );
+    //    c->write( d );
+    //    _root->add_child( c );
+    //}
 }
 void app_delegate::update( )
 {

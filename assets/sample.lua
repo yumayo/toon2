@@ -13,10 +13,11 @@ root:add_child(p0)
 -- text.position = vec2.new(100, 100)
 -- root:add_child(text)
 
--- server = tcp_server.create("25565", 6)
--- if server then
---     root:add_child(server)
--- end
+server = tcp_server.create("25565", 6)
+if server then
+    server.name = "server"
+    root:add_child(server)
+end
 
 p1 = button.create( size )
 if p1 then
@@ -29,12 +30,12 @@ if p1 then
     p1.pivot = vec2.new(0, 0)
 
 
-    -- client = tcp_client.create("127.0.0.1", "25565")
-    -- if client then
-    --     client.name = "client"
-    --     client:write("hello", function(b) end )
-    --     p1:add_child( client )
-    -- end
+    client = tcp_client.create("127.0.0.1", "25565")
+    if client then
+        client.name = "client"
+        client:write("こんにちは、UTF-8の文字列も送ってみます。", function(b) end )
+        p1:add_child( client )
+    end
 
 
     seq = sequence.create(  spawn.create(   EaseInOutExpo.create( rotate_by.create(0.5, pi / 2 ) ),

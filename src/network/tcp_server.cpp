@@ -39,7 +39,6 @@ struct tcp_server::_member
         : io( )
         , acceptor( )
         , sockets( )
-        , thread( )
         , port( port )
     {
         assert_log( 1 <= num_of_client, "クライアントの数は一つ以上でないといけません。", return );
@@ -51,27 +50,27 @@ struct tcp_server::_member
         }
     }
     void async_accept( socket_object& sock_obj );
+    void log_data( socket_object& sock_obj, size_t bytes_transferred );
     bool is_max( );
     void close_message( std::string const& message, socket_object& sock_obj );
     asio::io_service io;
     std::shared_ptr<tcp::acceptor> acceptor;
     std::vector<socket_object> sockets;
-    std::shared_ptr<std::thread> thread;
     std::string port;
     std::set<connect_data> ip_data;
 };
 void tcp_server::_member::async_accept( socket_object& sock_obj )
 {
-    log( "ソケットの準備" );
+    log( "【tcp_server】ソケットの準備" );
     acceptor->async_accept( sock_obj.socket, [ this, &sock_obj ] ( asio::error_code const& error )
     {
         if ( error )
         {
-            log( "接続は無効になりました。: %s", error.message( ).c_str( ) );
+            log( "【tcp_server】接続は無効になりました。: %s", error.message( ).c_str( ) );
         }
         else
         {
-            log( "接続を受け付けました。" );
+            log( "【tcp_server】接続を受け付けました。" );
             if ( is_max( ) )
             {
                 // 満員のときは即座に接続を切り、もう一度人数確認用に接続を受け付けます。
@@ -80,7 +79,7 @@ void tcp_server::_member::async_accept( socket_object& sock_obj )
             }
             else
             {
-                log( "接続成功！: %s, %d", sock_obj.socket.remote_endpoint( ).address( ).to_string( ).c_str( ), sock_obj.socket.remote_endpoint( ).port( ) );
+                log( "【tcp_server】接続成功！: %s, %d", sock_obj.socket.remote_endpoint( ).address( ).to_string( ).c_str( ), sock_obj.socket.remote_endpoint( ).port( ) );
                 ip_data.insert( connect_data( sock_obj.socket.remote_endpoint( ).address( ).to_string( ),
                                               sock_obj.socket.remote_endpoint( ).port( ) ) );
 
@@ -94,7 +93,7 @@ void tcp_server::_member::async_accept( socket_object& sock_obj )
                     {
                         if ( error == asio::error::eof )
                         {
-                            log( "クライアントが接続を切りました。: %s", error.message( ).c_str( ) );
+                            log( "【tcp_server】クライアントが接続を切りました。: %s", error.message( ).c_str( ) );
                             ip_data.erase( connect_data( sock_obj.socket.remote_endpoint( ).address( ).to_string( ),
                                                          sock_obj.socket.remote_endpoint( ).port( ) ) );
 
@@ -104,13 +103,12 @@ void tcp_server::_member::async_accept( socket_object& sock_obj )
                         }
                         else
                         {
-                            log( "無効なアクセスです。: %s", error.message( ).c_str( ) );
+                            log( "【tcp_server】無効なアクセスです。: %s", error.message( ).c_str( ) );
                         }
                     }
                     else
                     {
-                        const char* data = sock_obj.buffer.data( );
-                        log( "データ: %s", data );
+                        log_data( sock_obj, bytes_transferred );
                         std::fill_n( sock_obj.buffer.begin( ), bytes_transferred, 0 );
 
                         ip_data.erase( connect_data( sock_obj.socket.remote_endpoint( ).address( ).to_string( ),
@@ -124,6 +122,34 @@ void tcp_server::_member::async_accept( socket_object& sock_obj )
             }
         }
     } );
+}
+void tcp_server::_member::log_data( socket_object& sock_obj, size_t bytes_transferred )
+{
+    const char* data = sock_obj.buffer.data( );
+    log( "【tcp_server】受け取ったデータ: %d byte", bytes_transferred );
+    std::string output = ">[ ";
+    size_t i;
+    for ( i = 0; i < bytes_transferred - 1; ++i )
+    {
+        if ( ( i % 16 ) == 15 )
+        {
+            output += format( "%02X", data[i] & 0x000000FF );
+            output += " ]\n>[ ";
+        }
+        else
+        {
+            if ( ( i % 4 ) == 3 )
+            {
+                output += format( "%02X | ", data[i] & 0x000000FF );
+            }
+            else
+            {
+                output += format( "%02X", data[i] & 0x000000FF );
+            }
+        }
+    }
+    output += format( "%02X", data[i] & 0x000000FF );
+    log( "%s ]", output.c_str( ) );
 }
 bool tcp_server::_member::is_max( )
 {
@@ -141,11 +167,11 @@ void tcp_server::_member::close_message( std::string const & message, socket_obj
     {
         if ( error )
         {
-            log( "データを送れませんでした。: %s", error.message( ).c_str( ) );
+            log( "【tcp_server】データを送れませんでした。: %s", error.message( ).c_str( ) );
         }
         else
         {
-            log( "送信成功！" );
+            log( "【tcp_server】送信成功！" );
         }
     } );
     sock_obj.socket.close( );
@@ -157,23 +183,25 @@ CREATE_CPP( tcp_server, std::string const& port, int num_of_client )
 tcp_server::~tcp_server( )
 {
     _m->io.stop( );
-    _m->thread->join( );
 }
 bool tcp_server::init( std::string const& port, int num_of_client )
 {
     _m.reset( );
     _m = std::make_shared<_member>( port, num_of_client );
 
-    _m->thread = std::make_shared<std::thread>( [ this, num_of_client ]
+    set_schedule_update( );
+
+    for ( int i = 0; i < num_of_client + 1; ++i )
     {
-        for ( int i = 0; i < num_of_client + 1; ++i )
-        {
-            _m->async_accept( _m->sockets[i] );
-        }
-        _m->io.run( );
-    } );
+        _m->async_accept( _m->sockets[i] );
+    }
 
     return true;
+}
+void tcp_server::update( float delta )
+{
+    _m->io.reset( );
+    _m->io.poll( );
 }
 std::vector<std::pair<std::string, int>> tcp_server::get_ip_datas( )
 {
