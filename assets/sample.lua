@@ -19,6 +19,15 @@ if server then
     root:add_child(server)
 end
 
+function make_client()
+    client = tcp_client.create("127.0.0.1", "25565")
+    if client then
+        client.name = "client"
+        client:write("こんにちは、UTF-8の文字列も送ってみます。" )
+        p1:add_child( client )
+    end
+end
+
 p1 = button.create( size )
 if p1 then
     p1.position = vec2.new( 200, 200 )
@@ -30,25 +39,25 @@ if p1 then
     p1.pivot = vec2.new(0, 0)
 
 
-    client = tcp_client.create("127.0.0.1", "25565")
-    if client then
-        client.name = "client"
-        client:write("こんにちは、UTF-8の文字列も送ってみます。", function(b) end )
-        p1:add_child( client )
-    end
+    -- client = tcp_client.create("127.0.0.1", "25565")
+    -- if client then
+    --     client.name = "client"
+    --     -- client:write("こんにちは、UTF-8の文字列も送ってみます。", function(b) end )
+    --     p1:add_child( client )
+    -- end
 
 
     seq = sequence.create(  spawn.create(   EaseInOutExpo.create( rotate_by.create(0.5, pi / 2 ) ),
                                             EaseInOutExpo.create( scale_by.create(0.5, vec2.new( 1, 1 ) ) ) )
-                            -- ,call_func.create(function() make_client() end)
-                            -- , call_func.create( function() client.write("hello", function(b) end) end )
+                            , call_func.create(function() make_client() end)
+                            -- , call_func.create( function() client:write("こんにちは、UTF-8の文字列も送ってみます。", function(b) end ) end )
                             ,EaseInOutExpo.create(move_to.create(1.0, vec2.new(400, 200)))
                             ,EaseInOutExpo.create( scale_by.create(0.5, vec2.new( -1, -1 ) ) )
                             ,EaseInOutExpo.create(move_to.create(1.0, vec2.new(200, 200)))
-                            -- ,call_func.create(function() p1:remove_child_by_name("client") end)
+                            ,call_func.create(function() p1:remove_child_by_name("client") end)
                             -- ,remove_self.create()
                          )
-    p1:run_action( repeat_forever.create( seq ) )
+    p1:run_action( sequence.create( repeat_times.create( seq, 7 ), call_func.create(function() server:speech("マンメンミ(*´ω｀*)ﾓｷｭ") end), remove_self.create() ) )
 
     root:add_child(p1)
 

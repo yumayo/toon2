@@ -249,6 +249,9 @@
     <ClInclude Include="..\src\network\network.hpp">
       <Filter>Source Files\network</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\network\client_handle.h">
+      <Filter>Source Files\network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -469,6 +472,9 @@
       <Filter>Source Files\action</Filter>
     </ClCompile>
     <ClCompile Include="..\src\network\network.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\network\client_handle.cpp">
       <Filter>Source Files\network</Filter>
     </ClCompile>
   </ItemGroup>

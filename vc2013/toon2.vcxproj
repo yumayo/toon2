@@ -170,6 +170,7 @@
     <ClCompile Include="..\src\lualib\lzio.c" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\meeting\room.cpp" />
+    <ClCompile Include="..\src\network\client_handle.cpp" />
     <ClCompile Include="..\src\network\network.cpp" />
     <ClCompile Include="..\src\network\tcp_client.cpp" />
     <ClCompile Include="..\src\network\tcp_server.cpp" />
@@ -240,6 +241,7 @@
     <ClInclude Include="..\src\lualib\lvm.h" />
     <ClInclude Include="..\src\lualib\lzio.h" />
     <ClInclude Include="..\src\meeting\room.h" />
+    <ClInclude Include="..\src\network\client_handle.h" />
     <ClInclude Include="..\src\network\network.hpp" />
     <ClInclude Include="..\src\network\tcp_client.h" />
     <ClInclude Include="..\src\network\tcp_server.h" />
