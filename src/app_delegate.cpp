@@ -1,14 +1,11 @@
 ﻿#include "app_delegate.h"
 #include "cinder/gl/gl.h"
 #include "cocoslike.h"
-#include "network/tcp_server.h"
-#include "network/tcp_client.h"
-#include "cinder/Font.h"
-#include "cinder/gl/TextureFont.h"
 #include "utility/assert_log.h"
-#include "utility/utf8.h"
+#include "boost/range/algorithm/find_if.hpp"
 using namespace cinder;
 using namespace utility;
+int const app_delegate::_INVALID_ID = -1;
 void app_delegate::setup( )
 {
     _root = node::create( );
@@ -41,14 +38,40 @@ void app_delegate::mouseUp( cinder::app::MouseEvent event )
 }
 void app_delegate::touchesBegan( cinder::app::TouchEvent event )
 {
+    if ( _touch_id == _INVALID_ID )
+    {
+        _touch_id = event.getTouches( ).front( ).getId( );
+        auto itr = boost::find_if( event.getTouches( ), [ this ] ( cinder::app::TouchEvent::Touch& touch )
+        {
+            return touch.getId( ) == _touch_id;
+        } );
+        if ( itr != event.getTouches( ).end( ) ) _root->_touch_began( *itr );
+    }
+
     _root->_touches_began( event );
 }
 void app_delegate::touchesMoved( cinder::app::TouchEvent event )
 {
+    auto itr = boost::find_if( event.getTouches( ), [ this ] ( cinder::app::TouchEvent::Touch& touch )
+    {
+        return touch.getId( ) == _touch_id;
+    } );
+    if ( itr != event.getTouches( ).end( ) ) _root->_touch_moved( *itr );
+
     _root->_touches_moved( event );
 }
 void app_delegate::touchesEnded( cinder::app::TouchEvent event )
 {
+    auto itr = boost::find_if( event.getTouches( ), [ this ] ( cinder::app::TouchEvent::Touch& touch )
+    {
+        return touch.getId( ) == _touch_id;
+    } );
+    if ( itr != event.getTouches( ).end( ) )
+    {
+        _root->_touch_ended( *itr );
+        _touch_id = _INVALID_ID;
+    }
+
     _root->_touches_ended( event );
 }
 void app_delegate::keyDown( cinder::app::KeyEvent event )

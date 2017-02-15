@@ -22,7 +22,10 @@ public:
     virtual bool mouse_began( cinder::app::MouseEvent event );
     virtual void mouse_moved( cinder::app::MouseEvent event );
     virtual void mouse_ended( cinder::app::MouseEvent event );
-    virtual bool touches_began( cinder::app::TouchEvent event );
+    virtual bool touch_began( cinder::app::TouchEvent::Touch event );
+    virtual void touch_moved( cinder::app::TouchEvent::Touch event );
+    virtual void touch_ended( cinder::app::TouchEvent::Touch event );
+    virtual void touches_began( cinder::app::TouchEvent event );
     virtual void touches_moved( cinder::app::TouchEvent event );
     virtual void touches_ended( cinder::app::TouchEvent event );
     virtual void update( float delta );
@@ -32,9 +35,12 @@ private:
     bool _mouse_began( cinder::app::MouseEvent event );
     bool _mouse_moved( cinder::app::MouseEvent event );
     bool _mouse_ended( cinder::app::MouseEvent event );
-    bool _touches_began( cinder::app::TouchEvent event );
-    bool _touches_moved( cinder::app::TouchEvent event );
-    bool _touches_ended( cinder::app::TouchEvent event );
+    bool _touch_began( cinder::app::TouchEvent::Touch event );
+    bool _touch_moved( cinder::app::TouchEvent::Touch event );
+    bool _touch_ended( cinder::app::TouchEvent::Touch event );
+    void _touches_began( cinder::app::TouchEvent event );
+    void _touches_moved( cinder::app::TouchEvent event );
+    void _touches_ended( cinder::app::TouchEvent event );
     void _update( float delta );
     void _render( );
 

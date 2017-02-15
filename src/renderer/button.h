@@ -12,13 +12,11 @@ namespace renderer
         virtual bool mouse_began( cinder::app::MouseEvent event ) override;
         virtual void mouse_moved( cinder::app::MouseEvent event ) override;
         virtual void mouse_ended( cinder::app::MouseEvent event ) override;
-        virtual bool touches_began( cinder::app::TouchEvent event )override;
-        virtual void touches_moved( cinder::app::TouchEvent event )override;
-        virtual void touches_ended( cinder::app::TouchEvent event )override;
+        virtual bool touch_began( cinder::app::TouchEvent::Touch event )override;
+        virtual void touch_moved( cinder::app::TouchEvent::Touch event )override;
+        virtual void touch_ended( cinder::app::TouchEvent::Touch event )override;
     protected:
-        bool _swallow = false;
         bool _touch = false;
-        uint32_t _id = 0;
     private:
         bool hit_point( cinder::vec2 point );
     public:

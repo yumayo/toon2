@@ -22,9 +22,18 @@ void node::mouse_moved( cinder::app::MouseEvent event )
 void node::mouse_ended( cinder::app::MouseEvent event )
 {
 }
-bool node::touches_began( cinder::app::TouchEvent event )
+bool node::touch_began( cinder::app::TouchEvent::Touch event )
 {
     return false;
+}
+void node::touch_moved( cinder::app::TouchEvent::Touch event )
+{
+}
+void node::touch_ended( cinder::app::TouchEvent::Touch event )
+{
+}
+void node::touches_began( cinder::app::TouchEvent event )
+{
 }
 void node::touches_moved( cinder::app::TouchEvent event )
 {
@@ -100,19 +109,19 @@ bool node::_mouse_ended( cinder::app::MouseEvent event )
     }
     return false;
 }
-bool node::_touches_began( cinder::app::TouchEvent event )
+bool node::_touch_began( cinder::app::TouchEvent::Touch event )
 {
     for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
     {
         // 子供がモーダルオブジェクトだった場合
-        if ( ( *itr )->_touches_began( event ) )
+        if ( ( *itr )->_touch_began( event ) )
         {
             return true;
         }
     }
     if ( _schedule_mouse_event )
     {
-        if ( touches_began( event ) )
+        if ( touch_began( event ) )
         {
             _swallow = true;
             return true;
@@ -120,11 +129,11 @@ bool node::_touches_began( cinder::app::TouchEvent event )
     }
     return false;
 }
-bool node::_touches_moved( cinder::app::TouchEvent event )
+bool node::_touch_moved( cinder::app::TouchEvent::Touch event )
 {
     for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
     {
-        if ( ( *itr )->_touches_moved( event ) )
+        if ( ( *itr )->_touch_moved( event ) )
         {
             return true;
         }
@@ -133,17 +142,17 @@ bool node::_touches_moved( cinder::app::TouchEvent event )
     {
         if ( _swallow )
         {
-            touches_moved( event );
+            touch_moved( event );
             return true;
         }
     }
     return false;
 }
-bool node::_touches_ended( cinder::app::TouchEvent event )
+bool node::_touch_ended( cinder::app::TouchEvent::Touch event )
 {
     for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
     {
-        if ( ( *itr )->_touches_ended( event ) )
+        if ( ( *itr )->_touch_ended( event ) )
         {
             return true;
         }
@@ -152,12 +161,48 @@ bool node::_touches_ended( cinder::app::TouchEvent event )
     {
         if ( _swallow )
         {
-            touches_ended( event );
+            touch_ended( event );
             _swallow = false;
             return true;
         }
     }
     return false;
+}
+void node::_touches_began( cinder::app::TouchEvent event )
+{
+    for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
+    {
+        // 子供がモーダルオブジェクトだった場合
+        ( *itr )->_touches_began( event );
+    }
+    if ( _schedule_mouse_event )
+    {
+        touches_began( event );
+    }
+}
+void node::_touches_moved( cinder::app::TouchEvent event )
+{
+    for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
+    {
+        // 子供がモーダルオブジェクトだった場合
+        ( *itr )->_touches_moved( event );
+    }
+    if ( _schedule_mouse_event )
+    {
+        touches_moved( event );
+    }
+}
+void node::_touches_ended( cinder::app::TouchEvent event )
+{
+    for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
+    {
+        // 子供がモーダルオブジェクトだった場合
+        ( *itr )->_touches_ended( event );
+    }
+    if ( _schedule_mouse_event )
+    {
+        touches_ended( event );
+    }
 }
 void node::_update( float delta )
 {

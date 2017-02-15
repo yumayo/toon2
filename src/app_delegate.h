@@ -16,7 +16,9 @@ private:
 private:
     void lua_run( );
 private:
+    static int const _INVALID_ID;
     std::shared_ptr<sol::state> _lua;
     std::shared_ptr<node> _root;
+    int _touch_id = _INVALID_ID;
     double _prev_second = 0.0;
 };

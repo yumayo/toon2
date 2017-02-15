@@ -47,41 +47,18 @@ void button::mouse_ended( cinder::app::MouseEvent event )
 {
     _touch = false;
 }
-bool button::touches_began( cinder::app::TouchEvent event )
+bool button::touch_began( cinder::app::TouchEvent::Touch event )
 {
-    if ( hit_point( event.getTouches( )[0].getPos( ) ) )
-    {
-        _touch = true;
-        _id = event.getTouches( )[0].getId( );
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    _touch = hit_point( event.getPos( ) );
+    return _touch;
 }
-void button::touches_moved( cinder::app::TouchEvent event )
+void button::touch_moved( cinder::app::TouchEvent::Touch event )
 {
-    auto itr = boost::find_if( event.getTouches( ), [ this ] ( cinder::app::TouchEvent::Touch& touch )
-    {
-        return touch.getId( ) == _id;
-    } );
-    if ( itr != boost::end( event.getTouches( ) ) )
-    {
-        _touch = hit_point( itr->getPos( ) );
-    }
+    _touch = hit_point( event.getPos( ) );
 }
-void button::touches_ended( cinder::app::TouchEvent event )
+void button::touch_ended( cinder::app::TouchEvent::Touch event )
 {
-    auto itr = boost::find_if( event.getTouches( ), [ this ] ( cinder::app::TouchEvent::Touch& touch )
-    {
-        return touch.getId( ) == _id;
-    } );
-    if ( itr != boost::end( event.getTouches( ) ) )
-    {
-        _touch = false;
-    }
+    _touch = false;
 }
 bool button::hit_point( cinder::vec2 point )
 {
