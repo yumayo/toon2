@@ -50,6 +50,7 @@ struct tcp_server::_member
     void async_accept( socket_object& sock_obj );
     bool is_max( );
     void write( socket_object& sock_obj, asio::const_buffers_1 buffer, std::function<void( )> on_send );
+    void handshake( socket_object& sock_obj );
     void read( socket_object& sock_obj );
     void on_errored( asio::error_code const& error );
     std::vector<socket_object>::iterator find_socket_object( std::string const& name );
@@ -75,17 +76,15 @@ void tcp_server::_member::async_accept( socket_object& sock_obj )
             if ( is_max( ) )
             {
                 sock_obj.close( );
-                if ( parent.on_maxed ) parent.on_maxed( );
+                if ( parent.on_connections_overflow ) parent.on_connections_overflow( );
 
                 async_accept( sock_obj );
             }
             else
             {
                 log( "【tcp_server】接続成功！: %s, %d", sock_obj.socket.remote_endpoint( ).address( ).to_string( ).c_str( ), sock_obj.socket.remote_endpoint( ).port( ) );
-                if ( parent.on_connected ) parent.on_connected( );
                 sock_obj.handle.connect( sock_obj.socket.remote_endpoint( ).address( ).to_string( ), sock_obj.socket.remote_endpoint( ).port( ) );
-
-                read( sock_obj );
+                handshake( sock_obj );
             }
         }
     } );
@@ -126,6 +125,7 @@ void tcp_server::_member::read( socket_object & sock_obj )
         }
         else
         {
+            log( "【tcp_server】受け取ったデータ: %d byte", bytes_transferred );
             log_data( sock_obj.buffer.data( ), bytes_transferred );
             if ( parent.on_readed ) parent.on_readed( sock_obj.buffer.data( ), bytes_transferred );
             std::fill_n( sock_obj.buffer.begin( ), bytes_transferred, 0 );
@@ -144,13 +144,51 @@ void tcp_server::_member::write( socket_object& sock_obj, asio::const_buffers_1 
     {
         if ( error )
         {
-            log( "【tcp_client】送信できませんでした。: %s", error.message( ).c_str( ) );
+            log( "【tcp_server】送信できませんでした。: %s", error.message( ).c_str( ) );
             if ( parent.on_send_failed ) parent.on_send_failed( );
         }
         else
         {
-            log( "【tcp_client】送信成功！" );
+            log( "【tcp_server】送信成功！" );
             if ( on_send ) on_send( );
+        }
+    } );
+}
+void tcp_server::_member::handshake( socket_object& sock_obj )
+{
+    asio::async_read(
+        sock_obj.socket,
+        asio::buffer( sock_obj.buffer ),
+        asio::transfer_at_least( 1 ), // １バイトでもデータが送られてきたら、読み込みを開始します。
+        [ this, &sock_obj ] ( const asio::error_code& error, size_t bytes_transferred )
+    {
+        if ( error )
+        {
+            if ( error == asio::error::eof )
+            {
+                log( "【tcp_server】クライアントが接続を切りました。: %s", error.message( ).c_str( ) );
+                if ( parent.on_client_disconnected ) parent.on_client_disconnected( );
+                sock_obj.close( );
+
+                // クライアントがいなくなったソケットは、もう一度接続します。
+                async_accept( sock_obj );
+            }
+            else
+            {
+                log( "【tcp_server】無効なアクセスです。: %s", error.message( ).c_str( ) );
+                if ( parent.on_errored ) parent.on_errored( error );
+            }
+        }
+        else
+        {
+            log( "【tcp_server】受け取ったデータ: %d byte", bytes_transferred );
+            log_data( sock_obj.buffer.data( ), bytes_transferred );
+            sock_obj.handle.handshake( sock_obj.buffer.data( ) );
+            if ( parent.on_handshake ) parent.on_handshake( );
+
+            std::fill_n( sock_obj.buffer.begin( ), bytes_transferred, 0 );
+
+            read( sock_obj );
         }
     } );
 }
@@ -204,6 +242,10 @@ void tcp_server::write( std::string const & name, char const * message, size_t s
     {
         _m->write( *itr, asio::buffer( message, size ), on_send );
     }
+    else
+    {
+        log( "【tcp_server】名前と一致するクライアントが見つかりませんでした。" );
+    }
 }
 void tcp_server::speech( std::string const & message, std::function<void( )> on_send )
 {
@@ -256,12 +298,11 @@ LUA_SETUP_CPP( l_class )
            , l_base( node )
            , l_set( create )
            , l_set( on_startup_failed )
-           , l_set( on_connected )
-           , l_set( on_maxed )
+           , l_set( on_handshake )
+           , l_set( on_connections_overflow )
            , l_set( on_send_failed )
            , l_set( on_readed )
            , l_set( on_client_disconnected )
-           , l_set( on_cannot_sended )
            , "write", sol::overload( &l_class::lua_write_string_default,
                                      &l_class::lua_write_binary_default,
                                      &l_class::lua_write_string,

@@ -48,6 +48,7 @@ void tcp_client::_member::connect( )
         else
         {
             log( "【tcp_client】接続成功！" );
+            write( asio::buffer( parent._name.c_str( ), parent._name.size( ) ), nullptr );
             read( );
         }
     } );
@@ -97,6 +98,7 @@ void tcp_client::_member::read( )
         }
         else
         {
+            log( "【tcp_client】受け取ったデータ: %d byte", bytes_transferred );
             log_data( buffer.data( ), bytes_transferred );
             if ( parent.on_readed ) parent.on_readed( data, bytes_transferred );
             std::fill_n( buffer.begin( ), bytes_transferred, 0 );

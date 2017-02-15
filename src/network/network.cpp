@@ -68,7 +68,6 @@ void lua_setup_client_handle( sol::state& lua )
 }
 void log_data( char const * data, size_t bytes_transferred )
 {
-    log( "ytcp_serverzŽó‚¯Žæ‚Á‚½ƒf[ƒ^: %d byte", bytes_transferred );
     std::string output = ">[ ";
     size_t i;
     for ( i = 0; i < bytes_transferred - 1; ++i )

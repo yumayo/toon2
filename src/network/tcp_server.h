@@ -20,12 +20,11 @@ public:
     void speech( char const* message, size_t size, std::function<void( )> on_send = nullptr );
 public:
     std::function<void( )> on_startup_failed;
-    std::function<void( )> on_connected;
-    std::function<void( )> on_maxed;
+    std::function<void( )> on_handshake;
+    std::function<void( )> on_connections_overflow;
     std::function<void( )> on_send_failed;
     std::function<void( char const*, size_t )> on_readed;
     std::function<void( )> on_client_disconnected;
-    std::function<void( )> on_cannot_sended;
     std::function<void( asio::error_code const& )> on_errored;
 public:
     LUA_SETUP_H( tcp_server );
