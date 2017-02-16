@@ -1,4 +1,7 @@
 #include "network.hpp"
+#include "tcp_server.h"
+#include "tcp_client.h"
+#include "client_handle.h"
 #include "asio/error.hpp"
 #include "../utility/string_utility.h"
 using namespace utility;
@@ -98,5 +101,6 @@ void lua_setup( sol::state& lua )
     lua_setup_client_handle( lua );
     tcp_server::lua_setup( lua );
     tcp_client::lua_setup( lua );
+    client_handle::lua_setup( lua );
 }
 }

@@ -11,7 +11,9 @@ public:
 public:
     virtual bool is_done( ) override;
     virtual void update( float delta ) override;
+    virtual void restart( ) override;
 private:
+    int _init_number_of_times = 0;
     int _number_of_times = 0;
 public:
     LUA_SETUP_H( repeat_times );

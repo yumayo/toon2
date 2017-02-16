@@ -25,6 +25,7 @@ struct tcp_client::_member
     void connect( );
     void write( asio::const_buffers_1 buffer, std::function<void( )> on_send );
     void read( );
+    void handshake( );
     void sys_close( );
     void sys_error( asio::error_code const& error );
     asio::io_service io;
@@ -43,13 +44,13 @@ void tcp_client::_member::connect( )
         {
             log( "【tcp_client】接続できませんでした。: %s", error.message( ).c_str( ) );
             if ( parent.on_connect_failed ) parent.on_connect_failed( );
-            parent.remove_from_parent( );
+            sys_close( );
         }
         else
         {
             log( "【tcp_client】接続成功！" );
-            write( asio::buffer( parent._name.c_str( ), parent._name.size( ) ), nullptr );
-            read( );
+            // 接続が成功したらハンドシェイクを試みます。
+            handshake( );
         }
     } );
 }
@@ -64,7 +65,7 @@ void tcp_client::_member::write( asio::const_buffers_1 buffer, std::function<voi
         {
             log( "【tcp_client】送信できませんでした。: %s", error.message( ).c_str( ) );
             if ( parent.on_send_failed ) parent.on_send_failed( );
-            parent.remove_from_parent( );
+            sys_close( );
         }
         else
         {
@@ -88,13 +89,13 @@ void tcp_client::_member::read( )
             {
                 log( "【tcp_client】サーバーが接続を切りました。: %s", error.message( ).c_str( ) );
                 if ( parent.on_disconnected ) parent.on_disconnected( );
-                parent.remove_from_parent( );
             }
             else
             {
                 log( "【tcp_client】無効なアクセスです。: %s", error.message( ).c_str( ) );
                 sys_error( error );
             }
+            sys_close( );
         }
         else
         {
@@ -108,6 +109,27 @@ void tcp_client::_member::read( )
         }
     } );
 }
+void tcp_client::_member::handshake( )
+{
+    asio::async_write(
+        socket,
+        asio::buffer( parent._name.c_str( ), parent._name.size( ) ),
+        [ this ] ( const asio::error_code& error, size_t bytes_transferred )
+    {
+        if ( error )
+        {
+            log( "【tcp_client】ハンドシェイクできませんでした。: %s", error.message( ).c_str( ) );
+            if ( parent.on_handshake_faild ) parent.on_handshake_faild( );
+            sys_close( );
+        }
+        else
+        {
+            log( "【tcp_client】ハンドシェイク成功！" );
+            // ハンドシェイクに成功した場合は、サーバーからの読み込みを開始します。
+            read( );
+        }
+    } );
+}
 void tcp_client::_member::sys_close( )
 {
     if ( parent.on_closed ) parent.on_closed( );
@@ -117,7 +139,6 @@ void tcp_client::_member::sys_error( asio::error_code const& error )
 {
     if ( parent.on_errored ) parent.on_errored( error );
     if ( parent.lua_on_errored ) parent.lua_on_errored( error.value( ) );
-    parent.remove_from_parent( );
 }
 CREATE_CPP( tcp_client, std::string const& ip_address, std::string const& port )
 {

@@ -18,14 +18,15 @@ public:
     void write( std::string const& name, char const* message, size_t size, std::function<void( )> on_send = nullptr );
     void speech( std::string const& message, std::function<void( )> on_send = nullptr );
     void speech( char const* message, size_t size, std::function<void( )> on_send = nullptr );
+    void close( std::string const& name );
 public:
     std::function<void( )> on_startup_failed;
-    std::function<void( )> on_handshake;
+    std::function<void( client_handle const& )> on_handshake;
     std::function<void( )> on_connections_overflow;
-    std::function<void( )> on_send_failed;
-    std::function<void( char const*, size_t )> on_readed;
-    std::function<void( )> on_client_disconnected;
-    std::function<void( asio::error_code const& )> on_errored;
+    std::function<void( client_handle const& )> on_send_failed;
+    std::function<void( client_handle const&, char const*, size_t )> on_readed;
+    std::function<void( client_handle const& )> on_client_disconnected;
+    std::function<void( client_handle const&, asio::error_code const& )> on_errored;
 public:
     LUA_SETUP_H( tcp_server );
 private:
@@ -37,6 +38,6 @@ private:
     void lua_speech_binary_default( char const* message, size_t size );
     void lua_speech_string( std::string const& message, std::function<void( )> on_send );
     void lua_speech_binary( char const* message, size_t size, std::function<void( )> on_send );
-    std::function<void( int )> lua_on_errored;
+    std::function<void( client_handle const&, int )> lua_on_errored;
 };
 }

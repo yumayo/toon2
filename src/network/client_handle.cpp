@@ -1,20 +1,12 @@
 #include "client_handle.h"
 namespace network
 {
-void client_handle::clear( )
+client_handle::client_handle( std::string const & name, std::string const & ip_address, int const & port )
+    : _name( name )
+    , _ip_address( ip_address )
+    , _port( port )
 {
-    _name = "";
-    _ip_address = "";
-    _port = 0;
-}
-void client_handle::connect( std::string const & ip_address, int port )
-{
-    _ip_address = ip_address;
-    _port = port;
-}
-void client_handle::handshake( std::string const & name )
-{
-    _name = name;
+
 }
 bool client_handle::operator==( std::string const & name ) const
 {
@@ -23,18 +15,6 @@ bool client_handle::operator==( std::string const & name ) const
 bool client_handle::operator==( client_handle const & other ) const
 {
     return this->_name == other._name;
-}
-bool client_handle::operator<( client_handle const & other ) const
-{
-    return this->_name < other._name;
-}
-client_handle::operator bool( ) const
-{
-    return !_name.empty( );
-}
-bool client_handle::operator!( ) const
-{
-    return _name.empty( );
 }
 std::string client_handle::get_name( ) const
 {
@@ -48,6 +28,17 @@ int client_handle::get_port( ) const
 {
     return _port;
 }
+#define l_class client_handle
+#include "lua_define.h"
+LUA_SETUP_CPP( l_class )
+{
+    l_new( client_handle
+           , l_readonly( name )
+           , l_readonly( ip_address )
+           , l_readonly( port )
+    );
+}
+#include "lua_undef.h"
 bool operator==( std::string const & name, client_handle const& other )
 {
     return name == other._name;

@@ -8,7 +8,8 @@ CREATE_CPP( repeat_times, std::shared_ptr<finite_time_action> time_action, int n
 bool repeat_times::init( std::shared_ptr<finite_time_action> time_action, int number_of_times )
 {
     _time_action = time_action;
-    _number_of_times = number_of_times;
+    _init_number_of_times = number_of_times;
+    _number_of_times = _init_number_of_times;
     return true;
 }
 bool repeat_times::is_done( )
@@ -27,6 +28,11 @@ void repeat_times::update( float delta )
             _time_action->restart( );
         }
     }
+}
+void repeat_times::restart( )
+{
+    _number_of_times = _init_number_of_times;
+    _time_action->restart( );
 }
 #define l_class repeat_times
 #include "lua_define.h"

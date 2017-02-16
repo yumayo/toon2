@@ -59,6 +59,7 @@ utf8::utf8( const std::string& newStr )
         if ( lengthString == 0 )
         {
             assert_log( "Bad utf-8 set string: %s", newStr.c_str( ), return );
+            _is_utf8 = false;
         }
 
         while ( *sequenceUtf8 )
@@ -71,6 +72,24 @@ utf8::utf8( const std::string& newStr )
 
             push_back( charUTF8 );
         }
+
+        _text.clear( );
+        for ( auto& obj : *this )
+        {
+            _text += obj;
+        }
     }
+}
+bool utf8::is_utf8( )
+{
+    return _is_utf8;
+}
+char const* utf8::c_str( )
+{
+    return _text.c_str( );
+}
+std::string utf8::string( )
+{
+    return _text;
 }
 }

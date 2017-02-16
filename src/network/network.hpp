@@ -1,6 +1,5 @@
 #pragma once
-#include "tcp_server.h"
-#include "tcp_client.h"
+#include "sol.hpp"
 namespace network
 {
 void log_data( char const* data, size_t bytes_transferred );

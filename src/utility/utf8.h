@@ -22,8 +22,13 @@ class utf8 : public std::vector<std::string>
     bool isLegalUTF8( const utf8_head *source, int length );
     int getUTF8StringLength( const utf8_head* utf8 );
     size_t getNumBytesForUTF8( utf8_head first );
+    bool _is_utf8 = true;
+    std::string _text;
 public:
     utf8( );
     utf8( const std::string& newStr );
+    bool is_utf8( );
+    char const* c_str( );
+    std::string string( );
 };
 }

@@ -10,25 +10,53 @@ using asio::ip::tcp;
 #include "network.hpp"
 #include <set>
 #include "boost/range/algorithm/find_if.hpp"
+#include "../utility/utf8.h"
 using namespace utility;
 namespace network
 {
-struct socket_object
+class socket_object
 {
+public:
+    socket_object( ) = delete;
+    socket_object( socket_object const& ) = delete;
     socket_object( asio::io_service& io )
         : socket( io )
+        , handle( _name, _ip_address, _port )
     {
         buffer.fill( 0 );
     }
     void close( )
     {
-        handle.clear( );
+        _name = "";
+        _ip_address = "";
+        _port = 0;
         socket.close( );
         buffer.fill( 0 );
     }
-    client_handle handle;
+    void connect( std::string const& ip_address, int port )
+    {
+        _ip_address = ip_address;
+        _port = port;
+    }
+    void buffer_clear( size_t bytes_transferred )
+    {
+        std::fill_n( buffer.begin( ), bytes_transferred, 0 );
+    }
+    void handshake( )
+    {
+        _name = c_str( );
+    }
+    char const* c_str( )
+    {
+        return buffer.data( );
+    }
     tcp::socket socket;
     boost::array<char, 512> buffer;
+    client_handle handle;
+private: // 以下の値をハンドルに詰め込んで運びます。
+    std::string _name;
+    std::string _ip_address;
+    int _port = 0;
 };
 struct tcp_server::_member
 {
@@ -40,24 +68,27 @@ struct tcp_server::_member
         , port( port )
     {
         assert_log( 1 <= num_of_client, "クライアントの数は一つ以上でないといけません。", return );
-        acceptor = std::make_shared<tcp::acceptor>( io, tcp::endpoint( tcp::v4( ), boost::lexical_cast<int>( port ) ) );
+        acceptor = std::make_unique<tcp::acceptor>( io, tcp::endpoint( tcp::v4( ), boost::lexical_cast<int>( port ) ) );
         // 一つはクライアントの接続を切る役割を持たせています。
         for ( int i = 0; i < num_of_client + 1; ++i )
         {
-            sockets.emplace_back( io );
+            sockets.emplace_back( std::make_unique<socket_object>( io ) );
         }
+        int a = 0;
     }
     void async_accept( socket_object& sock_obj );
     bool is_max( );
     void write( socket_object& sock_obj, asio::const_buffers_1 buffer, std::function<void( )> on_send );
     void handshake( socket_object& sock_obj );
     void read( socket_object& sock_obj );
-    void on_errored( asio::error_code const& error );
-    std::vector<socket_object>::iterator find_socket_object( std::string const& name );
+    void on_errored( socket_object& sock_obj, asio::error_code const& error );
+    void close_async( socket_object& sock_obj );
+    std::vector<std::unique_ptr<socket_object>>::iterator find_socket_object( std::string const& name );
+    void find_run( std::string const& name, std::function<void( socket_object& )> call );
     tcp_server& parent;
     asio::io_service io;
-    std::shared_ptr<tcp::acceptor> acceptor;
-    std::vector<socket_object> sockets;
+    std::unique_ptr<tcp::acceptor> acceptor;
+    std::vector<std::unique_ptr<socket_object>> sockets;
     std::string port;
 };
 void tcp_server::_member::async_accept( socket_object& sock_obj )
@@ -75,15 +106,14 @@ void tcp_server::_member::async_accept( socket_object& sock_obj )
             log( "【tcp_server】接続を受け付けました。" );
             if ( is_max( ) )
             {
-                sock_obj.close( );
                 if ( parent.on_connections_overflow ) parent.on_connections_overflow( );
-
-                async_accept( sock_obj );
+                close_async( sock_obj );
             }
             else
             {
                 log( "【tcp_server】接続成功！: %s, %d", sock_obj.socket.remote_endpoint( ).address( ).to_string( ).c_str( ), sock_obj.socket.remote_endpoint( ).port( ) );
-                sock_obj.handle.connect( sock_obj.socket.remote_endpoint( ).address( ).to_string( ), sock_obj.socket.remote_endpoint( ).port( ) );
+                sock_obj.connect( sock_obj.socket.remote_endpoint( ).address( ).to_string( ), sock_obj.socket.remote_endpoint( ).port( ) );
+                // 接続が成功したら、ハンドシェイクを試みます。
                 handshake( sock_obj );
             }
         }
@@ -94,7 +124,7 @@ bool tcp_server::_member::is_max( )
     int num = 0;
     for ( auto& obj : sockets )
     {
-        if ( obj.socket.is_open( ) ) num++;
+        if ( obj->socket.is_open( ) ) num++;
     }
     return sockets.size( ) == num;
 }
@@ -111,23 +141,20 @@ void tcp_server::_member::read( socket_object & sock_obj )
             if ( error == asio::error::eof )
             {
                 log( "【tcp_server】クライアントが接続を切りました。: %s", error.message( ).c_str( ) );
-                if ( parent.on_client_disconnected ) parent.on_client_disconnected( );
-                sock_obj.close( );
-
-                // クライアントがいなくなったソケットは、もう一度接続します。
-                async_accept( sock_obj );
+                if ( parent.on_client_disconnected ) parent.on_client_disconnected( sock_obj.handle );
             }
             else
             {
                 log( "【tcp_server】無効なアクセスです。: %s", error.message( ).c_str( ) );
-                if ( parent.on_errored ) parent.on_errored( error );
+                on_errored( sock_obj, error );
             }
+            close_async( sock_obj );
         }
         else
         {
             log( "【tcp_server】受け取ったデータ: %d byte", bytes_transferred );
             log_data( sock_obj.buffer.data( ), bytes_transferred );
-            if ( parent.on_readed ) parent.on_readed( sock_obj.buffer.data( ), bytes_transferred );
+            if ( parent.on_readed ) parent.on_readed( sock_obj.handle, sock_obj.buffer.data( ), bytes_transferred );
             std::fill_n( sock_obj.buffer.begin( ), bytes_transferred, 0 );
 
             // クライアントからの接続が切れるまで無限に受け取り続けます。
@@ -140,12 +167,12 @@ void tcp_server::_member::write( socket_object& sock_obj, asio::const_buffers_1 
     asio::async_write(
         sock_obj.socket,
         buffer,
-        [ this, on_send, buffer ] ( const asio::error_code& error, size_t bytes_transferred )
+        [ this, &sock_obj, on_send, buffer ] ( const asio::error_code& error, size_t bytes_transferred )
     {
         if ( error )
         {
             log( "【tcp_server】送信できませんでした。: %s", error.message( ).c_str( ) );
-            if ( parent.on_send_failed ) parent.on_send_failed( );
+            if ( parent.on_send_failed ) parent.on_send_failed( sock_obj.handle );
         }
         else
         {
@@ -156,53 +183,58 @@ void tcp_server::_member::write( socket_object& sock_obj, asio::const_buffers_1 
 }
 void tcp_server::_member::handshake( socket_object& sock_obj )
 {
+    log( "【tcp_server】ハンドシェイクを受け付けました。" );
     asio::async_read(
         sock_obj.socket,
         asio::buffer( sock_obj.buffer ),
         asio::transfer_at_least( 1 ), // １バイトでもデータが送られてきたら、読み込みを開始します。
         [ this, &sock_obj ] ( const asio::error_code& error, size_t bytes_transferred )
     {
-        if ( error )
+        if ( error || !utf8( sock_obj.c_str( ) ).is_utf8( ) )
         {
-            if ( error == asio::error::eof )
-            {
-                log( "【tcp_server】クライアントが接続を切りました。: %s", error.message( ).c_str( ) );
-                if ( parent.on_client_disconnected ) parent.on_client_disconnected( );
-                sock_obj.close( );
-
-                // クライアントがいなくなったソケットは、もう一度接続します。
-                async_accept( sock_obj );
-            }
-            else
-            {
-                log( "【tcp_server】無効なアクセスです。: %s", error.message( ).c_str( ) );
-                if ( parent.on_errored ) parent.on_errored( error );
-            }
+            log( "【tcp_server】ハンドシェイクに失敗。" );
+            close_async( sock_obj );
         }
         else
         {
-            log( "【tcp_server】受け取ったデータ: %d byte", bytes_transferred );
-            log_data( sock_obj.buffer.data( ), bytes_transferred );
-            sock_obj.handle.handshake( sock_obj.buffer.data( ) );
-            if ( parent.on_handshake ) parent.on_handshake( );
+            log( "【tcp_server】相手の名前: %s", sock_obj.c_str( ) );
+            sock_obj.handshake( );
+            if ( parent.on_handshake ) parent.on_handshake( sock_obj.handle );
 
-            std::fill_n( sock_obj.buffer.begin( ), bytes_transferred, 0 );
-
+            sock_obj.buffer_clear( bytes_transferred );
             read( sock_obj );
         }
     } );
 }
-void tcp_server::_member::on_errored( asio::error_code const & error )
+void tcp_server::_member::on_errored( socket_object& sock_obj, asio::error_code const & error )
 {
-    if ( parent.on_errored ) parent.on_errored( error );
-    if ( parent.lua_on_errored ) parent.lua_on_errored( error.value( ) );
+    if ( parent.on_errored ) parent.on_errored( sock_obj.handle, error );
+    if ( parent.lua_on_errored ) parent.lua_on_errored( sock_obj.handle, error.value( ) );
 }
-std::vector<socket_object>::iterator tcp_server::_member::find_socket_object( std::string const & name )
+void tcp_server::_member::close_async( socket_object & sock_obj )
 {
-    return boost::find_if( sockets, [ name ] ( socket_object& obj )
+    // クライアントがいなくなったソケットは、もう一度接続します。
+    sock_obj.close( );
+    async_accept( sock_obj );
+}
+std::vector<std::unique_ptr<socket_object>>::iterator tcp_server::_member::find_socket_object( std::string const & name )
+{
+    return boost::find_if( sockets, [ name ] ( std::unique_ptr<socket_object>& obj )
     {
-        return obj.handle == name;
+        return obj->handle == name;
     } );
+}
+void tcp_server::_member::find_run( std::string const & name, std::function<void( socket_object& )> call )
+{
+    auto itr = find_socket_object( name );
+    if ( itr != sockets.end( ) )
+    {
+        call( **itr );
+    }
+    else
+    {
+        log( "【tcp_server】名前と一致するクライアントが見つかりませんでした。" );
+    }
 }
 CREATE_CPP( tcp_server, std::string const& port, int num_of_client )
 {
@@ -221,7 +253,7 @@ bool tcp_server::init( std::string const& port, int num_of_client )
 
     for ( int i = 0; i < num_of_client + 1; ++i )
     {
-        _m->async_accept( _m->sockets[i] );
+        _m->async_accept( *_m->sockets[i] );
     }
 
     return true;
@@ -237,15 +269,10 @@ void tcp_server::write( std::string const & name, std::string const & message, s
 }
 void tcp_server::write( std::string const & name, char const * message, size_t size, std::function<void( )> on_send )
 {
-    auto itr = _m->find_socket_object( name );
-    if ( itr != _m->sockets.end( ) )
+    _m->find_run( name, [ this, message, size, on_send ] ( socket_object& sock_obj ) 
     {
-        _m->write( *itr, asio::buffer( message, size ), on_send );
-    }
-    else
-    {
-        log( "【tcp_server】名前と一致するクライアントが見つかりませんでした。" );
-    }
+        _m->write( sock_obj, asio::buffer( message, size ), on_send );
+    } );
 }
 void tcp_server::speech( std::string const & message, std::function<void( )> on_send )
 {
@@ -255,8 +282,15 @@ void tcp_server::speech( char const * message, size_t size, std::function<void( 
 {
     for ( auto& obj : _m->sockets )
     {
-        _m->write( obj, asio::buffer( message, size ), on_send );
+        _m->write( *obj, asio::buffer( message, size ), on_send );
     }
+}
+void tcp_server::close( std::string const & name )
+{
+    _m->find_run( name, [ this ] ( socket_object& sock_obj )
+    {
+        _m->close_async( sock_obj );
+    } );
 }
 void tcp_server::lua_write_string_default( std::string const & name, std::string const & message )
 {
