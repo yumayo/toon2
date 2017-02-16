@@ -31,6 +31,7 @@ void repeat_times::update( float delta )
 }
 void repeat_times::restart( )
 {
+    finite_time_action::restart( );
     _number_of_times = _init_number_of_times;
     _time_action->restart( );
 }

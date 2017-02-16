@@ -30,6 +30,7 @@ void repeat_forever::update( float delta )
 }
 void repeat_forever::restart( )
 {
+    finite_time_action::restart( );
     _time_action->restart( );
 }
 #define l_class repeat_forever
