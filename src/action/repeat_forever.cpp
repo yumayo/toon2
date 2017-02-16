@@ -28,6 +28,10 @@ void repeat_forever::update( float delta )
         _time_action->restart( );
     }
 }
+void repeat_forever::restart( )
+{
+    _time_action->restart( );
+}
 #define l_class repeat_forever
 #include "lua_define.h"
 LUA_SETUP_CPP( l_class )
