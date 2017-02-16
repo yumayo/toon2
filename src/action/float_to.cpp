@@ -6,7 +6,7 @@ CREATE_CPP( float_to, float duration, float from, float to, std::function<void( 
 {
     CREATE( float_to, duration, from, to, callback );
 }
-bool float_to::init( float duration, float from, float to, float_to_callback callback )
+bool float_to::init( float duration, float from, float to, std::function<void( float value )> callback )
 {
     _duration = duration;
     _from = from;
