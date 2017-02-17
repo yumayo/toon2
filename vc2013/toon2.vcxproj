@@ -137,6 +137,7 @@
     <ClCompile Include="..\src\audio\audio.cpp" />
     <ClCompile Include="..\src\audio\buffer_player.cpp" />
     <ClCompile Include="..\src\audio\file_player.cpp" />
+    <ClCompile Include="..\src\auto_release_pool.cpp" />
     <ClCompile Include="..\src\cinder\cinder.cpp" />
     <ClCompile Include="..\src\lualib\lapi.c" />
     <ClCompile Include="..\src\lualib\lauxlib.c" />
@@ -181,6 +182,7 @@
     <ClCompile Include="..\src\network\tcp_server.cpp" />
     <ClCompile Include="..\src\node.cpp" />
     <ClCompile Include="..\src\app_delegate.cpp" />
+    <ClCompile Include="..\src\ref.cpp" />
     <ClCompile Include="..\src\renderer\button.cpp" />
     <ClCompile Include="..\src\renderer\label.cpp" />
     <ClCompile Include="..\src\renderer\letter.cpp" />
@@ -222,6 +224,7 @@
     <ClInclude Include="..\src\audio\audio.hpp" />
     <ClInclude Include="..\src\audio\buffer_player.h" />
     <ClInclude Include="..\src\audio\file_player.h" />
+    <ClInclude Include="..\src\auto_release_pool.h" />
     <ClInclude Include="..\src\cinder\cinder.hpp" />
     <ClInclude Include="..\src\forward.h" />
     <ClInclude Include="..\src\lualib\lapi.h" />
@@ -257,6 +260,7 @@
     <ClInclude Include="..\src\network\tcp_server.h" />
     <ClInclude Include="..\src\node.h" />
     <ClInclude Include="..\src\app_delegate.h" />
+    <ClInclude Include="..\src\ref.h" />
     <ClInclude Include="..\src\renderer\button.h" />
     <ClInclude Include="..\src\renderer\label.h" />
     <ClInclude Include="..\src\renderer\letter.h" />

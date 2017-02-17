@@ -3,6 +3,7 @@
 #include "cocoslike.h"
 #include "utility/assert_log.h"
 #include "boost/range/algorithm/find_if.hpp"
+#include "auto_release_pool.h"
 using namespace cinder;
 using namespace utility;
 int const app_delegate::_INVALID_ID = -1;
@@ -33,6 +34,7 @@ void app_delegate::update( )
     _root->_update( delta );
     _prev_second = getElapsedSeconds( );
     _lua->collect_garbage( );
+    auto_release_pool::get_instans( )->collect_garbage( );
 }
 void app_delegate::draw( )
 {
