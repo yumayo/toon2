@@ -5,11 +5,11 @@ namespace action
 class finite_time_action : public action
 {
 public:
-    CREATE_H( finite_time_action );
+    CREATE_H( finite_time_action, float duration );
     virtual ~finite_time_action( ) { }
 
 public:
-    bool init( );
+    bool init( float duration );
 public:
     virtual bool is_done( ) override;
     virtual void update( float delta ) override;

@@ -2,12 +2,13 @@
 #include "../node.h"
 namespace action
 {
-CREATE_CPP( finite_time_action )
+CREATE_CPP( finite_time_action, float duration )
 {
-    CREATE( finite_time_action );
+    CREATE( finite_time_action, duration );
 }
-bool finite_time_action::init( )
+bool finite_time_action::init( float duration )
 {
+    _duration = duration;
     return true;
 }
 void finite_time_action::update( float delta )

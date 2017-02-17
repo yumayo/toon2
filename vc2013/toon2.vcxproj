@@ -118,6 +118,8 @@
     <ClCompile Include="..\src\action\ease.cpp" />
     <ClCompile Include="..\src\action\action_manager.cpp" />
     <ClCompile Include="..\src\action\delay.cpp" />
+    <ClCompile Include="..\src\action\fade_in.cpp" />
+    <ClCompile Include="..\src\action\fade_out.cpp" />
     <ClCompile Include="..\src\action\finite_time_action.cpp" />
     <ClCompile Include="..\src\action\float_to.cpp" />
     <ClCompile Include="..\src\action\move_by.cpp" />
@@ -132,6 +134,9 @@
     <ClCompile Include="..\src\action\sequence.cpp" />
     <ClCompile Include="..\src\action\spawn.cpp" />
     <ClCompile Include="..\src\action\timeline.cpp" />
+    <ClCompile Include="..\src\audio\audio.cpp" />
+    <ClCompile Include="..\src\audio\buffer_player.cpp" />
+    <ClCompile Include="..\src\audio\file_player.cpp" />
     <ClCompile Include="..\src\cinder\cinder.cpp" />
     <ClCompile Include="..\src\lualib\lapi.c" />
     <ClCompile Include="..\src\lualib\lauxlib.c" />
@@ -198,6 +203,8 @@
     <ClInclude Include="..\src\action\ease.h" />
     <ClInclude Include="..\src\action\action_manager.h" />
     <ClInclude Include="..\src\action\delay.h" />
+    <ClInclude Include="..\src\action\fade_in.h" />
+    <ClInclude Include="..\src\action\fade_out.h" />
     <ClInclude Include="..\src\action\finite_time_action.h" />
     <ClInclude Include="..\src\action\float_to.h" />
     <ClInclude Include="..\src\action\move_by.h" />
@@ -212,6 +219,9 @@
     <ClInclude Include="..\src\action\sequence.h" />
     <ClInclude Include="..\src\action\spawn.h" />
     <ClInclude Include="..\src\action\timeline.h" />
+    <ClInclude Include="..\src\audio\audio.hpp" />
+    <ClInclude Include="..\src\audio\buffer_player.h" />
+    <ClInclude Include="..\src\audio\file_player.h" />
     <ClInclude Include="..\src\cinder\cinder.hpp" />
     <ClInclude Include="..\src\forward.h" />
     <ClInclude Include="..\src\lualib\lapi.h" />

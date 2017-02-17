@@ -34,6 +34,9 @@
     <Filter Include="Source Files\cinder">
       <UniqueIdentifier>{95da217f-eea7-463c-9e5d-dea5cb7f38b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\audio">
+      <UniqueIdentifier>{8437e4b0-5347-4a62-aa82-5688962ab1f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -251,6 +254,21 @@
     </ClInclude>
     <ClInclude Include="..\src\network\client_handle.h">
       <Filter>Source Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\audio\audio.hpp">
+      <Filter>Source Files\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\audio\buffer_player.h">
+      <Filter>Source Files\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\audio\file_player.h">
+      <Filter>Source Files\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\action\fade_in.h">
+      <Filter>Source Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\action\fade_out.h">
+      <Filter>Source Files\action</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -476,6 +494,21 @@
     </ClCompile>
     <ClCompile Include="..\src\network\client_handle.cpp">
       <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\audio\audio.cpp">
+      <Filter>Source Files\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\audio\buffer_player.cpp">
+      <Filter>Source Files\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\audio\file_player.cpp">
+      <Filter>Source Files\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\action\fade_in.cpp">
+      <Filter>Source Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\action\fade_out.cpp">
+      <Filter>Source Files\action</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

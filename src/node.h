@@ -112,6 +112,8 @@ protected:
 public:
     void set_color( cinder::ColorA value );
     cinder::ColorA get_color( );
+    void set_opacity( float alpha );
+    float get_opacity( );
 
 protected:
     std::vector<std::shared_ptr<node>> _children;

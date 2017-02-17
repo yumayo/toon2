@@ -105,7 +105,7 @@ void app_delegate::lua_run( )
 
     try
     {
-        ( *_lua ).script_file( getAssetPath( "sample.lua" ).string( ) );
+        ( *_lua ).script_file( getAssetPath( "main.lua" ).string( ) );
     }
     catch ( sol::error const& error )
     {

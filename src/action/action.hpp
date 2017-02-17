@@ -14,6 +14,8 @@
 #include "rotate_to.h"
 #include "rotate_by.h"
 #include "repeat_times.h"
+#include "fade_in.h"
+#include "fade_out.h"
 
 namespace action
 {
@@ -38,6 +40,8 @@ inline void lua_setup( sol::state& lua )
     scale_by::lua_setup( lua );
     rotate_to::lua_setup( lua );
     rotate_by::lua_setup( lua );
+    fade_in::lua_setup( lua );
+    fade_out::lua_setup( lua );
 
     ease<cinder::EaseNone>::lua_setup( lua );
     ease<cinder::EaseInQuad>::lua_setup( lua );

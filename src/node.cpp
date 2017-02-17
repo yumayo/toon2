@@ -318,6 +318,14 @@ cinder::ColorA node::get_color( )
 {
     return _color;
 }
+void node::set_opacity( float alpha )
+{
+    _color.a = alpha;
+}
+float node::get_opacity( )
+{
+    return _color.a;
+}
 std::vector<std::shared_ptr<node>> const & node::get_children( )
 {
     return _children;
@@ -529,6 +537,7 @@ LUA_SETUP_CPP( l_class )
            , l_prop( anchor_point )
            , l_prop( pivot )
            , l_prop( color )
+           , l_prop( opacity )
            , l_readonly( children )
            , l_prop( parent )
            , l_prop( tag )
