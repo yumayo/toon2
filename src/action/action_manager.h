@@ -15,6 +15,7 @@ public:
     bool is_running( );
     void update( float delta );
 private:
-    std::vector<std::shared_ptr<action>> _actions;
+    std::list<std::shared_ptr<action>> _actions;
+    std::vector<std::function<void( )>> _remove_signal;
 };
 }

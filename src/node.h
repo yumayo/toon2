@@ -116,9 +116,9 @@ public:
     float get_opacity( );
 
 protected:
-    std::vector<std::shared_ptr<node>> _children;
+    std::list<std::shared_ptr<node>> _children;
 public:
-    std::vector<std::shared_ptr<node>> const& get_children( );
+    std::list<std::shared_ptr<node>> const& get_children( );
 
 protected:
     std::weak_ptr<node> _parent;

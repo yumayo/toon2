@@ -49,19 +49,22 @@ std::shared_ptr<action> action_manager::get_action_by_tag( int tag )
 
 void action_manager::remove_all_actions( )
 {
-    _actions.clear( );
+    _remove_signal.emplace_back( [ this ] { _actions.clear( ); } );
 }
 
 void action_manager::remove_action( std::shared_ptr<action> const& act_weak )
 {
     if ( _actions.empty( ) ) return;
 
-    auto erase = std::remove_if( std::begin( _actions ), std::end( _actions ), [ this, act_weak ] ( std::shared_ptr<action>& act )
+    _remove_signal.emplace_back( [ this, act_weak ]
     {
-        return act == act_weak;
-    } );
+        auto erase = std::remove_if( std::begin( _actions ), std::end( _actions ), [ this, act_weak ] ( std::shared_ptr<action>& act )
+        {
+            return act == act_weak;
+        } );
 
-    _actions.erase( erase, std::end( _actions ) );
+        _actions.erase( erase, std::end( _actions ) );
+    } );
 }
 
 void action_manager::remove_action_by_tag( int tag )
@@ -113,5 +116,8 @@ void action_manager::update( float delta )
     } );
 
     _actions.erase( erase, std::end( _actions ) );
+
+    for ( auto const& rem : _remove_signal ) rem( );
+    _remove_signal.clear( );
 }
 }

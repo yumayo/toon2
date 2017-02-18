@@ -200,14 +200,14 @@ void node::_touches_ended( cinder::app::TouchEvent event )
 }
 void node::_update( float delta )
 {
-    // 途中でaddがあるため、iteratorをバックアップします。
-    std::vector<std::vector<std::shared_ptr<node>>::iterator> update_iterators;
+    // 途中でaddがあるため、コンテナをバックアップします。
+    std::vector<std::list<std::shared_ptr<node>>::iterator> update_objects;
     for ( auto itr = std::begin( _children ); itr != std::end( _children ); ++itr )
     {
-        update_iterators.emplace_back( itr );
+        update_objects.emplace_back( itr );
     }
 
-    for ( auto const& c : update_iterators )
+    for ( auto const& c : update_objects )
     {
         ( *c )->_update( delta );
     }
@@ -372,7 +372,7 @@ float node::get_opacity( )
 {
     return _color.a;
 }
-std::vector<std::shared_ptr<node>> const & node::get_children( )
+std::list<std::shared_ptr<node>> const & node::get_children( )
 {
     return _children;
 }
@@ -508,7 +508,10 @@ void node::remove_child_by_tag( int tag )
 }
 void node::remove_all_children( )
 {
-    _children.clear( );
+    _remove_signal.emplace_back( [ this ]
+    {
+        _children.clear( );
+    } );
 }
 void node::remove_from_parent( )
 {
