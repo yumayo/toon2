@@ -2,7 +2,6 @@
 #include "cinder/gl/gl.h"
 #include "../utility/collision.h"
 #include "../utility/assert_log.h"
-#include "boost/range/algorithm/find_if.hpp"
 using namespace cinder;
 namespace renderer
 {
@@ -71,6 +70,7 @@ void button::render( )
 bool button::mouse_began( cinder::app::MouseEvent event )
 {
     _touch = hit_point( event.getPos( ) );
+    if ( _touch && on_began ) on_began( );
     _render_texture = _touch ? _swallow_texture : _normal_texture;
     return _touch;
 }
@@ -81,13 +81,14 @@ void button::mouse_moved( cinder::app::MouseEvent event )
 }
 void button::mouse_ended( cinder::app::MouseEvent event )
 {
-    if ( _touch && _on_taped ) _on_taped( );
+    if ( _touch && on_ended ) on_ended( );
     _render_texture = _normal_texture;
     _touch = false;
 }
 bool button::touch_began( cinder::app::TouchEvent::Touch event )
 {
     _touch = hit_point( event.getPos( ) );
+    if ( _touch && on_began ) on_began( );
     _render_texture = _touch ? _swallow_texture : _normal_texture;
     return _touch;
 }
@@ -98,7 +99,7 @@ void button::touch_moved( cinder::app::TouchEvent::Touch event )
 }
 void button::touch_ended( cinder::app::TouchEvent::Touch event )
 {
-    if ( _touch && _on_taped ) _on_taped( );
+    if ( _touch && on_ended ) on_ended( );
     _render_texture = _normal_texture;
     _touch = false;
 }
@@ -137,7 +138,8 @@ LUA_SETUP_CPP( l_class )
                                       [ ] ( std::string const & normal_texture_relative_path ) { return l_class::create( normal_texture_relative_path ); },
                                       [ ] ( std::string const & normal_texture_relative_path, std::string const & swallow_texture_relative_path ) { return l_class::create( normal_texture_relative_path, swallow_texture_relative_path ); }
            )
-           , "on_taped", &l_class::_on_taped
+           , l_set( on_began )
+           , l_set( on_ended )
     );
 }
 #include "lua_undef.h"

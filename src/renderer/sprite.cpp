@@ -8,16 +8,10 @@ CREATE_CPP( sprite, std::string const& relative_path )
 {
     CREATE( sprite, relative_path );
 }
-bool sprite::init( )
+bool sprite::init( std::string const& relative_path )
 {
     set_anchor_point( { 0.5F, 0.5F } );
     set_pivot( { 0.5F, 0.5F } );
-
-    return true;
-}
-bool sprite::init( std::string const& relative_path )
-{
-    if ( !init( ) ) return false;
 
     assert_log( !app::getAssetPath( relative_path ).empty( ), "ファイルが見つかりません。", return false );
 

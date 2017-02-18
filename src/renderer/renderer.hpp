@@ -3,6 +3,7 @@
 #include "rect.h"
 #include "sprite.h"
 #include "label.h"
+#include "surface.h"
 namespace renderer
 {
 void lua_setup( sol::state& lua );
@@ -13,5 +14,6 @@ inline void lua_setup( sol::state& lua )
     rect::lua_setup( lua );
     sprite::lua_setup( lua );
     label::lua_setup( lua );
+    surface::lua_setup( lua );
 }
 }

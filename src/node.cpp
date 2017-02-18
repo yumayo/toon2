@@ -1,7 +1,6 @@
 ﻿#include "node.h"
 #include "cinder/gl/gl.h"
 #include "utility/assert_log.h"
-#include "boost/range/algorithm/for_each.hpp"
 using namespace cinder;
 using namespace utility;
 CREATE_CPP( node )
@@ -212,6 +211,8 @@ void node::_update( float delta )
 }
 void node::_render( )
 {
+    if ( !_visible ) return;
+
     gl::pushModelView( );
     gl::translate( _position );
     gl::scale( _scale );
@@ -423,11 +424,12 @@ void node::remove_child( std::shared_ptr<node> const& child )
 {
     if ( _children.empty( ) ) return;
 
-    auto itr = std::find_if( std::begin( _children ), std::end( _children ), [ this, child ] ( std::shared_ptr<node>& n )
+    auto erase = std::find_if( std::begin( _children ), std::end( _children ), [ this, child ] ( std::shared_ptr<node>& n )
     {
         return n == child;
     } );
-    _children.erase( itr );
+
+    if ( erase != std::end( _children ) ) _children.erase( erase );
 }
 void node::remove_child_by_name( std::string const & name )
 {
@@ -470,6 +472,17 @@ void node::remove_from_parent( )
         _parent.lock( )->_remove_signal.emplace_back( [ this ]
         {
             _parent.lock( )->remove_child( shared_from_this( ) );
+        } );
+    }
+}
+void node::remove_from_parent_user_function( std::function<void( )> remove_user_function )
+{
+    if ( _parent.lock( ) )
+    {
+        _parent.lock( )->_remove_signal.emplace_back( [ this, remove_user_function ]
+        {
+            _parent.lock( )->remove_child( shared_from_this( ) );
+            if ( remove_user_function ) remove_user_function( );
         } );
     }
 }
@@ -553,6 +566,7 @@ LUA_SETUP_CPP( l_class )
            , l_set( remove_child_by_tag )
            , l_set( remove_all_children )
            , l_set( remove_from_parent )
+           , l_set( remove_from_parent_user_function )
            , l_set( get_root )
            , l_set( run_action )
            , l_set( get_world_matrix )

@@ -3,7 +3,7 @@
 
 CINDER_APP( app_delegate, cinder::app::RendererGl, [ & ] ( cinder::app::App::Settings *settings )
 {
-    settings->setWindowSize( 640, 360 );
+    settings->setWindowSize( 1280, 720 );
     settings->setTitle( u8"toon2" );
     settings->setMultiTouchEnabled( );
 } )

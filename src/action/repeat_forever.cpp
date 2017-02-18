@@ -1,11 +1,11 @@
 ﻿#include "repeat_forever.h"
 namespace action
 {
-CREATE_CPP( repeat_forever, std::shared_ptr<finite_time_action> time_action )
+CREATE_CPP( repeat_forever, std::shared_ptr<finite_time_action> const& time_action )
 {
     CREATE( repeat_forever, time_action );
 }
-bool repeat_forever::init( std::shared_ptr<finite_time_action> time_action )
+bool repeat_forever::init( std::shared_ptr<finite_time_action> const& time_action )
 {
     _time_action = time_action;
     return true;

@@ -1,13 +1,11 @@
-﻿root:remove_all_children()
-
-bgm = file_player.create("home.mp3")
+﻿bgm = file_player.create("home.mp3")
 bgm:play()
 root:add_child(bgm)
 
 background = button.create("monta.png")
 background.position = vec2.new( get_window_size.x * 0.5, get_window_size.y * 0.5 )
 background.scale = vec2.new(1.5)
-background.on_taped = function() script_file("game.lua") end
+background.on_ended = function() tap() end
 root:add_child(background)
 
 logo = label.create( "オセラトゥーン", "sample.otf", 48 )

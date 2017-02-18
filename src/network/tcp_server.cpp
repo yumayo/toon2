@@ -9,7 +9,6 @@ using asio::ip::tcp;
 #include "client_handle.h"
 #include "network.hpp"
 #include <set>
-#include "boost/range/algorithm/find_if.hpp"
 #include "../utility/utf8.h"
 using namespace utility;
 namespace network
@@ -219,7 +218,7 @@ void tcp_server::_member::close_async( socket_object & sock_obj )
 }
 std::vector<std::unique_ptr<socket_object>>::iterator tcp_server::_member::find_socket_object( std::string const & name )
 {
-    return boost::find_if( sockets, [ name ] ( std::unique_ptr<socket_object>& obj )
+    return std::find_if( std::begin( sockets ), std::end( sockets ), [ name ] ( std::unique_ptr<socket_object>& obj )
     {
         return obj->handle == name;
     } );
@@ -269,7 +268,7 @@ void tcp_server::write( std::string const & name, std::string const & message, s
 }
 void tcp_server::write( std::string const & name, char const * message, size_t size, std::function<void( )> on_send )
 {
-    _m->find_run( name, [ this, message, size, on_send ] ( socket_object& sock_obj ) 
+    _m->find_run( name, [ this, message, size, on_send ] ( socket_object& sock_obj )
     {
         _m->write( sock_obj, asio::buffer( message, size ), on_send );
     } );

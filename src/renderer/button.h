@@ -17,9 +17,11 @@ namespace renderer
         virtual bool touch_began( cinder::app::TouchEvent::Touch event )override;
         virtual void touch_moved( cinder::app::TouchEvent::Touch event )override;
         virtual void touch_ended( cinder::app::TouchEvent::Touch event )override;
+    public:
+        std::function<void( )> on_began;
+        std::function<void( )> on_ended;
     protected:
         bool _touch = false;
-        std::function<void( )> _on_taped;
         cinder::gl::TextureRef _render_texture;
         cinder::gl::TextureRef _normal_texture;
         cinder::gl::TextureRef _swallow_texture;

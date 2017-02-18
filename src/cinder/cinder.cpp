@@ -27,6 +27,7 @@ void lua_setup( sol::state & lua )
     lua.new_usertype<ColorA>( "color"
                               , sol::constructors< sol::types<>
                               , sol::types<ColorA>
+                              , sol::types<float, float, float>
                               , sol::types<float, float, float, float>
                               >( )
                               , "r", &ColorA::r

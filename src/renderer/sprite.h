@@ -7,7 +7,6 @@ namespace renderer
     {
     public:
         CREATE_H( sprite, std::string const& relative_path );
-        bool init( );
         bool init( std::string const& relative_path );
         void render( ) override;
     private:

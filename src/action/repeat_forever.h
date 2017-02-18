@@ -5,9 +5,9 @@ namespace action
 class repeat_forever : public finite_time_action
 {
 public:
-    CREATE_H( repeat_forever, std::shared_ptr<finite_time_action> );
+    CREATE_H( repeat_forever, std::shared_ptr<finite_time_action> const& );
 public:
-    bool init( std::shared_ptr<finite_time_action> time_action );
+    bool init( std::shared_ptr<finite_time_action> const& time_action );
 public:
     virtual void setup( ) override;
     virtual bool is_done( ) override;

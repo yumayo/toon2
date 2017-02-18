@@ -1,6 +1,5 @@
 ﻿#include "action_manager.h"
-#include "boost/range/algorithm/find_if.hpp"
-#include "boost/range/algorithm/remove_if.hpp"
+#include <algorithm>
 #include "../utility/assert_log.h"
 #include "../node.h"
 using namespace utility;
@@ -20,12 +19,12 @@ std::shared_ptr<action> action_manager::get_action_by_name( std::string const & 
     std::hash<std::string> h;
     size_t hash = h( name );
 
-    auto itr = boost::find_if( _actions, [ this, hash, name ] ( std::shared_ptr<action>& act )
+    auto itr = std::find_if( std::begin( _actions ), std::end( _actions ), [ this, hash, name ] ( std::shared_ptr<action>& act )
     {
         return act->_hash == hash && act->_name.compare( name ) == 0;
     } );
 
-    if ( itr != boost::end( _actions ) )
+    if ( itr != std::end( _actions ) )
     {
         return *itr;
     }
@@ -36,12 +35,12 @@ std::shared_ptr<action> action_manager::get_action_by_tag( int tag )
 {
     assert_log( tag == node::INVALID_TAG, "無効なタグです。", return std::make_shared<action>( ) );
 
-    auto itr = boost::find_if( _actions, [ this, tag ] ( std::shared_ptr<action>& act )
+    auto itr = std::find_if( std::begin( _actions ), std::end( _actions ), [ this, tag ] ( std::shared_ptr<action>& act )
     {
         return act->_tag == tag;
     } );
 
-    if ( itr != boost::end( _actions ) )
+    if ( itr != std::end( _actions ) )
     {
         return *itr;
     }
@@ -57,11 +56,12 @@ void action_manager::remove_action( std::shared_ptr<action> const& act_weak )
 {
     if ( _actions.empty( ) ) return;
 
-    auto itr = boost::find_if( _actions, [ this, act_weak ] ( std::shared_ptr<action>& act )
+    auto erase = std::find_if( std::begin( _actions ), std::end( _actions ), [ this, act_weak ] ( std::shared_ptr<action>& act )
     {
         return act == act_weak;
     } );
-    _actions.erase( itr );
+
+    if ( erase != std::end( _actions ) ) _actions.erase( erase );
 }
 
 void action_manager::remove_action_by_tag( int tag )
@@ -102,11 +102,11 @@ void action_manager::update( float delta )
     {
         obj->update( delta );
     }
-    auto erase = boost::remove_if( _actions, [ ] ( std::shared_ptr<action>& act )
+    auto erase = std::remove_if( std::begin( _actions ), std::end( _actions ), [ ] ( std::shared_ptr<action>& act )
     {
         return act->is_done( );
     } );
-    if ( erase != boost::end( _actions ) )
-        _actions.erase( erase );
+
+    if ( erase != std::end( _actions ) ) _actions.erase( erase );
 }
 }

@@ -168,6 +168,7 @@ public:
     void remove_child_by_tag( int tag );
     void remove_all_children( );
     void remove_from_parent( );
+    void remove_from_parent_user_function( std::function<void( )> remove_user_function );
 protected:
     std::vector<std::function<void( )>> _remove_signal;
 
