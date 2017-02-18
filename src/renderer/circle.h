@@ -12,7 +12,7 @@ namespace renderer
     public:
         void set_radius( float value );
         float get_radius( );
-    private:
+    protected:
         float _radius = 0.0F;
         float _segments = -1.0F;
     public:

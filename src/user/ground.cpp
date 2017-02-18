@@ -15,6 +15,8 @@ bool ground::init( std::weak_ptr<node> player_manager )
 
     set_schedule_update( );
 
+    set_scale( vec2( 4.0F ) );
+
     return true;
 }
 void ground::update( float delta )
@@ -22,7 +24,7 @@ void ground::update( float delta )
     auto own = _player_manager.lock( )->get_child_by_name( "own" );
     auto pl = std::dynamic_pointer_cast<player>( own );
 
-    float radius = pl->get_radius( );
+    float radius = pl->get_radius( ) / get_scale( ).x;
     for ( int y = -radius; y < radius; ++y )
     {
         for ( int x = -radius; x < radius; ++x )
@@ -30,7 +32,7 @@ void ground::update( float delta )
             auto len = length( vec2( x, y ) );
             if ( len < radius )
             {
-                set_pixel( pl->get_position( ) + vec2( x, y ), pl->get_color( ) );
+                set_pixel( pl->get_position( ) / get_scale( ).x + vec2( x, y ), pl->get_color( ) );
             }
         }
     }

@@ -8,6 +8,8 @@ using namespace utility;
 int const app_delegate::_INVALID_ID = -1;
 void app_delegate::setup( )
 {
+    log( "stand by ready!" );
+
     _root = node::create( );
     _root->set_name( "root" );
     _root->add_child( user::title::create( ) );

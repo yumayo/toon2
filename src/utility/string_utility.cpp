@@ -17,7 +17,6 @@ std::string format( char const * str, ... )
 
 void log( char const * str, ... )
 {
-    #ifdef _DEBUG
     const int max_string_length = ( 1024 * 100 );
     va_list args;
     va_start( args, str );
@@ -29,7 +28,6 @@ void log( char const * str, ... )
         cinder::app::console( ) << buf << std::endl;
     }
     va_end( args );
-    #endif
 }
 }
 

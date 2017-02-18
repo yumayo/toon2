@@ -5,7 +5,7 @@ namespace action
 class repeat_times : public repeat_forever
 {
 public:
-    CREATE_H( repeat_times, std::shared_ptr<finite_time_action> const&, int );
+    CREATE_H( repeat_times, std::shared_ptr<finite_time_action> const& time_action, int number_of_times );
 public:
     bool init( std::shared_ptr<finite_time_action> const& time_action, int number_of_times );
 public:

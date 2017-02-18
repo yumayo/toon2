@@ -478,10 +478,6 @@ void node::remove_from_parent( )
             } );
         }
     }
-    else
-    {
-        int a = 0;
-    }
 }
 void node::remove_from_parent_user_function( std::function<void( )> remove_user_function )
 {

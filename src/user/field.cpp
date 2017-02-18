@@ -11,6 +11,8 @@ CREATE_CPP( field )
 }
 bool field::init( )
 {
+    set_name( "field" );
+
     auto player_manager = player_manager::create( );
     auto ground = ground::create( player_manager );
     auto feed_manager = feed_manager::create( player_manager, ground );
