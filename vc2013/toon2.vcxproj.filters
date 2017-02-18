@@ -282,9 +282,6 @@
     <ClInclude Include="..\src\user\field.h">
       <Filter>Source Files\user</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\user\player.h">
-      <Filter>Source Files\user</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\user\controller.h">
       <Filter>Source Files\user</Filter>
     </ClInclude>
@@ -293,6 +290,21 @@
     </ClInclude>
     <ClInclude Include="..\src\renderer\circle.h">
       <Filter>Source Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\ground.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\feed_manager.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\player.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\player_manager.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\action\move_to_target.h">
+      <Filter>Source Files\action</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -543,9 +555,6 @@
     <ClCompile Include="..\src\user\field.cpp">
       <Filter>Source Files\user</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\user\player.cpp">
-      <Filter>Source Files\user</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\user\controller.cpp">
       <Filter>Source Files\user</Filter>
     </ClCompile>
@@ -554,6 +563,21 @@
     </ClCompile>
     <ClCompile Include="..\src\renderer\circle.cpp">
       <Filter>Source Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\ground.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\feed_manager.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\player.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\player_manager.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\action\move_to_target.cpp">
+      <Filter>Source Files\action</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

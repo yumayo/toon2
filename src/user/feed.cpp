@@ -2,6 +2,7 @@
 #include "cinder/gl/gl.h"
 #include "cinder/Rand.h"
 #include "../action/action.hpp"
+#include "player.h"
 using namespace cinder;
 namespace user
 {
@@ -27,9 +28,16 @@ bool feed::init( )
 
     return true;
 }
-float feed::capture( )
+void feed::captured( std::weak_ptr<node> player )
 {
-    remove_from_parent( );
-    return _score;
+    _captureing = true;
+    run_action( action::sequence::create( action::move_to_target::create( 0.3F, player.lock( ) ),
+                                          action::call_func::create( [ this, player ] {
+        auto pla = std::dynamic_pointer_cast<user::player>( player.lock( ) );
+        pla->capture( _score ); } ), action::remove_self::create( ) ) );
+}
+bool feed::captureing( )
+{
+    return _captureing;
 }
 }

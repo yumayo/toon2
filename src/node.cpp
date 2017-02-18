@@ -467,23 +467,35 @@ void node::remove_all_children( )
 }
 void node::remove_from_parent( )
 {
-    if ( _parent.lock( ) )
+    if ( !_own_removing )
     {
-        _parent.lock( )->_remove_signal.emplace_back( [ this ]
+        _own_removing = true;
+        if ( _parent.lock( ) )
         {
-            _parent.lock( )->remove_child( shared_from_this( ) );
-        } );
+            _parent.lock( )->_remove_signal.emplace_back( [ this ]
+            {
+                _parent.lock( )->remove_child( shared_from_this( ) );
+            } );
+        }
+    }
+    else
+    {
+        int a = 0;
     }
 }
 void node::remove_from_parent_user_function( std::function<void( )> remove_user_function )
 {
-    if ( _parent.lock( ) )
+    if ( !_own_removing )
     {
-        _parent.lock( )->_remove_signal.emplace_back( [ this, remove_user_function ]
+        _own_removing = true;
+        if ( _parent.lock( ) )
         {
-            _parent.lock( )->remove_child( shared_from_this( ) );
-            if ( remove_user_function ) remove_user_function( );
-        } );
+            _parent.lock( )->_remove_signal.emplace_back( [ this, remove_user_function ]
+            {
+                _parent.lock( )->remove_child( shared_from_this( ) );
+                if ( remove_user_function ) remove_user_function( );
+            } );
+        }
     }
 }
 std::shared_ptr<node> node::get_root( )
@@ -507,6 +519,41 @@ void node::run_action( std::shared_ptr<action::action> const & action )
 {
     _action_manager.add_action( action, shared_from_this( ), !_running );
     action->setup( );
+}
+
+std::shared_ptr<action::action> node::get_action_by_name( std::string const & name )
+{
+    return _action_manager.get_action_by_name( name );
+}
+
+std::shared_ptr<action::action> node::get_action_by_tag( int tag )
+{
+    return _action_manager.get_action_by_tag( tag );
+}
+
+void node::remove_all_actions( )
+{
+    _action_manager.remove_all_actions( );
+}
+
+void node::remove_action( std::shared_ptr<action::action> const & action )
+{
+    _action_manager.remove_action( action );
+}
+
+void node::remove_action_by_tag( int tag )
+{
+    _action_manager.remove_action_by_tag( tag );
+}
+
+void node::remove_action_by_name( std::string const & name )
+{
+    _action_manager.remove_action_by_name( name );
+}
+
+bool node::is_running_action( )
+{
+    return _action_manager.is_running( );
 }
 
 cinder::mat3 node::get_world_matrix( )

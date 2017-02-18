@@ -1,4 +1,5 @@
 ﻿#include "player.h"
+#include "../action/action.hpp"
 using namespace cinder;
 namespace user
 {
@@ -8,7 +9,6 @@ CREATE_CPP( player )
 }
 bool player::init( )
 {
-    set_name( "player" );
     set_color( ColorA( 0.2, 0.8, 0.6 ) );
     set_radius( 20.0F );
 
@@ -36,11 +36,25 @@ float player::get_radius( )
 {
     return _radius;
 }
-void player::predation( float score )
+void player::capture( float score )
 {
-    set_radius( get_radius( ) + score );
-    _base.lock( )->set_radius( get_radius( ) );
-    _mask.lock( )->set_radius( get_radius( ) );
+    if ( is_running_action( ) )
+    {
+        remove_all_actions( );
+    }
+
+    // どの大きさまで大きくなるのかを設定する。
+    _target_radius = _radius + score;
+
+    // アクションは終了済み。
+    auto sub = _target_radius - _radius;
+    sub = clamp( sub, 0.0F, 3.0F );
+    run_action( action::ease<EaseOutSine>::create( action::float_to::create( sub, _radius, _target_radius, [ this ] ( float value )
+    {
+        set_radius( value );
+        _base.lock( )->set_radius( get_radius( ) );
+        _mask.lock( )->set_radius( get_radius( ) );
+    } ) ) );
 }
 }
 

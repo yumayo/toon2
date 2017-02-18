@@ -12,6 +12,7 @@ public:
     void remove_action( std::shared_ptr<action> const& action );
     void remove_action_by_tag( int tag );
     void remove_action_by_name( std::string const& name );
+    bool is_running( );
     void update( float delta );
 private:
     std::vector<std::shared_ptr<action>> _actions;

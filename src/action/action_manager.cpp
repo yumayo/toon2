@@ -96,6 +96,11 @@ void action_manager::remove_action_by_name( std::string const & name )
     }
 }
 
+bool action_manager::is_running( )
+{
+    return !_actions.empty( );
+}
+
 void action_manager::update( float delta )
 {
     for ( auto const& obj : _actions )

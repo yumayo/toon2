@@ -2,10 +2,10 @@
 #include "../node.h"
 namespace user
 {
-class field : public node
+class player_manager : public node
 {
 public:
-    CREATE_H( field );
+    CREATE_H( player_manager );
     bool init( );
 };
 }

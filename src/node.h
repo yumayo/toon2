@@ -169,7 +169,8 @@ public:
     void remove_all_children( );
     void remove_from_parent( );
     void remove_from_parent_user_function( std::function<void( )> remove_user_function );
-protected:
+private:
+    bool _own_removing = false;
     std::vector<std::function<void( )>> _remove_signal;
 
 protected:
@@ -183,6 +184,13 @@ protected:
     action::action_manager _action_manager;
 public:
     void run_action( std::shared_ptr<action::action> const& action );
+    std::shared_ptr<action::action> get_action_by_name( std::string const& name );
+    std::shared_ptr<action::action> get_action_by_tag( int tag );
+    void remove_all_actions( );
+    void remove_action( std::shared_ptr<action::action> const& action );
+    void remove_action_by_tag( int tag );
+    void remove_action_by_name( std::string const& name );
+    bool is_running_action( );
 
 public:
     cinder::mat3 get_world_matrix( );

@@ -124,6 +124,7 @@
     <ClCompile Include="..\src\action\float_to.cpp" />
     <ClCompile Include="..\src\action\move_by.cpp" />
     <ClCompile Include="..\src\action\move_to.cpp" />
+    <ClCompile Include="..\src\action\move_to_target.cpp" />
     <ClCompile Include="..\src\action\remove_self.cpp" />
     <ClCompile Include="..\src\action\repeat_times.cpp" />
     <ClCompile Include="..\src\action\repeat_forever.cpp" />
@@ -189,9 +190,12 @@
     <ClCompile Include="..\src\renderer\surface.cpp" />
     <ClCompile Include="..\src\user\controller.cpp" />
     <ClCompile Include="..\src\user\feed.cpp" />
+    <ClCompile Include="..\src\user\feed_manager.cpp" />
     <ClCompile Include="..\src\user\field.cpp" />
     <ClCompile Include="..\src\user\game.cpp" />
+    <ClCompile Include="..\src\user\ground.cpp" />
     <ClCompile Include="..\src\user\player.cpp" />
+    <ClCompile Include="..\src\user\player_manager.cpp" />
     <ClCompile Include="..\src\user\title.cpp" />
     <ClCompile Include="..\src\utility\collision.cpp" />
     <ClCompile Include="..\src\utility\lmake.cpp" />
@@ -216,6 +220,7 @@
     <ClInclude Include="..\src\action\float_to.h" />
     <ClInclude Include="..\src\action\move_by.h" />
     <ClInclude Include="..\src\action\move_to.h" />
+    <ClInclude Include="..\src\action\move_to_target.h" />
     <ClInclude Include="..\src\action\remove_self.h" />
     <ClInclude Include="..\src\action\repeat_times.h" />
     <ClInclude Include="..\src\action\repeat_forever.h" />
@@ -273,9 +278,12 @@
     <ClInclude Include="..\src\renderer\surface.h" />
     <ClInclude Include="..\src\user\controller.h" />
     <ClInclude Include="..\src\user\feed.h" />
+    <ClInclude Include="..\src\user\feed_manager.h" />
     <ClInclude Include="..\src\user\field.h" />
     <ClInclude Include="..\src\user\game.h" />
+    <ClInclude Include="..\src\user\ground.h" />
     <ClInclude Include="..\src\user\player.h" />
+    <ClInclude Include="..\src\user\player_manager.h" />
     <ClInclude Include="..\src\user\title.h" />
     <ClInclude Include="..\src\utility\assert_log.h" />
     <ClInclude Include="..\src\utility\collision.h" />

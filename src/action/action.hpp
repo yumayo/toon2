@@ -16,6 +16,7 @@
 #include "repeat_times.h"
 #include "fade_in.h"
 #include "fade_out.h"
+#include "move_to_target.h" // no lua
 
 namespace action
 {

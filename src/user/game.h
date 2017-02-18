@@ -14,7 +14,7 @@ public:
 private:
     sol::state* lua;
     std::weak_ptr<field> _field;
-    std::weak_ptr<player> _player;
+    std::weak_ptr<player> _own;
     std::weak_ptr<controller> _controller;
 };
 }
