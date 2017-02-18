@@ -7,7 +7,6 @@ class feed : public renderer::circle
 public:
     CREATE_H( feed );
     bool init( );
-    void render( ) override;
 public:
     void captured( std::weak_ptr<node> player );
     bool captureing( );

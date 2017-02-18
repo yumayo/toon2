@@ -1,4 +1,5 @@
 ﻿#include "controller.h"
+#include "../renderer/rect_edge.h"
 using namespace cinder;
 namespace user
 {
@@ -28,6 +29,13 @@ bool controller::init( std::weak_ptr<node> player )
 
             s1->set_opacity( 0.8F );
         }
+    }
+
+    if ( auto edge = renderer::rect_edge::create( vec2( app::getWindowSize( ) ) - vec2( 200, 200 ) ) )
+    {
+        edge->set_color( ColorA( 0.9, 0.2, 0.2, 1.0F ) );
+        edge->set_position( vec2( app::getWindowSize( ) ) * 0.5F );
+        add_child( edge );
     }
 
     return true;

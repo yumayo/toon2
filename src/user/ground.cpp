@@ -15,7 +15,7 @@ bool ground::init( std::weak_ptr<node> player_manager )
 
     set_schedule_update( );
 
-    set_scale( vec2( 4.0F ) );
+    set_scale( vec2( 1.0F ) );
 
     return true;
 }

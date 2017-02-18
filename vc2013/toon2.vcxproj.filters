@@ -306,6 +306,9 @@
     <ClInclude Include="..\src\action\move_to_target.h">
       <Filter>Source Files\action</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\renderer\rect_edge.h">
+      <Filter>Source Files\renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -578,6 +581,9 @@
     </ClCompile>
     <ClCompile Include="..\src\action\move_to_target.cpp">
       <Filter>Source Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\renderer\rect_edge.cpp">
+      <Filter>Source Files\renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@ CREATE_CPP( player )
 bool player::init( )
 {
     set_color( ColorA( 0.2, 0.8, 0.6 ) );
-    set_radius( 20.0F );
+    set_radius( 256.0F );
 
     if ( auto base = renderer::circle::create( _radius ) )
     {

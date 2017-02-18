@@ -186,6 +186,7 @@
     <ClCompile Include="..\src\renderer\label.cpp" />
     <ClCompile Include="..\src\renderer\letter.cpp" />
     <ClCompile Include="..\src\renderer\rect.cpp" />
+    <ClCompile Include="..\src\renderer\rect_edge.cpp" />
     <ClCompile Include="..\src\renderer\sprite.cpp" />
     <ClCompile Include="..\src\renderer\surface.cpp" />
     <ClCompile Include="..\src\user\controller.cpp" />
@@ -273,6 +274,7 @@
     <ClInclude Include="..\src\renderer\label.h" />
     <ClInclude Include="..\src\renderer\letter.h" />
     <ClInclude Include="..\src\renderer\rect.h" />
+    <ClInclude Include="..\src\renderer\rect_edge.h" />
     <ClInclude Include="..\src\renderer\renderer.hpp" />
     <ClInclude Include="..\src\renderer\sprite.h" />
     <ClInclude Include="..\src\renderer\surface.h" />

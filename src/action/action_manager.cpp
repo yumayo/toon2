@@ -56,12 +56,12 @@ void action_manager::remove_action( std::shared_ptr<action> const& act_weak )
 {
     if ( _actions.empty( ) ) return;
 
-    auto erase = std::find_if( std::begin( _actions ), std::end( _actions ), [ this, act_weak ] ( std::shared_ptr<action>& act )
+    auto erase = std::remove_if( std::begin( _actions ), std::end( _actions ), [ this, act_weak ] ( std::shared_ptr<action>& act )
     {
         return act == act_weak;
     } );
 
-    if ( erase != std::end( _actions ) ) _actions.erase( erase );
+    _actions.erase( erase, std::end( _actions ) );
 }
 
 void action_manager::remove_action_by_tag( int tag )
@@ -112,6 +112,6 @@ void action_manager::update( float delta )
         return act->is_done( );
     } );
 
-    if ( erase != std::end( _actions ) ) _actions.erase( erase );
+    _actions.erase( erase, std::end( _actions ) );
 }
 }
