@@ -3,6 +3,7 @@
 #include "cocoslike.h"
 #include "utility/assert_log.h"
 #include "user/title.h"
+#include "user/game.h"
 using namespace cinder;
 using namespace utility;
 int const app_delegate::_INVALID_ID = -1;
@@ -12,7 +13,7 @@ void app_delegate::setup( )
 
     _root = node::create( );
     _root->set_name( "root" );
-    _root->add_child( user::title::create( ) );
+    _root->add_child( user::game::create( ) );
 }
 void app_delegate::update( )
 {
@@ -22,7 +23,7 @@ void app_delegate::update( )
 }
 void app_delegate::draw( )
 {
-    gl::clear( );
+    gl::clear( ColorA( 0.1, 0.1, 0.1, 1.0 ) );
     _root->_render( );
 }
 void app_delegate::mouseDown( cinder::app::MouseEvent event )
@@ -45,7 +46,7 @@ void app_delegate::touchesBegan( cinder::app::TouchEvent event )
     if ( _touch_id == _INVALID_ID )
     {
         _touch_id = event.getTouches( ).front( ).getId( );
-        auto itr = std::find_if( std::begin( event.getTouches( ) ), std::end( event.getTouches( ) ), [ this ]( cinder::app::TouchEvent::Touch& touch )
+        auto itr = std::find_if( std::begin( event.getTouches( ) ), std::end( event.getTouches( ) ), [ this ] ( cinder::app::TouchEvent::Touch& touch )
         {
             return touch.getId( ) == _touch_id;
         } );

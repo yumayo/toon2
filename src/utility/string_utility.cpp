@@ -14,7 +14,6 @@ std::string format( char const * str, ... )
     va_end( args );
     return ret;
 }
-
 void log( char const * str, ... )
 {
     const int max_string_length = ( 1024 * 100 );
@@ -28,6 +27,32 @@ void log( char const * str, ... )
         cinder::app::console( ) << buf << std::endl;
     }
     va_end( args );
+}
+void log_data( char const * data, size_t size )
+{
+    std::string output = ">[ ";
+    size_t i;
+    for ( i = 0; i < size - 1; ++i )
+    {
+        if ( ( i % 16 ) == 15 )
+        {
+            output += format( "%02X", data[i] & 0x000000FF );
+            output += " ]\n>[ ";
+        }
+        else
+        {
+            if ( ( i % 4 ) == 3 )
+            {
+                output += format( "%02X | ", data[i] & 0x000000FF );
+            }
+            else
+            {
+                output += format( "%02X", data[i] & 0x000000FF );
+            }
+        }
+    }
+    output += format( "%02X", data[i] & 0x000000FF );
+    log( "%s ]", output.c_str( ) );
 }
 }
 

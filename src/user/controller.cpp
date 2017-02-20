@@ -12,6 +12,7 @@ bool controller::init( std::weak_ptr<node> player )
 {
     _player = player;
 
+    set_schedule_mouse_event( );
     set_schedule_touch_event( );
     set_schedule_update( );
 
@@ -33,7 +34,41 @@ bool controller::init( std::weak_ptr<node> player )
 
     return true;
 }
+bool controller::mouse_began( cinder::app::MouseEvent event )
+{
+    began( event.getPos( ) );
+    return true;
+}
+void controller::mouse_moved( cinder::app::MouseEvent event )
+{
+    moved( event.getPos( ) );
+}
+void controller::mouse_ended( cinder::app::MouseEvent event )
+{
+    ended( event.getPos( ) );
+}
 bool controller::touch_began( cinder::app::TouchEvent::Touch event )
+{
+    began( event.getPos( ) );
+    return true;
+}
+void controller::touch_moved( cinder::app::TouchEvent::Touch event )
+{
+    moved( event.getPos( ) );
+}
+void controller::touch_ended( cinder::app::TouchEvent::Touch event )
+{
+    ended( event.getPos( ) );
+}
+void controller::update( float delta )
+{
+    _player.lock( )->set_position( _player.lock( )->get_position( ) + _axis * 0.01F );
+}
+cinder::vec2 controller::get_axis( )
+{
+    return _axis;
+}
+void controller::began( cinder::vec2 pos )
 {
     if ( _base_node.lock( )->is_running_action( ) )
     {
@@ -48,42 +83,31 @@ bool controller::touch_began( cinder::app::TouchEvent::Touch event )
     _base_node.lock( )->set_opacity( 0.2F );
     _axis_node.lock( )->set_opacity( 0.8F );
 
-    tap_start_position = event.getPos( );
+    _tap_start_position = pos;
 
-    _base_node.lock( )->set_position( tap_start_position );
-    _axis_node.lock( )->set_position( axis );
-
-    return true;
+    _base_node.lock( )->set_position( _tap_start_position );
+    _axis_node.lock( )->set_position( _axis );
 }
-void controller::touch_moved( cinder::app::TouchEvent::Touch event )
+void controller::moved( cinder::vec2 pos )
 {
-    axis = event.getPos( ) - tap_start_position;
+    _axis = pos - _tap_start_position;
     float len = _base_node.lock( )->get_content_size( ).x * 0.5;
-    if ( len <= length( axis ) )
-        axis = normalize( axis ) * len;
-    _axis_node.lock( )->set_position( axis );
+    if ( len <= length( _axis ) )
+        _axis = normalize( _axis ) * len;
+    _axis_node.lock( )->set_position( _axis );
 }
-void controller::touch_ended( cinder::app::TouchEvent::Touch event )
+void controller::ended( cinder::vec2 pos )
 {
-    axis = vec2( 0 );
+    _axis = vec2( 0 );
 
     auto controller_fade_out = [ this ]
     {
         _base_node.lock( )->run_action( action::fade_out::create( 0.2F ) );
     };
-    _axis_node.lock( )->run_action( action::sequence::create( action::ease<EaseOutExpo>::create( action::move_to::create( 0.2F, axis ) ),
+    _axis_node.lock( )->run_action( action::sequence::create( action::ease<EaseOutExpo>::create( action::move_to::create( 0.2F, _axis ) ),
                                                               action::call_func::create( std::move( controller_fade_out ) ),
                                                               action::fade_out::create( 0.2F ),
                                                               action::call_func::create( [ this ] { _base_node.lock( )->set_visible( false ); } ) ) );
-
-}
-void controller::update( float delta )
-{
-    _player.lock( )->set_position( _player.lock( )->get_position( ) + axis * 0.01F );
-}
-cinder::vec2 controller::get_axis( )
-{
-    return axis;
 }
 }
 

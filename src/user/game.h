@@ -12,7 +12,6 @@ public:
     bool init( );
     void update( float delta ) override;
 private:
-    sol::state* lua;
     std::weak_ptr<field> _field;
     std::weak_ptr<player> _own;
     std::weak_ptr<controller> _controller;

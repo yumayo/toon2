@@ -9,6 +9,8 @@ CREATE_CPP( player )
 }
 bool player::init( )
 {
+    set_schedule_update( );
+
     set_color( ColorA( 0.2, 0.8, 0.6 ) );
     set_radius( 20.0F );
 
@@ -26,7 +28,17 @@ bool player::init( )
         }
     }
 
+    if ( auto sender = network::udp_sender::create( "127.0.0.1", "25565" ) )
+    {
+        _sender = sender;
+        add_child( sender );
+    }
+
     return true;
+}
+void player::update( float delta )
+{
+    _sender.lock( )->write( "hogehoge" );
 }
 void player::set_radius( float value )
 {

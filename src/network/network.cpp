@@ -65,40 +65,9 @@ void lua_setup_asio_error( sol::state& lua )
     );
 }
 #undef l_e
-void lua_setup_client_handle( sol::state& lua )
-{
-    
-}
-void log_data( char const * data, size_t bytes_transferred )
-{
-    std::string output = ">[ ";
-    size_t i;
-    for ( i = 0; i < bytes_transferred - 1; ++i )
-    {
-        if ( ( i % 16 ) == 15 )
-        {
-            output += format( "%02X", data[i] & 0x000000FF );
-            output += " ]\n>[ ";
-        }
-        else
-        {
-            if ( ( i % 4 ) == 3 )
-            {
-                output += format( "%02X | ", data[i] & 0x000000FF );
-            }
-            else
-            {
-                output += format( "%02X", data[i] & 0x000000FF );
-            }
-        }
-    }
-    output += format( "%02X", data[i] & 0x000000FF );
-    log( "%s ]", output.c_str( ) );
-}
 void lua_setup( sol::state& lua )
 {
     lua_setup_asio_error( lua );
-    lua_setup_client_handle( lua );
     tcp_server::lua_setup( lua );
     tcp_client::lua_setup( lua );
     client_handle::lua_setup( lua );

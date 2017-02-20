@@ -1,4 +1,5 @@
 ﻿#include "tcp_client.h"
+#define ASIO_HAS_STD_ATOMIC
 #define ASIO_HAS_BOOST_DATE_TIME
 #define BOOST_DATE_TIME_NO_LIB
 #include "asio/asio.hpp"
@@ -6,7 +7,6 @@ using asio::ip::tcp;
 #include "boost/lexical_cast.hpp"
 #include "boost/bind.hpp"
 #include "../utility/assert_log.h"
-#include "network.hpp"
 using namespace utility;
 namespace network
 {
@@ -82,7 +82,6 @@ void tcp_client::_member::read( )
         asio::transfer_at_least( 1 ),
         [ this ] ( const asio::error_code& error, size_t bytes_transferred )
     {
-        const char* data = nullptr;
         if ( error )
         {
             if ( error == asio::error::eof )
@@ -101,7 +100,7 @@ void tcp_client::_member::read( )
         {
             log( "【tcp_client】受け取ったデータ: %d byte", bytes_transferred );
             log_data( buffer.data( ), bytes_transferred );
-            if ( parent.on_readed ) parent.on_readed( data, bytes_transferred );
+            if ( parent.on_readed ) parent.on_readed( buffer.data( ), bytes_transferred );
             std::fill_n( buffer.begin( ), bytes_transferred, 0 );
 
             // エラーじゃない限り無限に受け取りを続けます。

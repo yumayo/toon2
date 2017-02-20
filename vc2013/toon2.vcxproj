@@ -179,6 +179,8 @@
     <ClCompile Include="..\src\network\network.cpp" />
     <ClCompile Include="..\src\network\tcp_client.cpp" />
     <ClCompile Include="..\src\network\tcp_server.cpp" />
+    <ClCompile Include="..\src\network\udp_reader.cpp" />
+    <ClCompile Include="..\src\network\udp_sender.cpp" />
     <ClCompile Include="..\src\node.cpp" />
     <ClCompile Include="..\src\app_delegate.cpp" />
     <ClCompile Include="..\src\renderer\button.cpp" />
@@ -267,6 +269,8 @@
     <ClInclude Include="..\src\network\network.hpp" />
     <ClInclude Include="..\src\network\tcp_client.h" />
     <ClInclude Include="..\src\network\tcp_server.h" />
+    <ClInclude Include="..\src\network\udp_reader.h" />
+    <ClInclude Include="..\src\network\udp_sender.h" />
     <ClInclude Include="..\src\node.h" />
     <ClInclude Include="..\src\app_delegate.h" />
     <ClInclude Include="..\src\renderer\button.h" />

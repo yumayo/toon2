@@ -309,6 +309,12 @@
     <ClInclude Include="..\src\renderer\rect_edge.h">
       <Filter>Source Files\renderer</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\network\udp_reader.h">
+      <Filter>Source Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\network\udp_sender.h">
+      <Filter>Source Files\network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -584,6 +590,12 @@
     </ClCompile>
     <ClCompile Include="..\src\renderer\rect_edge.cpp">
       <Filter>Source Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\network\udp_reader.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\network\udp_sender.cpp">
+      <Filter>Source Files\network</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

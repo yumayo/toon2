@@ -3,7 +3,12 @@
 
 CINDER_APP( app_delegate, cinder::app::RendererGl, [ & ] ( cinder::app::App::Settings *settings )
 {
+    settings->setConsoleWindowEnabled( );
+
     settings->setWindowSize( 1280, 720 );
     settings->setTitle( u8"toon2" );
-    settings->setMultiTouchEnabled( );
+
+    settings->setResizable( false );
+
+    //settings->setMultiTouchEnabled( );
 } )

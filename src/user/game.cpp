@@ -1,4 +1,5 @@
 ﻿#include "game.h"
+#include "../network/udp_reader.h"
 using namespace cinder;
 namespace user
 {
@@ -25,6 +26,11 @@ bool game::init( )
     {
         _controller = controller;
         add_child( controller );
+    }
+
+    if ( auto reader = network::udp_reader::create( "25565" ) )
+    {
+        add_child( reader );
     }
     return true;
 }

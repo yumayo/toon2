@@ -9,7 +9,7 @@ CREATE_CPP( ground, std::weak_ptr<node> player_manager )
 }
 bool ground::init( std::weak_ptr<node> player_manager )
 {
-    if ( !renderer::surface::init( vec2( 512 ), ColorA( 0.2F, 0.2F, 0.2F ) ) ) return false;
+    if ( !renderer::surface::init( vec2( 512 ), ColorA( 0.1F, 0.1F, 0.1F ) ) ) return false;
 
     _player_manager = player_manager;
 
@@ -35,6 +35,17 @@ void ground::update( float delta )
                 set_pixel( pl->get_position( ) / get_scale( ).x + vec2( x, y ), pl->get_color( ) );
             }
         }
+    }
+
+    for ( auto& player : _player_manager.lock( )->get_children( ) )
+    {
+        auto pos = player->get_position( );
+        auto size = get_content_size( ) * get_scale( );
+
+        pos.x = clamp( pos.x, 0.0F, size.x );
+        pos.y = clamp( pos.y, 0.0F, size.y );
+         
+        player->set_position( pos );
     }
 }
 }

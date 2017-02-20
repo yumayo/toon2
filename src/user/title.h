@@ -8,6 +8,6 @@ public:
     CREATE_H( title );
     bool init( );
 private:
-    sol::state* lua;
+    sol::state* _lua;
 };
 }

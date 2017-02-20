@@ -1,4 +1,5 @@
 ﻿#include "tcp_server.h"
+// #define ASIO_HAS_STD_ATOMIC
 #define ASIO_HAS_BOOST_DATE_TIME
 #define BOOST_DATE_TIME_NO_LIB
 #include "asio/asio.hpp"
@@ -7,7 +8,6 @@ using asio::ip::tcp;
 #include "boost/bind.hpp"
 #include "../utility/assert_log.h"
 #include "client_handle.h"
-#include "network.hpp"
 #include <set>
 #include "../utility/utf8.h"
 using namespace utility;

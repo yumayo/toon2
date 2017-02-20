@@ -13,7 +13,7 @@ namespace renderer
     public:
         void set_pixel( cinder::vec2 pixel, cinder::ColorA color );
         cinder::ColorA get_pixel( cinder::vec2 pixel );
-    private:
+    protected:
         cinder::Surface32f _surface;
         cinder::gl::TextureRef _texture;
     public:
