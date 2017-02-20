@@ -16,8 +16,6 @@ public:
     void write( std::string const& message, std::function<void( )> on_send = nullptr );
     void write( char const* message, size_t size, std::function<void( )> on_send = nullptr );
 public:
-    // ハンドシェイクに失敗したときに呼ばれます。
-    std::function<void( )> on_handshake_faild;
     // データを送れなかったときに呼ばれます。
     std::function<void( )> on_send_failed;
     // データが送られてきたときに呼ばれます。

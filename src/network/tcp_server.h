@@ -14,14 +14,13 @@ public:
     bool init( std::string const& port, int num_of_client );
     void update( float delta )override;
 public:
-    void write( std::string const& name, std::string const& message, std::function<void( )> on_send = nullptr );
-    void write( std::string const& name, char const* message, size_t size, std::function<void( )> on_send = nullptr );
+    void write( client_handle const& handle, std::string const& message, std::function<void( )> on_send = nullptr );
+    void write( client_handle const& handle, char const* message, size_t size, std::function<void( )> on_send = nullptr );
     void speech( std::string const& message, std::function<void( )> on_send = nullptr );
     void speech( char const* message, size_t size, std::function<void( )> on_send = nullptr );
-    void close( std::string const& name );
+    void close( client_handle const& handle );
 public:
     std::function<void( )> on_startup_failed;
-    std::function<void( client_handle const& )> on_handshake;
     std::function<void( )> on_connections_overflow;
     std::function<void( client_handle const& )> on_send_failed;
     std::function<void( client_handle const&, char const*, size_t )> on_readed;
@@ -30,10 +29,10 @@ public:
 public:
     LUA_SETUP_H( tcp_server );
 private:
-    void lua_write_string_default( std::string const& name, std::string const& message );
-    void lua_write_binary_default( std::string const& name, char const* message, size_t size );
-    void lua_write_string( std::string const& name, std::string const& message, std::function<void( )> on_send );
-    void lua_write_binary( std::string const& name, char const* message, size_t size, std::function<void( )> on_send );
+    void lua_write_string_default( client_handle const& handle, std::string const& message );
+    void lua_write_binary_default( client_handle const& handle, char const* message, size_t size );
+    void lua_write_string( client_handle const& handle, std::string const& message, std::function<void( )> on_send );
+    void lua_write_binary( client_handle const& handle, char const* message, size_t size, std::function<void( )> on_send );
     void lua_speech_string_default( std::string const& message );
     void lua_speech_binary_default( char const* message, size_t size );
     void lua_speech_string( std::string const& message, std::function<void( )> on_send );

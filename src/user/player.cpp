@@ -9,9 +9,8 @@ CREATE_CPP( player, cinder::ColorA color )
 }
 bool player::init( cinder::ColorA color )
 {
-    set_schedule_update( );
-
     set_color( color );
+
     _radius = 20.0F;
 
     if ( auto base = renderer::circle::create( _radius ) )
@@ -28,17 +27,7 @@ bool player::init( cinder::ColorA color )
         }
     }
 
-    if ( auto sender = network::udp_sender::create( "192.168.11.13", "25565" ) )
-    {
-        _sender = sender;
-        add_child( sender );
-    }
-
     return true;
-}
-void player::update( float delta )
-{
-    _sender.lock( )->write( "hogehoge" );
 }
 float player::get_radius( )
 {

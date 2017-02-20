@@ -1,5 +1,7 @@
 ﻿#include "player_manager.h"
-#include "player.h"
+#include "own.h"
+#include "enemy.h"
+#include "../network/network.hpp"
 using namespace cinder;
 namespace user
 {
@@ -13,14 +15,12 @@ bool player_manager::init( )
 
     set_schedule_update( );
 
-    auto own = player::create( ColorA( 0.2, 0.8, 0.6 ) );
-    own->set_name( "own" );
+    auto own = own::create( );
     own->set_position( { 200, 0 } );
     own->capture( 30.0F );
     add_child( own );
 
-    auto enemy = player::create( ColorA( 0.6, 0.2, 0.8 ) );
-    enemy->set_name( "other" );
+    auto enemy = enemy::create( );
     add_child( enemy );
 
     return true;
@@ -59,7 +59,7 @@ void player_manager::update( float delta )
 
                 if ( small.lock( )->get_radius( ) < large.lock( )->get_radius( ) / 2 )
                 {
-                    small.lock( )->captured( large );
+                    if ( !small.lock( )->is_captureing( ) ) small.lock( )->captured( large );
                 }
             }
         }

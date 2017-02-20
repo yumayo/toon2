@@ -37,9 +37,6 @@
     <Filter Include="Source Files\user">
       <UniqueIdentifier>{76809bbe-fa27-4eef-ae00-452241302363}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\user\meeting">
-      <UniqueIdentifier>{7f816fc0-cad9-4fa6-b778-6f428ae829de}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -322,6 +319,15 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\captured_object.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\meeting_room.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\own.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\enemy.h">
       <Filter>Source Files\user</Filter>
     </ClInclude>
   </ItemGroup>
@@ -613,6 +619,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\captured_object.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\meeting_room.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\enemy.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\own.cpp">
       <Filter>Source Files\user</Filter>
     </ClCompile>
   </ItemGroup>

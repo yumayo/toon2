@@ -25,9 +25,8 @@ struct tcp_client::_member
     void connect( );
     void write( asio::const_buffers_1 buffer, std::function<void( )> on_send );
     void read( );
-    void handshake( );
-    void sys_close( );
-    void sys_error( asio::error_code const& error );
+    void close( );
+    void error( asio::error_code const& error );
     asio::io_service io;
     tcp::socket socket;
     boost::array<char, 512> buffer;
@@ -38,19 +37,18 @@ void tcp_client::_member::connect( )
 {
     socket.async_connect(
         tcp::endpoint( asio::ip::address::from_string( ip_address ), boost::lexical_cast<int>( port ) ),
-        [ this ] ( const asio::error_code& error )
+        [ this ] ( const asio::error_code& e )
     {
-        if ( error )
+        if ( e )
         {
-            log( "【tcp_client】接続できませんでした。: %s", error.message( ).c_str( ) );
+            log( "【tcp_client】接続できませんでした。: %s", e.message( ).c_str( ) );
             if ( parent.on_connect_failed ) parent.on_connect_failed( );
-            sys_close( );
+            close( );
         }
         else
         {
             log( "【tcp_client】接続成功！" );
-            // 接続が成功したらハンドシェイクを試みます。
-            handshake( );
+            read( );
         }
     } );
 }
@@ -59,13 +57,13 @@ void tcp_client::_member::write( asio::const_buffers_1 buffer, std::function<voi
     asio::async_write(
         socket,
         buffer,
-        [ this, on_send, buffer ] ( const asio::error_code& error, size_t bytes_transferred )
+        [ this, on_send, buffer ] ( const asio::error_code& e, size_t bytes_transferred )
     {
-        if ( error )
+        if ( e )
         {
-            log( "【tcp_client】送信できませんでした。: %s", error.message( ).c_str( ) );
+            log( "【tcp_client】送信できませんでした。: %s", e.message( ).c_str( ) );
             if ( parent.on_send_failed ) parent.on_send_failed( );
-            sys_close( );
+            close( );
         }
         else
         {
@@ -80,21 +78,21 @@ void tcp_client::_member::read( )
         socket,
         asio::buffer( buffer ),
         asio::transfer_at_least( 1 ),
-        [ this ] ( const asio::error_code& error, size_t bytes_transferred )
+        [ this ] ( const asio::error_code& e, size_t bytes_transferred )
     {
-        if ( error )
+        if ( e )
         {
-            if ( error == asio::error::eof )
+            if ( e == asio::error::eof )
             {
-                log( "【tcp_client】サーバーが接続を切りました。: %s", error.message( ).c_str( ) );
+                log( "【tcp_client】サーバーが接続を切りました。: %s", e.message( ).c_str( ) );
                 if ( parent.on_disconnected ) parent.on_disconnected( );
             }
             else
             {
-                log( "【tcp_client】無効なアクセスです。: %s", error.message( ).c_str( ) );
-                sys_error( error );
+                log( "【tcp_client】無効なアクセスです。: %s", e.message( ).c_str( ) );
+                error( e );
             }
-            sys_close( );
+            close( );
         }
         else
         {
@@ -108,36 +106,15 @@ void tcp_client::_member::read( )
         }
     } );
 }
-void tcp_client::_member::handshake( )
-{
-    asio::async_write(
-        socket,
-        asio::buffer( parent._name.c_str( ), parent._name.size( ) ),
-        [ this ] ( const asio::error_code& error, size_t bytes_transferred )
-    {
-        if ( error )
-        {
-            log( "【tcp_client】ハンドシェイクできませんでした。: %s", error.message( ).c_str( ) );
-            if ( parent.on_handshake_faild ) parent.on_handshake_faild( );
-            sys_close( );
-        }
-        else
-        {
-            log( "【tcp_client】ハンドシェイク成功！" );
-            // ハンドシェイクに成功した場合は、サーバーからの読み込みを開始します。
-            read( );
-        }
-    } );
-}
-void tcp_client::_member::sys_close( )
+void tcp_client::_member::close( )
 {
     if ( parent.on_closed ) parent.on_closed( );
     socket.close( );
 }
-void tcp_client::_member::sys_error( asio::error_code const& error )
+void tcp_client::_member::error( asio::error_code const& e )
 {
-    if ( parent.on_errored ) parent.on_errored( error );
-    if ( parent.lua_on_errored ) parent.lua_on_errored( error.value( ) );
+    if ( parent.on_errored ) parent.on_errored( e );
+    if ( parent.lua_on_errored ) parent.lua_on_errored( e.value( ) );
 }
 CREATE_CPP( tcp_client, std::string const& ip_address, std::string const& port )
 {
@@ -156,7 +133,7 @@ bool tcp_client::init( std::string const& ip_address, std::string const& port )
 }
 tcp_client::~tcp_client( )
 {
-    _m->sys_close( );
+    _m->close( );
     _m->io.stop( );
 }
 void tcp_client::update( float delta )

@@ -12,7 +12,7 @@ void captured_object::captured( std::weak_ptr<node> other )
                                               [ this, other ] ( ) { on_captured( other ); } ),
                                           action::remove_self::create( ) ) );
 }
-bool captured_object::captureing( )
+bool captured_object::is_captureing( )
 {
     return _captureing;
 }

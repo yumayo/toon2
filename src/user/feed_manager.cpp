@@ -20,8 +20,8 @@ bool feed_manager::init( std::weak_ptr<node> player_manager, std::weak_ptr<node>
 
     set_schedule_update( );
 
-    run_action( action::repeat_times::create( action::call_func::create( [ this ] { create_feed( ); } ), 
-                                              100 ) );
+    run_action( action::repeat_times::create( action::call_func::create( [ this ] { create_feed( ); } ),
+                                              25 * _ground.lock( )->get_scale( ).x ) );
 
     return true;
 }
@@ -33,14 +33,14 @@ void feed_manager::update( float delta )
     for ( auto& f : _children )
     {
         auto fee = std::dynamic_pointer_cast<feed>( f );
-        if ( fee->captureing( ) ) continue;
+        if ( fee->is_captureing( ) ) continue;
 
         auto this_pos = fee->get_position( );
         auto this_radius = fee->get_radius( );
 
         auto target_pos = pla->get_position( );
         auto target_radius = pla->get_radius( );
-        
+
         // 自分の半径の二倍分の距離から吸い取れます。
         if ( distance( this_pos, target_pos ) < this_radius * 2 + target_radius )
         {
