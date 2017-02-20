@@ -1,5 +1,7 @@
 ﻿#include "tcp_client.h"
+#ifndef ASIO_HAS_STD_ATOMIC
 #define ASIO_HAS_STD_ATOMIC
+#endif
 #define ASIO_HAS_BOOST_DATE_TIME
 #define BOOST_DATE_TIME_NO_LIB
 #include "asio/asio.hpp"

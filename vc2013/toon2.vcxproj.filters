@@ -306,12 +306,6 @@
     <ClInclude Include="..\src\renderer\rect_edge.h">
       <Filter>Source Files\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\network\udp_reader.h">
-      <Filter>Source Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\network\udp_sender.h">
-      <Filter>Source Files\network</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\scene_manager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -324,10 +318,16 @@
     <ClInclude Include="..\src\user\meeting_room.h">
       <Filter>Source Files\user</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\user\own.h">
+    <ClInclude Include="..\src\network\udp_client.h">
+      <Filter>Source Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\network\udp_server.h">
+      <Filter>Source Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\player_manager_host.h">
       <Filter>Source Files\user</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\user\enemy.h">
+    <ClInclude Include="..\src\user\player_manager_client.h">
       <Filter>Source Files\user</Filter>
     </ClInclude>
   </ItemGroup>
@@ -606,12 +606,6 @@
     <ClCompile Include="..\src\renderer\rect_edge.cpp">
       <Filter>Source Files\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\network\udp_reader.cpp">
-      <Filter>Source Files\network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\network\udp_sender.cpp">
-      <Filter>Source Files\network</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\scene_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -624,10 +618,16 @@
     <ClCompile Include="..\src\user\meeting_room.cpp">
       <Filter>Source Files\user</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\user\enemy.cpp">
+    <ClCompile Include="..\src\network\udp_client.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\network\udp_server.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\player_manager_host.cpp">
       <Filter>Source Files\user</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\user\own.cpp">
+    <ClCompile Include="..\src\user\player_manager_client.cpp">
       <Filter>Source Files\user</Filter>
     </ClCompile>
   </ItemGroup>

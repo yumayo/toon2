@@ -1,5 +1,5 @@
 ﻿#include "game.h"
-#include "../network/udp_reader.h"
+#include "player_manager.h"
 using namespace cinder;
 namespace user
 {
@@ -17,20 +17,13 @@ bool game::init( )
         add_child( field );
     }
 
-    // プレイヤーを探します。
-    auto pla_mgr = _field.lock( )->get_child_by_name( "player_manager" );
-    auto own = pla_mgr->get_child_by_name( "own" );
-    _own = std::dynamic_pointer_cast<player>( own );
+    auto pla_mgr = std::dynamic_pointer_cast<player_manager>( _field.lock( )->get_child_by_name( "player_manager" ) );
+    _own = pla_mgr->get_player( );
 
     if ( auto controller = controller::create( _own ) )
     {
         _controller = controller;
         add_child( controller );
-    }
-
-    if ( auto reader = network::udp_reader::create( "25565" ) )
-    {
-        add_child( reader );
     }
     return true;
 }

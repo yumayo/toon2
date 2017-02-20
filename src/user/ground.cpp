@@ -21,31 +21,31 @@ bool ground::init( std::weak_ptr<node> player_manager )
 }
 void ground::update( float delta )
 {
-    auto own = _player_manager.lock( )->get_child_by_name( "own" );
-    auto pl = std::dynamic_pointer_cast<player>( own );
-
-    float radius = pl->get_radius( ) / get_scale( ).x;
-    for ( int y = -radius; y < radius; ++y )
+    for ( auto child : _player_manager.lock( )->get_children( ) )
     {
-        for ( int x = -radius; x < radius; ++x )
+        auto pla = std::dynamic_pointer_cast<player>( child );
+        if ( !pla ) continue;
+
+        // フィールドに色を塗る。
+        float radius = pla->get_radius( ) / get_scale( ).x;
+        for ( int y = -radius; y < radius; ++y )
         {
-            auto len = length( vec2( x, y ) );
-            if ( len < radius )
+            for ( int x = -radius; x < radius; ++x )
             {
-                set_pixel( pl->get_position( ) / get_scale( ).x + vec2( x, y ), pl->get_color( ) );
+                auto len = length( vec2( x, y ) );
+                if ( len < radius )
+                {
+                    set_pixel( pla->get_position( ) / get_scale( ).x + vec2( x, y ), pla->get_color( ) );
+                }
             }
         }
-    }
 
-    for ( auto& player : _player_manager.lock( )->get_children( ) )
-    {
-        auto pos = player->get_position( );
+        // フィールド制限。
+        auto pos = pla->get_position( );
         auto size = get_content_size( ) * get_scale( );
-
         pos.x = clamp( pos.x, 0.0F, size.x );
         pos.y = clamp( pos.y, 0.0F, size.y );
-         
-        player->set_position( pos );
+        pla->set_position( pos );
     }
 }
 }

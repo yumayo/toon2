@@ -363,6 +363,10 @@ int node::get_tag( )
 void node::set_order( int value )
 {
     _order = value;
+    _children.sort( [ ] ( std::shared_ptr<node>& a, std::shared_ptr<node>& b )
+    {
+        return a->_order < b->_order;
+    } );
 }
 int node::get_order( )
 {

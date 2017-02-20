@@ -132,7 +132,7 @@ public:
     void set_tag( int value );
     int get_tag( );
 
-protected:
+private:
     int _order = 0;
 public:
     void set_order( int value );
