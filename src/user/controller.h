@@ -1,6 +1,6 @@
 #pragma once
 #include "../node.h"
-#include "../renderer/sprite.h"
+#include "../renderer/circle.h"
 namespace user
 {
 class controller : public node
@@ -17,8 +17,8 @@ public:
 private:
     cinder::vec2 tap_start_position;
     cinder::vec2 axis;
-    std::weak_ptr<renderer::sprite> _base_node;
-    std::weak_ptr<renderer::sprite> _axis_node;
+    std::weak_ptr<renderer::circle> _base_node;
+    std::weak_ptr<renderer::circle> _axis_node;
     std::weak_ptr<node> _player;
 };
 }

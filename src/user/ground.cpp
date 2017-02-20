@@ -9,13 +9,13 @@ CREATE_CPP( ground, std::weak_ptr<node> player_manager )
 }
 bool ground::init( std::weak_ptr<node> player_manager )
 {
-    if ( !renderer::surface::init( vec2( 512 ) ) ) return false;
+    if ( !renderer::surface::init( vec2( 512 ), ColorA( 0.2F, 0.2F, 0.2F ) ) ) return false;
 
     _player_manager = player_manager;
 
     set_schedule_update( );
 
-    set_scale( vec2( 1.0F ) );
+    set_scale( vec2( 4.0F ) );
 
     return true;
 }

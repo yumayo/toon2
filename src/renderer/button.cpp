@@ -69,14 +69,14 @@ void button::render( )
 }
 bool button::mouse_began( cinder::app::MouseEvent event )
 {
-    _touch = hit_point( event.getPos( ) );
+    _touch = utility::hit_point_plane_2d( shared_from_this( ), event.getPos( ) );
     if ( _touch && on_began ) on_began( );
     _render_texture = _touch ? _swallow_texture : _normal_texture;
     return _touch;
 }
 void button::mouse_moved( cinder::app::MouseEvent event )
 {
-    _touch = hit_point( event.getPos( ) );
+    _touch = utility::hit_point_plane_2d( shared_from_this( ), event.getPos( ) );
     _render_texture = _touch ? _swallow_texture : _normal_texture;
 }
 void button::mouse_ended( cinder::app::MouseEvent event )
@@ -87,14 +87,14 @@ void button::mouse_ended( cinder::app::MouseEvent event )
 }
 bool button::touch_began( cinder::app::TouchEvent::Touch event )
 {
-    _touch = hit_point( event.getPos( ) );
+    _touch = utility::hit_point_plane_2d( shared_from_this( ), event.getPos( ) );
     if ( _touch && on_began ) on_began( );
     _render_texture = _touch ? _swallow_texture : _normal_texture;
     return _touch;
 }
 void button::touch_moved( cinder::app::TouchEvent::Touch event )
 {
-    _touch = hit_point( event.getPos( ) );
+    _touch = utility::hit_point_plane_2d( shared_from_this( ), event.getPos( ) );
     _render_texture = _touch ? _swallow_texture : _normal_texture;
 }
 void button::touch_ended( cinder::app::TouchEvent::Touch event )
@@ -102,30 +102,6 @@ void button::touch_ended( cinder::app::TouchEvent::Touch event )
     if ( _touch && on_ended ) on_ended( );
     _render_texture = _normal_texture;
     _touch = false;
-}
-bool button::hit_point( cinder::vec2 point )
-{
-    auto mat = get_world_matrix( );
-
-    auto obj = mat;
-    obj = translate( obj, _position );
-    obj = scale( obj, _scale );
-    obj = rotate( obj, _rotation );
-
-    auto ma = translate( obj, vec2( -_content_size.x * _anchor_point.x, -_content_size.y * _anchor_point.y ) );
-    auto a = vec2( ma[2][0], ma[2][1] );
-    auto mb = translate( obj, vec2( _content_size.x * _anchor_point.x, -_content_size.y * _anchor_point.y ) );
-    auto b = vec2( mb[2][0], mb[2][1] );
-    auto mc = translate( obj, vec2( _content_size.x * _anchor_point.x, _content_size.y * _anchor_point.y ) );
-    auto c = vec2( mc[2][0], mc[2][1] );
-    auto md = translate( obj, vec2( -_content_size.x * _anchor_point.x, _content_size.y * _anchor_point.y ) );
-    auto d = vec2( md[2][0], md[2][1] );
-
-    int hit = 0;
-    hit += utility::hit_point_polygon_2d( a, b, c, point );
-    hit += utility::hit_point_polygon_2d( a, c, d, point );
-
-    return hit != 0;
 }
 
 #define l_class button

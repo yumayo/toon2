@@ -228,42 +228,10 @@ void node::_render( )
     gl::translate( -_content_size * _anchor_point );
     gl::color( _color );
 
-    // 軽減処理
-    auto mat = get_world_matrix( );
-    auto obj = mat;
-    obj = translate( obj, _position );
-    obj = scale( obj, _scale );
-    obj = rotate( obj, _rotation );
-    auto slide_size = -_content_size * _anchor_point;
-    auto start = vec2( 100, 100 );
-    auto size = vec2( app::getWindowSize( ) ) - start;
-    vec2 e = { start.x, start.y }, f = { size.x, start.y }, g = { size.x, size.y }, h = { start.x, size.y };
-    auto ma = translate( obj, slide_size + vec2( 0.0F, 0.0F ) );
-    auto a = vec2( ma[2][0], ma[2][1] );
-    auto mb = translate( obj, slide_size + vec2( _content_size.x, 0.0F ) );
-    auto b = vec2( mb[2][0], mb[2][1] );
-    auto mc = translate( obj, slide_size + vec2( _content_size.x, _content_size.y ) );
-    auto c = vec2( mc[2][0], mc[2][1] );
-    auto md = translate( obj, slide_size + vec2( 0.0F, _content_size.y ) );
-    auto d = vec2( md[2][0], md[2][1] );
-
-    if ( utility::hit_point_plane_2d( a, b, c, d, e ) ||
-         utility::hit_point_plane_2d( a, b, c, d, f ) ||
-         utility::hit_point_plane_2d( a, b, c, d, g ) ||
-         utility::hit_point_plane_2d( a, b, c, d, h ) ||
-         utility::hit_point_plane_2d( e, f, g, h, a ) ||
-         utility::hit_point_plane_2d( e, f, g, h, b ) ||
-         utility::hit_point_plane_2d( e, f, g, h, c ) ||
-         utility::hit_point_plane_2d( e, f, g, h, d ) ||
-         utility::hit_segment( d, a, h, e ) )
+    if ( utility::hit_window( shared_from_this( ) ) )
     {
-        // hit
         this->render( );
     }
-    // 画面外にオブジェクトが出たら描画しません。
-    else
-        auto name = _name;
-
 
     gl::translate( _content_size * _pivot );
     for ( auto const& c : _children )

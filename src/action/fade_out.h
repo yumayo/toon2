@@ -11,6 +11,8 @@ public:
 private:
     void setup( ) override;
     void step( float t ) override;
+private:
+    float _opacity = 0.0F;
 public:
     LUA_SETUP_H( fade_out );
 };

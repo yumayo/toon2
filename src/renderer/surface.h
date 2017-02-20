@@ -7,8 +7,8 @@ namespace renderer
     class surface : public node
     {
     public:
-        CREATE_H( surface, cinder::vec2 size );
-        bool init( cinder::vec2 size );
+        CREATE_H( surface, cinder::vec2 size, cinder::ColorA color = cinder::ColorA( 1, 1, 1, 1) );
+        bool init( cinder::vec2 size, cinder::ColorA color );
         void render( ) override;
     public:
         void set_pixel( cinder::vec2 pixel, cinder::ColorA color );

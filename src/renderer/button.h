@@ -25,8 +25,6 @@ namespace renderer
         cinder::gl::TextureRef _render_texture;
         cinder::gl::TextureRef _normal_texture;
         cinder::gl::TextureRef _swallow_texture;
-    private:
-        bool hit_point( cinder::vec2 point );
     public:
         LUA_SETUP_H( button );
     };

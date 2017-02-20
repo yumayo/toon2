@@ -4,11 +4,11 @@
 using namespace cinder;
 namespace renderer
 {
-CREATE_CPP( surface, cinder::vec2 size )
+CREATE_CPP( surface, cinder::vec2 size, cinder::ColorA color )
 {
-    CREATE( surface, size );
+    CREATE( surface, size, color );
 }
-bool surface::init( cinder::vec2 size )
+bool surface::init( cinder::vec2 size, cinder::ColorA color )
 {
     // サーフェスは左上原点で行きます。
 
@@ -17,7 +17,7 @@ bool surface::init( cinder::vec2 size )
     {
         for ( int x = 0; x < _surface.getWidth( ); ++x )
         {
-            _surface.setPixel( vec2( x, y ), ColorA( 1, 1, 1, 1 ) );
+            _surface.setPixel( vec2( x, y ), color );
         }
     }
     _texture = gl::Texture::create( _surface );
