@@ -23,8 +23,9 @@ void player_manager_client::update( float delta )
 {
     vec2 pos = _player.lock( )->get_position( );
     char send_data[sizeof( vec2 )];
-    memcpy( &send_data, &pos, sizeof( vec2 ) );
+    memcpy( send_data, &pos, sizeof( vec2 ) );
     _client.lock( )->write( send_data, sizeof( vec2 ) );
+
     _client.lock( )->on_readed = [ this ] ( const char* data, size_t size )
     {
         vec2 pos;

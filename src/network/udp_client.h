@@ -9,7 +9,6 @@ class udp_client : public node
 public:
     CREATE_H( udp_client, std::string const& ip_address, std::string const& port );
     bool init( std::string const& ip_address, std::string const& port );
-    void update( float delta ) override;
 public:
     void write( std::string const& message, std::function<void( )> on_send = nullptr );
     void write( char const* message, size_t size, std::function<void( )> on_send = nullptr );
