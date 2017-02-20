@@ -13,7 +13,7 @@ bool player_manager_client::init( )
 
     set_schedule_update( );
 
-    auto client = network::udp_client::create( "192.168.11.2", "25565" );
+    auto client = network::udp_client::create( "192.168.11.13", "25565" );
     _client = client;
     add_child( client );
 

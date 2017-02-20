@@ -330,6 +330,15 @@
     <ClInclude Include="..\src\user\player_manager_client.h">
       <Filter>Source Files\user</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\user\toon_packet.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\network\udp_object.h">
+      <Filter>Source Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\network\udp_object_member.h">
+      <Filter>Source Files\network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -629,6 +638,15 @@
     </ClCompile>
     <ClCompile Include="..\src\user\player_manager_client.cpp">
       <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\toon_packet.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\network\udp_object.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\network\udp_object_member.cpp">
+      <Filter>Source Files\network</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -28,6 +28,7 @@ void player_manager_host::update( float delta )
 
     _server.lock( )->on_readed = [ this ] ( const char* data, size_t size )
     {
+        if ( size != sizeof( vec2 ) ) return;
         vec2 pos;
         memcpy( &pos, data, size );
         _enemy.lock( )->set_position( pos );

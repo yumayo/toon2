@@ -179,6 +179,8 @@
     <ClCompile Include="..\src\network\network.cpp" />
     <ClCompile Include="..\src\network\tcp_client.cpp" />
     <ClCompile Include="..\src\network\tcp_server.cpp" />
+    <ClCompile Include="..\src\network\udp_object.cpp" />
+    <ClCompile Include="..\src\network\udp_object_member.cpp" />
     <ClCompile Include="..\src\network\udp_server.cpp" />
     <ClCompile Include="..\src\network\udp_client.cpp" />
     <ClCompile Include="..\src\node.cpp" />
@@ -206,6 +208,7 @@
     <ClCompile Include="..\src\user\player.cpp" />
     <ClCompile Include="..\src\user\player_manager.cpp" />
     <ClCompile Include="..\src\user\title.cpp" />
+    <ClCompile Include="..\src\user\toon_packet.cpp" />
     <ClCompile Include="..\src\utility\collision.cpp" />
     <ClCompile Include="..\src\utility\lmake.cpp" />
     <ClCompile Include="..\src\utility\string_utility.cpp" />
@@ -275,6 +278,8 @@
     <ClInclude Include="..\src\network\network.hpp" />
     <ClInclude Include="..\src\network\tcp_client.h" />
     <ClInclude Include="..\src\network\tcp_server.h" />
+    <ClInclude Include="..\src\network\udp_object.h" />
+    <ClInclude Include="..\src\network\udp_object_member.h" />
     <ClInclude Include="..\src\network\udp_server.h" />
     <ClInclude Include="..\src\network\udp_client.h" />
     <ClInclude Include="..\src\node.h" />
@@ -303,6 +308,7 @@
     <ClInclude Include="..\src\user\player.h" />
     <ClInclude Include="..\src\user\player_manager.h" />
     <ClInclude Include="..\src\user\title.h" />
+    <ClInclude Include="..\src\user\toon_packet.h" />
     <ClInclude Include="..\src\utility\assert_log.h" />
     <ClInclude Include="..\src\utility\collision.h" />
     <ClInclude Include="..\src\utility\lmake.h" />
