@@ -15,7 +15,7 @@ bool player_manager::init( )
 
     auto own = player::create( ColorA( 0.2, 0.8, 0.6 ) );
     _player = own;
-    own->set_position( { 200, 0 } );
+    own->set_position( { 400, 0 } );
     own->capture( 30.0F );
     add_child( own );
 

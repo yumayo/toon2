@@ -24,6 +24,8 @@ public:
 
     udp::endpoint remote_endpoint_buffer; // 接続してきた相手の情報が一時的に保存されます。
 
+    std::unique_ptr<std::thread> recv_thread;
+
     boost::array<char, 512> buffer;
 
     void read( );
@@ -37,13 +39,7 @@ CREATE_CPP( udp_server, std::string const& port )
 bool udp_server::init( std::string const& port )
 {
     _m = std::make_shared<_member>( *this, port );
-    set_schedule_update( );
     return true;
-}
-void udp_server::update( float delta )
-{
-    _m->io.reset( );
-    _m->io.poll( );
 }
 void udp_server::write( std::string const & message, std::function<void( )> on_send )
 {
@@ -62,7 +58,14 @@ udp_server::_member::_member( udp_server& parent, std::string const& port )
     , socket( io, udp::endpoint( asio::ip::udp::v4( ), boost::lexical_cast<int>( port ) ) )
     , port( port )
 {
-    read( );
+    buffer.fill( 0 );
+    recv_thread = std::make_unique<std::thread>( [ this ]
+    {
+        while ( socket.is_open( ) )
+        {
+            read( );
+        }
+    } );
 }
 udp_server::_member::~_member( )
 {
@@ -70,25 +73,20 @@ udp_server::_member::~_member( )
 }
 void udp_server::_member::read( )
 {
-    socket.async_receive_from( asio::buffer( buffer ),
-                               remote_endpoint_buffer,
-                               [ this ] ( const asio::error_code& error, size_t bytes_transferred )
+    try
     {
-        if ( error )
-        {
-            log( "【udp_server】データを受け取れませんでした。" );
-            if ( parent.on_read_failed ) parent.on_read_failed( );
-        }
-        else
-        {
-            log( "【udp_server】受け取ったデータ: %d byte", bytes_transferred );
-            log_data( buffer.data( ), bytes_transferred );
-            if ( parent.on_readed ) parent.on_readed( buffer.data( ), bytes_transferred );
-            std::fill_n( buffer.begin( ), bytes_transferred, 0 );
-            read( ); // 無限再帰
-                     // 非同期なので、スタックオーバーフローにはなりません。
-        }
-    } );
+        auto bytes_transferred = socket.receive_from( asio::buffer( buffer ),
+                                                      remote_endpoint_buffer );
+        log( "【udp_server】受け取ったデータ: %d byte", bytes_transferred );
+        log_data( buffer.data( ), bytes_transferred );
+        if ( parent.on_readed ) parent.on_readed( buffer.data( ), bytes_transferred );
+        std::fill_n( buffer.begin( ), bytes_transferred, 0 );
+    }
+    catch ( asio::error_code& e )
+    {
+        log( "【udp_client】データを受け取れませんでした。: %s", e.message( ).c_str( ) );
+        if ( parent.on_read_failed ) parent.on_read_failed( );
+    }
 }
 void udp_server::_member::write( asio::const_buffers_1 buffer, std::function<void( )> on_send )
 {
@@ -97,8 +95,8 @@ void udp_server::_member::write( asio::const_buffers_1 buffer, std::function<voi
     {
         udp::resolver resolver( io );
         udp::resolver::query query( udp::v4( ),
-                                    socket.remote_endpoint( ).address( ).to_string( ),
-                                    boost::lexical_cast<std::string>( socket.remote_endpoint( ).port( ) ) );
+                                    remote_endpoint_buffer.address( ).to_string( ),
+                                    boost::lexical_cast<std::string>( remote_endpoint_buffer.port( ) ) );
         udp::endpoint receiver_endpoint = *resolver.resolve( query );
         auto len = socket.send_to( asio::buffer( buffer ), receiver_endpoint );
         // log( "【udp_server】送信中..." );
@@ -106,7 +104,7 @@ void udp_server::_member::write( asio::const_buffers_1 buffer, std::function<voi
     }
     catch ( asio::error_code& error )
     {
-        log( "【udp_client】エラー: %s", error.message( ).c_str( ) );
+        log( "【udp_server】エラー: %s", error.message( ).c_str( ) );
         if ( parent.on_send_failed ) parent.on_send_failed( );
     }
 }
