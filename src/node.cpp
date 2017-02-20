@@ -346,7 +346,14 @@ std::list<std::shared_ptr<node>>& node::get_children( )
 }
 void node::set_parent( std::shared_ptr<node> const& value )
 {
+    std::weak_ptr<node> prev_parent = value->_parent;
     _parent = value;
+    _parent.lock( )->add_child( value );
+
+    if ( prev_parent.lock( ) )
+    {
+        prev_parent.lock( )->remove_child( value );
+    }
 }
 std::shared_ptr<node> node::get_parent( )
 {
