@@ -3,16 +3,16 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( player )
+CREATE_CPP( player, cinder::ColorA color )
 {
-    CREATE( player );
+    CREATE( player, color );
 }
-bool player::init( )
+bool player::init( cinder::ColorA color )
 {
     set_schedule_update( );
 
-    set_color( ColorA( 0.2, 0.8, 0.6 ) );
-    set_radius( 20.0F );
+    set_color( color );
+    _radius = 20.0F;
 
     if ( auto base = renderer::circle::create( _radius ) )
     {
@@ -28,7 +28,7 @@ bool player::init( )
         }
     }
 
-    if ( auto sender = network::udp_sender::create( "127.0.0.1", "25565" ) )
+    if ( auto sender = network::udp_sender::create( "192.168.11.13", "25565" ) )
     {
         _sender = sender;
         add_child( sender );
@@ -40,13 +40,14 @@ void player::update( float delta )
 {
     _sender.lock( )->write( "hogehoge" );
 }
-void player::set_radius( float value )
-{
-    _radius = value;
-}
 float player::get_radius( )
 {
     return _radius;
+}
+void player::on_captured( std::weak_ptr<node> other )
+{
+    auto pla = std::dynamic_pointer_cast<user::player>( other.lock( ) );
+    pla->capture( _radius );
 }
 void player::capture( float score )
 {
@@ -60,10 +61,10 @@ void player::capture( float score )
 
     // アクションは終了済み。
     auto sub = _target_radius - _radius;
-    sub = clamp( sub, 0.0F, 3.0F );
+    sub = clamp( sub, 0.0F, 2.0F );
     run_action( action::ease<EaseOutSine>::create( action::float_to::create( sub, _radius, _target_radius, [ this ] ( float value )
     {
-        set_radius( value );
+        _radius = value;
         _base.lock( )->set_radius( get_radius( ) );
         _mask.lock( )->set_radius( get_radius( ) );
     } ) ) );

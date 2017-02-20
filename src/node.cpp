@@ -340,7 +340,7 @@ float node::get_opacity( )
 {
     return _color.a;
 }
-std::list<std::shared_ptr<node>> const & node::get_children( )
+std::list<std::shared_ptr<node>>& node::get_children( )
 {
     return _children;
 }

@@ -315,6 +315,15 @@
     <ClInclude Include="..\src\network\udp_sender.h">
       <Filter>Source Files\network</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\scene_manager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scene.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\captured_object.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -596,6 +605,15 @@
     </ClCompile>
     <ClCompile Include="..\src\network\udp_sender.cpp">
       <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scene_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\captured_object.cpp">
+      <Filter>Source Files\user</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

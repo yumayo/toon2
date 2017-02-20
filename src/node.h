@@ -118,7 +118,7 @@ public:
 protected:
     std::list<std::shared_ptr<node>> _children;
 public:
-    std::list<std::shared_ptr<node>> const& get_children( );
+    std::list<std::shared_ptr<node>>& get_children( );
 
 protected:
     std::weak_ptr<node> _parent;

@@ -191,6 +191,9 @@
     <ClCompile Include="..\src\renderer\rect_edge.cpp" />
     <ClCompile Include="..\src\renderer\sprite.cpp" />
     <ClCompile Include="..\src\renderer\surface.cpp" />
+    <ClCompile Include="..\src\scene.cpp" />
+    <ClCompile Include="..\src\scene_manager.cpp" />
+    <ClCompile Include="..\src\user\captured_object.cpp" />
     <ClCompile Include="..\src\user\controller.cpp" />
     <ClCompile Include="..\src\user\feed.cpp" />
     <ClCompile Include="..\src\user\feed_manager.cpp" />
@@ -282,6 +285,9 @@
     <ClInclude Include="..\src\renderer\renderer.hpp" />
     <ClInclude Include="..\src\renderer\sprite.h" />
     <ClInclude Include="..\src\renderer\surface.h" />
+    <ClInclude Include="..\src\scene.h" />
+    <ClInclude Include="..\src\scene_manager.h" />
+    <ClInclude Include="..\src\user\captured_object.h" />
     <ClInclude Include="..\src\user\controller.h" />
     <ClInclude Include="..\src\user\feed.h" />
     <ClInclude Include="..\src\user\feed_manager.h" />

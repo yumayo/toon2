@@ -61,12 +61,12 @@ void udp_sender::_member::write( asio::const_buffers_1 buffer, std::function<voi
         udp::resolver::query query( udp::v4( ), ip_address, port );
         udp::endpoint receiver_endpoint = *resolver.resolve( query );
         auto len = socket.send_to( asio::buffer( buffer ), receiver_endpoint );
-        log( "【udp_sender】送信成功！" );
+        // log( "【udp_sender】送信中..." );
         if ( on_send ) on_send( );
     }
     catch ( asio::error_code& error )
     {
-        log( "【udp_sender】送信できませんでした。: %s", error.message( ).c_str( ) );
+        log( "【udp_sender】エラー: %s", error.message( ).c_str( ) );
         if ( parent.on_send_failed ) parent.on_send_failed( );
     }
 }

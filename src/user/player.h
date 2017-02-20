@@ -1,18 +1,18 @@
 #pragma once
-#include "../node.h"
+#include "captured_object.h"
 #include "../renderer/circle.h"
 #include "../network/udp_sender.h"
 namespace user
 {
-class player : public node
+class player : public captured_object
 {
 public:
-    CREATE_H( player );
-    bool init( );
+    CREATE_H( player, cinder::ColorA color );
+    bool init( cinder::ColorA color );
     void update( float delta )override;
 public:
-    void set_radius( float value );
     float get_radius( );
+    void on_captured( std::weak_ptr<node> other );
     void capture( float score );
 private:
     std::weak_ptr<renderer::circle> _base;

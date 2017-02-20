@@ -7,5 +7,6 @@ class player_manager : public node
 public:
     CREATE_H( player_manager );
     bool init( );
+    void update( float delta ) override;
 };
 }

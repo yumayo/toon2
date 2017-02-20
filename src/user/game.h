@@ -5,7 +5,7 @@
 #include "controller.h"
 namespace user
 {
-class game : public node
+class game : public scene
 {
 public:
     CREATE_H( game );
