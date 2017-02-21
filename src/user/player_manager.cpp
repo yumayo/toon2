@@ -1,6 +1,7 @@
 ﻿#include "player_manager.h"
 #include "player.h"
 #include "toon_packet.h"
+#include "feed_manager.h"
 using namespace cinder;
 namespace user
 {
@@ -96,6 +97,7 @@ void player_manager::update( float delta )
             auto& pla_d = _enemy.lock( )->packet.get_player_data( );
             _enemy.lock( )->set_position( pla_d.position );
             _enemy.lock( )->set_radius( pla_d.radius );
+
             _enemy.lock( )->packet.data_updated( );
         }
     };
@@ -103,6 +105,10 @@ void player_manager::update( float delta )
 std::shared_ptr<player> player_manager::get_player( )
 {
     return _player.lock( );
+}
+void player_manager::packet_loss_completion( std::function<void( cinder::vec2 position )> on_packet_loss )
+{
+    _enemy.lock( )->packet.on_packet_loss = on_packet_loss;
 }
 }
 

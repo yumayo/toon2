@@ -10,13 +10,12 @@ public:
     CREATE_H( player_manager );
     bool init( );
     void update( float delta ) override;
-protected:
-    std::weak_ptr<player> _player;
 public:
     std::shared_ptr<player> get_player( );
+    void packet_loss_completion( std::function<void(cinder::vec2 position )> on_packet_loss );
 protected:
+    std::weak_ptr<player> _player;
     std::weak_ptr<player> _enemy;
-protected:
     std::weak_ptr<network::udp_object> _udp;
 };
 }

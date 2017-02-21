@@ -31,6 +31,9 @@ public:
     size_t size( );
     size_t player_data_size( );
     size_t captured_feed_data_size( );
+    void lock( );
+public:
+    std::function<void( cinder::vec2 data )> on_packet_loss;
 private:
     player_data _player_data;
 
@@ -38,10 +41,11 @@ private:
     std::deque<captured_feed_data> _captured_feed_data;
     static const size_t _size;
 
-    size_t _my_frame = 0;
-    size_t _enemy_frame = 0;
+    size_t _update_frame = 0;
+    size_t _data_updated_frame = 0;
+
+    size_t _packet_loss_frame = 0;
 
     std::mutex lock_object;
-    void lock( );
 };
 }

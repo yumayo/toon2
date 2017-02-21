@@ -11,18 +11,34 @@ void toon_packet::update( )
 {
     lock( );
 
-    _my_frame++;
+    if ( _update_frame != _data_updated_frame )
+    {
+        _packet_loss_frame++;
+    }
+
+    _update_frame++;
 
     _captured_feed_data.pop_back( );
     _captured_feed_data.emplace_front( captured_feed_data( ) );
 }
 void toon_packet::data_updated( )
 {
-    _enemy_frame++;
+    lock( );
+
+    // パケットロスした間の補完。
+    if ( on_packet_loss )
+        for ( int i = 0; i < _packet_loss_frame; ++i )
+        {
+            for ( auto d : _captured_feed_data[i] ) on_packet_loss( d.second );
+        }
+
+    // これでフレームに追いつく。
+    _packet_loss_frame = 0;
+    _data_updated_frame = _update_frame;
 }
 void toon_packet::set_player_data( cinder::vec2 positoin, float radius )
 {
-    // プレイヤーデータは別に書き換えられても困らないので、mutexにはしません。
+    lock( );
 
     _player_data.position = positoin;
     _player_data.radius = radius;
@@ -102,7 +118,7 @@ void toon_packet::set_data( char const * data )
 }
 player_data const & toon_packet::get_player_data( )
 {
-    // こちらもプレイヤーデータへのアクセスは気にしません。
+    lock( );
 
     return _player_data;
 }

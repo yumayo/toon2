@@ -47,6 +47,6 @@ void feed::on_captured( std::weak_ptr<node> other )
     auto pla = std::dynamic_pointer_cast<user::player>( other.lock( ) );
     pla->capture( _score );
     auto mgr = std::dynamic_pointer_cast<user::feed_manager>( get_parent( ) );
-    pla->packet.add_captured_feed( mgr->create_feed( ) );
+    pla->packet.add_captured_feed( std::make_pair( get_tag( ), mgr->create_feed( ) ) );
 }
 }

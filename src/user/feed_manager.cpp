@@ -30,6 +30,10 @@ void feed_manager::update( float delta )
 {
     // 餌を取れるのはプレイヤーだけです。
     auto pla_mgr = std::dynamic_pointer_cast<player_manager>( _player_manager.lock( ) );
+    pla_mgr->packet_loss_completion( [ this ] (vec2 pos) 
+    {
+        create_feed( pos );
+    } );
     auto pla = pla_mgr->get_player( );
 
     for ( auto& f : _children )
@@ -50,16 +54,25 @@ void feed_manager::update( float delta )
         }
     }
 }
-std::pair<int, cinder::vec2> feed_manager::create_feed( )
+cinder::vec2 feed_manager::create_feed( )
 {
     auto size = _ground.lock( )->get_content_size( ) * _ground.lock( )->get_scale( );
 
     // エサの作成。
     auto f = feed::create( );
+    f->set_tag( _now_tag++ );
     f->set_position( vec2( randFloat( size.x ), randFloat( size.y ) ) );
     add_child( f );
 
-    return std::make_pair( f->get_order( ), f->get_position( ) );
+    return f->get_position( );
+}
+void user::feed_manager::create_feed( cinder::vec2 const& position )
+{
+    // エサの作成。
+    auto f = feed::create( );
+    f->set_tag( _now_tag++ );
+    f->set_position( position );
+    add_child( f );
 }
 }
 
