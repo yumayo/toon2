@@ -9,6 +9,8 @@ toon_packet::toon_packet( )
 }
 void toon_packet::update( )
 {
+    std::lock_guard<decltype( lock_object )> lk( lock_object );
+
     _my_frame++;
 
     _captured_feed_data.pop_back( );
@@ -16,15 +18,21 @@ void toon_packet::update( )
 }
 void toon_packet::data_updated( )
 {
+    std::lock_guard<decltype( lock_object )> lk( lock_object );
+
     _enemy_frame++;
 }
 void toon_packet::set_player_data( cinder::vec2 positoin, float radius )
 {
+    // プレイヤーデータは別に書き換えられても困らないので、mutexにはしません。
+
     _player_data.position = positoin;
     _player_data.radius = radius;
 }
 void toon_packet::add_captured_feed( std::pair<int, cinder::vec2> const& data )
 {
+    std::lock_guard<decltype( lock_object )> lk( lock_object );
+
     auto& cap_data = _captured_feed_data.front( );
     cap_data.emplace_back( data );
 }
@@ -58,6 +66,8 @@ void toon_packet::get_data( char* value )
 }
 void toon_packet::set_data( char const * data )
 {
+    std::lock_guard<decltype( lock_object )> lk( lock_object );
+
     memcpy( &_player_data, data, sizeof( player_data ) );
     data += player_data_size( );
 
@@ -104,6 +114,8 @@ size_t toon_packet::player_data_size( )
 }
 size_t toon_packet::captured_feed_data_size( )
 {
+    std::lock_guard<decltype( lock_object )> lk( lock_object );
+
     size_t all = 0;
     for ( auto& obj : _captured_feed_data )
     {

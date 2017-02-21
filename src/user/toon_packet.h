@@ -3,6 +3,7 @@
 #include <deque>
 #include <utility>
 #include <vector>
+#include <mutex>
 namespace user
 {
 struct player_data
@@ -38,5 +39,6 @@ private:
 
     size_t _my_frame = 0;
     size_t _enemy_frame = 0;
+    std::mutex lock_object;
 };
 }
