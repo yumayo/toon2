@@ -81,10 +81,14 @@ void player_manager::update( float delta )
         vec2 position;
         float radius;
     };
-    player_data p_data = { _player.lock( )->get_position( ), _player.lock( )->get_radius( ) };
-    std::unique_ptr<char [ ]> send_data( new char[sizeof( player_data )] );
-    memcpy( send_data.get( ), &p_data, sizeof( player_data ) );
-    _udp.lock( )->write( send_data.get( ), sizeof( player_data ) );
+
+    if ( _player.lock( ) )
+    {
+        player_data p_data = { _player.lock( )->get_position( ), _player.lock( )->get_radius( ) };
+        std::unique_ptr<char [ ]> send_data( new char[sizeof( player_data )] );
+        memcpy( send_data.get( ), &p_data, sizeof( player_data ) );
+        _udp.lock( )->write( send_data.get( ), sizeof( player_data ) );
+    }
 
     _udp.lock( )->on_readed = [ this ] ( const char* data, size_t size )
     {

@@ -31,6 +31,7 @@ void game::update( float delta )
 {
     // カメラのアップデート
     auto win_half = vec2( app::getWindowSize( ) ) * 0.5F;
-    _field.lock( )->set_position( win_half - _own.lock( )->get_position( ) );
+    if ( _own.lock( ) )
+        _field.lock( )->set_position( win_half - _own.lock( )->get_position( ) );
 }
 }
