@@ -59,7 +59,7 @@ void player::capture( float score )
     sub = clamp( sub, 0.0F, 2.0F );
     run_action( action::ease<EaseOutSine>::create( action::float_to::create( sub, _radius, _target_radius, [ this ] ( float value )
     {
-        set_radius( _radius );
+        set_radius( value );
     } ) ) );
 }
 }
