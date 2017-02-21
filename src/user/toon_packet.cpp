@@ -9,7 +9,7 @@ toon_packet::toon_packet( )
 }
 void toon_packet::update( )
 {
-    std::lock_guard<decltype( lock_object )> lk( lock_object );
+    lock( );
 
     _my_frame++;
 
@@ -18,8 +18,6 @@ void toon_packet::update( )
 }
 void toon_packet::data_updated( )
 {
-    std::lock_guard<decltype( lock_object )> lk( lock_object );
-
     _enemy_frame++;
 }
 void toon_packet::set_player_data( cinder::vec2 positoin, float radius )
@@ -31,13 +29,15 @@ void toon_packet::set_player_data( cinder::vec2 positoin, float radius )
 }
 void toon_packet::add_captured_feed( std::pair<int, cinder::vec2> const& data )
 {
-    std::lock_guard<decltype( lock_object )> lk( lock_object );
+    lock( );
 
     auto& cap_data = _captured_feed_data.front( );
     cap_data.emplace_back( data );
 }
 void toon_packet::get_data( char* value )
 {
+    lock( );
+
     memcpy( value, &_player_data, sizeof( player_data ) );
     value += player_data_size( );
 
@@ -66,7 +66,7 @@ void toon_packet::get_data( char* value )
 }
 void toon_packet::set_data( char const * data )
 {
-    std::lock_guard<decltype( lock_object )> lk( lock_object );
+    lock( );
 
     memcpy( &_player_data, data, sizeof( player_data ) );
     data += player_data_size( );
@@ -102,6 +102,8 @@ void toon_packet::set_data( char const * data )
 }
 player_data const & toon_packet::get_player_data( )
 {
+    // こちらもプレイヤーデータへのアクセスは気にしません。
+
     return _player_data;
 }
 size_t toon_packet::size( )
@@ -114,7 +116,7 @@ size_t toon_packet::player_data_size( )
 }
 size_t toon_packet::captured_feed_data_size( )
 {
-    std::lock_guard<decltype( lock_object )> lk( lock_object );
+    lock( );
 
     size_t all = 0;
     for ( auto& obj : _captured_feed_data )
@@ -123,5 +125,9 @@ size_t toon_packet::captured_feed_data_size( )
         all += ( sizeof( int ) + sizeof( cinder::vec2 ) ) * obj.size( );
     }
     return all;
+}
+void toon_packet::lock( )
+{
+    std::lock_guard<decltype( lock_object )> lk( lock_object );
 }
 }

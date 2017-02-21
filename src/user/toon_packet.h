@@ -33,12 +33,15 @@ public:
     size_t captured_feed_data_size( );
 private:
     player_data _player_data;
-    // パケットロスをする可能性があるので、数フレーム前までのデータを詰めます。
+
+    // パケットロスをする可能性があるので、_sizeフレーム前までのデータを詰めます。
     std::deque<captured_feed_data> _captured_feed_data;
     static const size_t _size;
 
     size_t _my_frame = 0;
     size_t _enemy_frame = 0;
+
     std::mutex lock_object;
+    void lock( );
 };
 }
