@@ -36,6 +36,8 @@ float player::get_radius( )
 void player::set_radius( float value )
 {
     _radius = value;
+    _base.lock( )->set_radius( get_radius( ) );
+    _mask.lock( )->set_radius( get_radius( ) );
 }
 void player::on_captured( std::weak_ptr<node> other )
 {
@@ -57,9 +59,7 @@ void player::capture( float score )
     sub = clamp( sub, 0.0F, 2.0F );
     run_action( action::ease<EaseOutSine>::create( action::float_to::create( sub, _radius, _target_radius, [ this ] ( float value )
     {
-        _radius = value;
-        _base.lock( )->set_radius( get_radius( ) );
-        _mask.lock( )->set_radius( get_radius( ) );
+        set_radius( _radius );
     } ) ) );
 }
 }
