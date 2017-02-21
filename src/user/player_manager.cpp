@@ -1,7 +1,6 @@
 ﻿#include "player_manager.h"
 #include "player.h"
 #include "toon_packet.h"
-#include "feed_manager.h"
 using namespace cinder;
 namespace user
 {
@@ -17,8 +16,7 @@ bool player_manager::init( )
 
     auto own = player::create( ColorA( 0.2, 0.8, 0.6 ) );
     _player = own;
-    own->set_position( { 800, 0 } );
-    own->capture( 30.0F );
+    own->set_position( { 0, 0 } );
     add_child( own );
 
     auto enemy = player::create( ColorA( 0.6, 0.2, 0.8 ) );
@@ -78,37 +76,32 @@ void player_manager::update( float delta )
         }
     }
 
-    _player.lock( )->packet.update( );
-    std::unique_ptr<char [ ]> send_data( new char[_player.lock( )->packet.size( )] );
-    _player.lock( )->packet.set_player_data( _player.lock( )->get_position( ), _player.lock( )->get_radius( ) );
-    _player.lock( )->packet.get_data( send_data.get( ) );
-    _udp.lock( )->write( send_data.get( ), _player.lock( )->packet.size( ) );
-    _player.lock( )->packet.data_updated( );
+    struct player_data
+    {
+        vec2 position;
+        float radius;
+    };
+    player_data p_data = { _player.lock( )->get_position( ), _player.lock( )->get_radius( ) };
+    std::unique_ptr<char [ ]> send_data( new char[sizeof( player_data )] );
+    memcpy( send_data.get( ), &p_data, sizeof( player_data ) );
+    _udp.lock( )->write( send_data.get( ), sizeof( player_data ) );
 
-    _enemy.lock( )->packet.update( );
     _udp.lock( )->on_readed = [ this ] ( const char* data, size_t size )
     {
         if ( _enemy.lock( ) )
         {
-            if ( size != _player.lock( )->packet.size( ) ) return;
+            if ( size != sizeof( player_data ) ) return;
 
-            _enemy.lock( )->packet.set_data( data );
-
-            auto& pla_d = _enemy.lock( )->packet.get_player_data( );
-            _enemy.lock( )->set_position( pla_d.position );
-            _enemy.lock( )->set_radius( pla_d.radius );
-
-            _enemy.lock( )->packet.data_updated( );
+            player_data p_data;
+            memcpy( &p_data, data, sizeof( player_data ) );
+            _enemy.lock( )->set_position( p_data.position );
+            _enemy.lock( )->set_radius( p_data.radius );
         }
     };
 }
 std::shared_ptr<player> player_manager::get_player( )
 {
     return _player.lock( );
-}
-void player_manager::packet_loss_completion( std::function<void( cinder::vec2 position )> on_packet_loss )
-{
-    _enemy.lock( )->packet.on_packet_loss = on_packet_loss;
 }
 }
 

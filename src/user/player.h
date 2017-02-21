@@ -14,7 +14,6 @@ public:
     void set_radius( float value );
     void on_captured( std::weak_ptr<node> other );
     void capture( float score );
-    toon_packet packet;
 protected:
     std::weak_ptr<renderer::circle> _base;
     std::weak_ptr<renderer::circle> _mask;

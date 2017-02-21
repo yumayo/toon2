@@ -12,7 +12,6 @@ public:
     void update( float delta ) override;
 public:
     std::shared_ptr<player> get_player( );
-    void packet_loss_completion( std::function<void(cinder::vec2 position )> on_packet_loss );
 protected:
     std::weak_ptr<player> _player;
     std::weak_ptr<player> _enemy;

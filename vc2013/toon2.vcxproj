@@ -208,7 +208,6 @@
     <ClCompile Include="..\src\user\player.cpp" />
     <ClCompile Include="..\src\user\player_manager.cpp" />
     <ClCompile Include="..\src\user\title.cpp" />
-    <ClCompile Include="..\src\user\toon_packet.cpp" />
     <ClCompile Include="..\src\utility\collision.cpp" />
     <ClCompile Include="..\src\utility\lmake.cpp" />
     <ClCompile Include="..\src\utility\string_utility.cpp" />
@@ -308,7 +307,6 @@
     <ClInclude Include="..\src\user\player.h" />
     <ClInclude Include="..\src\user\player_manager.h" />
     <ClInclude Include="..\src\user\title.h" />
-    <ClInclude Include="..\src\user\toon_packet.h" />
     <ClInclude Include="..\src\utility\assert_log.h" />
     <ClInclude Include="..\src\utility\collision.h" />
     <ClInclude Include="..\src\utility\lmake.h" />
