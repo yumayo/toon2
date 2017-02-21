@@ -77,16 +77,12 @@ void player_manager::update( float delta )
         }
     }
 
-    // 相手に自分のデータを送ります。
-    player_data t_data;
-    t_data.position = _player.lock( )->get_position( );
-    t_data.radius = _player.lock( )->get_radius( );
-
+    _player.lock( )->packet.update( );
     std::unique_ptr<char [ ]> send_data( new char[_player.lock( )->packet.size( )] );
+    _player.lock( )->packet.set_player_data( _player.lock( )->get_position( ), _player.lock( )->get_radius( ) );
     _player.lock( )->packet.get_data( send_data.get( ) );
     _udp.lock( )->write( send_data.get( ), _player.lock( )->packet.size( ) );
-    _player.lock( )->packet.update( );
-    _player.lock( )->packet.data_update( t_data, captured_feed_data( ) );
+    _player.lock( )->packet.data_updated( );
 
     _enemy.lock( )->packet.update( );
     _udp.lock( )->on_readed = [ this ] ( const char* data, size_t size )
@@ -100,6 +96,7 @@ void player_manager::update( float delta )
             auto& pla_d = _enemy.lock( )->packet.get_player_data( );
             _enemy.lock( )->set_position( pla_d.position );
             _enemy.lock( )->set_radius( pla_d.radius );
+            _enemy.lock( )->packet.data_updated( );
         }
     };
 }

@@ -21,7 +21,9 @@ class toon_packet
 public:
     toon_packet( );
     void update( );
-    void data_update( player_data const& pla_data, captured_feed_data const& cap_data );
+    void data_updated( );
+    void set_player_data( cinder::vec2 positoin, float radius );
+    void add_captured_feed( std::pair<int, cinder::vec2> const& spawn_position );
     void get_data( char* value );
     void set_data( char const* data );
     player_data const& get_player_data( );

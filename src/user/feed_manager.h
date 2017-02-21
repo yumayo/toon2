@@ -9,7 +9,7 @@ public:
     bool init( std::weak_ptr<node> player_manager, std::weak_ptr<node> ground );
     void update( float delta ) override;
 public:
-    void create_feed( );
+    std::pair<int, cinder::vec2> create_feed( );
 private:
     std::weak_ptr<node> _player_manager;
     std::weak_ptr<node> _ground;

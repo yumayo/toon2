@@ -10,14 +10,23 @@ toon_packet::toon_packet( )
 void toon_packet::update( )
 {
     _my_frame++;
+
+    _captured_feed_data.pop_back( );
+    _captured_feed_data.emplace_front( captured_feed_data( ) );
 }
-void toon_packet::data_update( player_data const & player_data, captured_feed_data const & captured_feed_data )
+void toon_packet::data_updated( )
 {
     _enemy_frame++;
-
-    _player_data = player_data;
-    _captured_feed_data.pop_back( );
-    _captured_feed_data.emplace_front( captured_feed_data );
+}
+void toon_packet::set_player_data( cinder::vec2 positoin, float radius )
+{
+    _player_data.position = positoin;
+    _player_data.radius = radius;
+}
+void toon_packet::add_captured_feed( std::pair<int, cinder::vec2> const& data )
+{
+    auto& cap_data = _captured_feed_data.front( );
+    cap_data.emplace_back( data );
 }
 void toon_packet::get_data( char* value )
 {

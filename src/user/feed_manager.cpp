@@ -50,16 +50,16 @@ void feed_manager::update( float delta )
         }
     }
 }
-void feed_manager::create_feed( )
+std::pair<int, cinder::vec2> feed_manager::create_feed( )
 {
     auto size = _ground.lock( )->get_content_size( ) * _ground.lock( )->get_scale( );
 
     // エサの作成。
-    if ( auto f = feed::create( ) )
-    {
-        f->set_position( vec2( randFloat( size.x ), randFloat( size.y ) ) );
-        add_child( f );
-    }
+    auto f = feed::create( );
+    f->set_position( vec2( randFloat( size.x ), randFloat( size.y ) ) );
+    add_child( f );
+
+    return std::make_pair( f->get_order( ), f->get_position( ) );
 }
 }
 
