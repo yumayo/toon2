@@ -33,6 +33,10 @@ float player::get_radius( )
 {
     return _radius;
 }
+void player::set_radius( float value )
+{
+    _radius = value;
+}
 void player::on_captured( std::weak_ptr<node> other )
 {
     auto pla = std::dynamic_pointer_cast<user::player>( other.lock( ) );

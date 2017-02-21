@@ -11,26 +11,10 @@ bool player_manager_client::init( )
 {
     if ( !player_manager::init( ) ) return false;
 
-    set_schedule_update( );
-
     auto client = network::udp_client::create( "192.168.11.13", "25565" );
-    _client = client;
+    _udp = client;
     add_child( client );
 
     return true;
-}
-void player_manager_client::update( float delta )
-{
-    vec2 pos = _player.lock( )->get_position( );
-    char send_data[sizeof( vec2 )];
-    memcpy( send_data, &pos, sizeof( vec2 ) );
-    _client.lock( )->write( send_data, sizeof( vec2 ) );
-
-    _client.lock( )->on_readed = [ this ] ( const char* data, size_t size )
-    {
-        vec2 pos;
-        memcpy( &pos, data, size );
-        _enemy.lock( )->set_position( pos );
-    };
 }
 }

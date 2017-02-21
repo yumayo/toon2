@@ -4,6 +4,7 @@
 #include "player.h"
 #include "../action/action.hpp"
 #include "cinder/Rand.h"
+#include "player_manager.h"
 using namespace cinder;
 namespace user
 {
@@ -27,27 +28,25 @@ bool feed_manager::init( std::weak_ptr<node> player_manager, std::weak_ptr<node>
 }
 void feed_manager::update( float delta )
 {
-    for ( auto child : _player_manager.lock( )->get_children( ) )
+    // 餌を取れるのはプレイヤーだけです。
+    auto pla_mgr = std::dynamic_pointer_cast<player_manager>( _player_manager.lock( ) );
+    auto pla = pla_mgr->get_player( );
+
+    for ( auto& f : _children )
     {
-        auto pla = std::dynamic_pointer_cast<player>( child );
-        if ( !pla ) continue;
+        auto fee = std::dynamic_pointer_cast<feed>( f );
+        if ( fee->is_captureing( ) ) continue;
 
-        for ( auto& f : _children )
+        auto this_pos = fee->get_position( );
+        auto this_radius = fee->get_radius( );
+
+        auto target_pos = pla->get_position( );
+        auto target_radius = pla->get_radius( );
+
+        // 自分の半径の二倍分の距離から吸い取れます。
+        if ( distance( this_pos, target_pos ) < this_radius * 2 + target_radius )
         {
-            auto fee = std::dynamic_pointer_cast<feed>( f );
-            if ( fee->is_captureing( ) ) continue;
-
-            auto this_pos = fee->get_position( );
-            auto this_radius = fee->get_radius( );
-
-            auto target_pos = pla->get_position( );
-            auto target_radius = pla->get_radius( );
-
-            // 自分の半径の二倍分の距離から吸い取れます。
-            if ( distance( this_pos, target_pos ) < this_radius * 2 + target_radius )
-            {
-                fee->captured( pla );
-            }
+            fee->captured( pla );
         }
     }
 }

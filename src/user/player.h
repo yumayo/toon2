@@ -10,6 +10,7 @@ public:
     bool init( cinder::ColorA color );
 public:
     float get_radius( );
+    void set_radius( float value );
     void on_captured( std::weak_ptr<node> other );
     void capture( float score );
 protected:
