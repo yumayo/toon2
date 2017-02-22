@@ -63,7 +63,7 @@ void controller::touch_ended( cinder::app::TouchEvent::Touch event )
 void controller::update( float delta )
 {
     if ( _player.lock( ) )
-        _player.lock( )->set_position( _player.lock( )->get_position( ) + _axis * 0.01F );
+        _player.lock( )->set_position( _player.lock( )->get_position( ) + _axis * delta );
 }
 cinder::vec2 controller::get_axis( )
 {

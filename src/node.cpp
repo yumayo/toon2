@@ -228,7 +228,7 @@ void node::_render( )
     gl::translate( -_content_size * _anchor_point );
     gl::color( _color );
 
-    if ( utility::hit_window( shared_from_this( ) ) )
+    if ( utility::hit_window_aabb( shared_from_this( ) ) )
     {
         this->render( );
     }

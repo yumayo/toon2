@@ -179,10 +179,10 @@
     <ClCompile Include="..\src\network\network.cpp" />
     <ClCompile Include="..\src\network\tcp_client.cpp" />
     <ClCompile Include="..\src\network\tcp_server.cpp" />
-    <ClCompile Include="..\src\network\udp_object.cpp" />
-    <ClCompile Include="..\src\network\udp_object_member.cpp" />
+    <ClCompile Include="..\src\network\udp_client_member.cpp" />
     <ClCompile Include="..\src\network\udp_server.cpp" />
     <ClCompile Include="..\src\network\udp_client.cpp" />
+    <ClCompile Include="..\src\network\udp_server_member.cpp" />
     <ClCompile Include="..\src\node.cpp" />
     <ClCompile Include="..\src\app_delegate.cpp" />
     <ClCompile Include="..\src\renderer\button.cpp" />
@@ -277,10 +277,11 @@
     <ClInclude Include="..\src\network\network.hpp" />
     <ClInclude Include="..\src\network\tcp_client.h" />
     <ClInclude Include="..\src\network\tcp_server.h" />
+    <ClInclude Include="..\src\network\udp_client_member.h" />
     <ClInclude Include="..\src\network\udp_object.h" />
-    <ClInclude Include="..\src\network\udp_object_member.h" />
     <ClInclude Include="..\src\network\udp_server.h" />
     <ClInclude Include="..\src\network\udp_client.h" />
+    <ClInclude Include="..\src\network\udp_server_member.h" />
     <ClInclude Include="..\src\node.h" />
     <ClInclude Include="..\src\app_delegate.h" />
     <ClInclude Include="..\src\renderer\button.h" />

@@ -19,6 +19,7 @@ cinder::vec2 get_hit_segment_intersection( cinder::vec2 s1, cinder::vec2 e1, cin
 bool hit_quad_quad( cinder::vec2 a1, cinder::vec2 b1, cinder::vec2 c1, cinder::vec2 d1,
                     cinder::vec2 a2, cinder::vec2 b2, cinder::vec2 c2, cinder::vec2 d2 );
 bool hit_window( std::shared_ptr<node>const& object );
+bool hit_window_aabb( std::shared_ptr<node> const& object );
 
 float determinant_2d( cinder::vec2 a, cinder::vec2 b );
 }

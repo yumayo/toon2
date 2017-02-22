@@ -333,7 +333,10 @@
     <ClInclude Include="..\src\network\udp_object.h">
       <Filter>Source Files\network</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\network\udp_object_member.h">
+    <ClInclude Include="..\src\network\udp_server_member.h">
+      <Filter>Source Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\network\udp_client_member.h">
       <Filter>Source Files\network</Filter>
     </ClInclude>
   </ItemGroup>
@@ -636,10 +639,10 @@
     <ClCompile Include="..\src\user\player_manager_client.cpp">
       <Filter>Source Files\user</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\network\udp_object.cpp">
+    <ClCompile Include="..\src\network\udp_server_member.cpp">
       <Filter>Source Files\network</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\network\udp_object_member.cpp">
+    <ClCompile Include="..\src\network\udp_client_member.cpp">
       <Filter>Source Files\network</Filter>
     </ClCompile>
   </ItemGroup>

@@ -173,6 +173,60 @@ bool hit_window( std::shared_ptr<node> const & object )
 
     return hit_quad_quad( a, b, c, d, e, f, g, h );
 }
+bool hit_window_aabb( std::shared_ptr<node> const & object )
+{
+    auto mat = object->get_world_matrix( );
+    auto _content_size = object->get_content_size( );
+    auto _anchor_point = object->get_anchor_point( );
+    auto _position = object->get_position( );
+    auto _scale = object->get_scale( );
+    auto _rotation = object->get_rotation( );
+
+    auto obj = mat;
+    obj = translate( obj, _position );
+    obj = scale( obj, _scale );
+    obj = rotate( obj, _rotation );
+
+    auto slide_size = -_content_size * _anchor_point;
+    auto ma = translate( obj, slide_size + vec2( 0.0F, 0.0F ) );
+    auto a = vec2( ma[2][0], ma[2][1] );
+    auto mb = translate( obj, slide_size + vec2( _content_size.x, 0.0F ) );
+    auto b = vec2( mb[2][0], mb[2][1] );
+    auto mc = translate( obj, slide_size + vec2( _content_size.x, _content_size.y ) );
+    auto c = vec2( mc[2][0], mc[2][1] );
+    auto md = translate( obj, slide_size + vec2( 0.0F, _content_size.y ) );
+    auto d = vec2( md[2][0], md[2][1] );
+
+    std::vector<float> _x, _y;
+    _x.emplace_back( a.x );
+    _x.emplace_back( b.x );
+    _x.emplace_back( c.x );
+    _x.emplace_back( d.x );
+    _y.emplace_back( a.y );
+    _y.emplace_back( b.y );
+    _y.emplace_back( c.y );
+    _y.emplace_back( d.y );
+    auto ret_x = std::minmax_element( std::begin( _x ), std::end( _x ) );
+    auto ret_y = std::minmax_element( std::begin( _y ), std::end( _y ) );
+    vec2 pos, size;
+    pos.x = *ret_x.first;
+    size.x = *ret_x.second;
+    pos.y = *ret_y.first;
+    size.y = *ret_y.second;
+
+    vec2 win_pos = { 0.0F, 0.0F };
+    vec2 win_siz = vec2( app::getWindowSize( ) );
+
+    if ( std::abs( pos.x - win_pos.x ) < pos.x / 2 + win_siz.x / 2 &&
+         std::abs( pos.y - win_pos.y ) < pos.y / 2 + win_siz.y / 2 )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 float determinant_2d( cinder::vec2 a, cinder::vec2 b )
 {
     return a.x * b.y - a.y * b.x;

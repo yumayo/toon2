@@ -11,7 +11,7 @@ bool player_manager_client::init( )
 {
     if ( !player_manager::init( ) ) return false;
 
-    auto client = network::udp_client::create( "192.168.11.13", "25565" );
+    auto client = network::udp_client::create( "127.0.0.1", "25565" );
     _udp = client;
     add_child( client );
 
