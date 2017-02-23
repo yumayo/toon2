@@ -11,6 +11,8 @@ bool ground::init( std::weak_ptr<node> player_manager )
 {
     if ( !renderer::surface::init( vec2( 512 ), ColorA( 0.1F, 0.1F, 0.1F ) ) ) return false;
 
+    set_name( "ground" );
+
     _player_manager = player_manager;
 
     set_schedule_update( );

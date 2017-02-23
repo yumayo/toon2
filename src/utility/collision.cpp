@@ -208,17 +208,21 @@ bool hit_window_aabb( std::shared_ptr<node> const & object )
     _y.emplace_back( d.y );
     auto ret_x = std::minmax_element( std::begin( _x ), std::end( _x ) );
     auto ret_y = std::minmax_element( std::begin( _y ), std::end( _y ) );
-    vec2 pos, size;
-    pos.x = *ret_x.first;
-    size.x = *ret_x.second;
-    pos.y = *ret_y.first;
-    size.y = *ret_y.second;
+    vec2 begin_pos, end_pos;
+    begin_pos.x = *ret_x.first;
+    end_pos.x = *ret_x.second;
+    begin_pos.y = *ret_y.first;
+    end_pos.y = *ret_y.second;
 
     vec2 win_pos = { 0.0F, 0.0F };
-    vec2 win_siz = vec2( app::getWindowSize( ) );
+    vec2 win_size = vec2( app::getWindowSize( ) );
 
-    if ( std::abs( pos.x - win_pos.x ) < pos.x / 2 + win_siz.x / 2 &&
-         std::abs( pos.y - win_pos.y ) < pos.y / 2 + win_siz.y / 2 )
+    vec2 size = end_pos - begin_pos;
+    vec2 pos = size / 2.0F;
+
+    // http://qiita.com/hp0me/items/57f901e9b0babe1a320e
+    if ( std::abs( pos.x - win_pos.x ) < size.x / 2 + win_size.x / 2 &&
+         std::abs( pos.y - win_pos.y ) < size.y / 2 + win_size.y / 2 )
     {
         return true;
     }
