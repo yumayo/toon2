@@ -197,6 +197,22 @@ bool hit_window_aabb( std::shared_ptr<node> const & object )
     auto md = translate( obj, slide_size + vec2( 0.0F, _content_size.y ) );
     auto d = vec2( md[2][0], md[2][1] );
 
+    vec2 win_pos = { 0.0F, 0.0F };
+    vec2 win_size = vec2( app::getWindowSize( ) );
+
+    auto aabb = create_aabb( a, b, c, d );
+    vec2 pos = aabb.first, size = aabb.second;
+
+    return pos.x <= win_pos.x + win_size.x && win_pos.x <= pos.x + size.x &&
+        pos.y <= win_pos.y + win_size.y && win_pos.y <= pos.y + size.y;
+}
+float determinant_2d( cinder::vec2 a, cinder::vec2 b )
+{
+    return a.x * b.y - a.y * b.x;
+}
+
+std::pair<cinder::vec2, cinder::vec2> create_aabb( cinder::vec2 a, cinder::vec2 b, cinder::vec2 c, cinder::vec2 d )
+{
     std::vector<float> _x, _y;
     _x.emplace_back( a.x );
     _x.emplace_back( b.x );
@@ -214,26 +230,10 @@ bool hit_window_aabb( std::shared_ptr<node> const & object )
     begin_pos.y = *ret_y.first;
     end_pos.y = *ret_y.second;
 
-    vec2 win_pos = { 0.0F, 0.0F };
-    vec2 win_size = vec2( app::getWindowSize( ) );
-
+    vec2 pos = begin_pos;
     vec2 size = end_pos - begin_pos;
-    vec2 pos = size / 2.0F;
 
-    // http://qiita.com/hp0me/items/57f901e9b0babe1a320e
-    if ( std::abs( pos.x - win_pos.x ) < size.x / 2 + win_size.x / 2 &&
-         std::abs( pos.y - win_pos.y ) < size.y / 2 + win_size.y / 2 )
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-float determinant_2d( cinder::vec2 a, cinder::vec2 b )
-{
-    return a.x * b.y - a.y * b.x;
+    return std::make_pair( pos, size );
 }
 
 }

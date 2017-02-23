@@ -22,4 +22,6 @@ bool hit_window( std::shared_ptr<node>const& object );
 bool hit_window_aabb( std::shared_ptr<node> const& object );
 
 float determinant_2d( cinder::vec2 a, cinder::vec2 b );
+
+std::pair<cinder::vec2, cinder::vec2> create_aabb( cinder::vec2 a, cinder::vec2 b, cinder::vec2 c, cinder::vec2 d );
 }
