@@ -16,7 +16,6 @@ bool player_manager::init( )
 
     auto own = player::create( ColorA( 0.2, 0.8, 0.6 ) );
     _player = own;
-    own->set_position( { 0, 0 } );
     add_child( own );
 
     auto enemy = player::create( ColorA( 0.6, 0.2, 0.8 ) );

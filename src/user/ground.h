@@ -9,6 +9,8 @@ public:
     bool init( std::weak_ptr<node> player_manager );
     void update( float delta ) override;
 private:
+    void spawn_player( );
+private:
     std::weak_ptr<node> _player_manager;
 };
 }

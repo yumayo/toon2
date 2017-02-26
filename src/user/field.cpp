@@ -1,7 +1,7 @@
 ﻿#include "field.h"
 #include "ground.h"
 #include "feed_manager.h"
-#include "player_manager_host.h"
+#include "player_manager_client.h"
 using namespace cinder;
 namespace user
 {
@@ -13,7 +13,7 @@ bool field::init( )
 {
     set_name( "field" );
 
-    auto player_manager = player_manager_host::create( );
+    auto player_manager = player_manager_client::create( );
     auto ground = ground::create( player_manager );
     auto feed_manager = feed_manager::create( player_manager, ground );
 

@@ -14,10 +14,12 @@ public:
     void set_radius( float value );
     void on_captured( std::weak_ptr<node> other );
     void capture( float score );
+    void move( cinder::vec2 axis );
 protected:
     std::weak_ptr<renderer::circle> _base;
     std::weak_ptr<renderer::circle> _mask;
     float _radius = 0.0F;
     float _target_radius = 0.0F;
+    float _setup_radius = 20.0F;
 };
 }

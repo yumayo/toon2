@@ -1,5 +1,6 @@
 ﻿#include "player.h"
 #include "../action/action.hpp"
+#include "../utility/string_utility.h"
 using namespace cinder;
 namespace user
 {
@@ -11,8 +12,9 @@ bool player::init( cinder::ColorA color )
 {
     set_color( color );
 
-    _radius = 20.0F;
+    _setup_radius = 20.0F;
 
+    _radius = _setup_radius;
     if ( auto base = renderer::circle::create( _radius ) )
     {
         _base = base;
@@ -60,7 +62,13 @@ void player::capture( float score )
     run_action( action::ease<EaseOutSine>::create( action::float_to::create( sub, _radius, _target_radius, [ this ] ( float value )
     {
         set_radius( value );
-    } ) ) );
+    }
+    ) ) );
+}
+void player::move( cinder::vec2 axis )
+{
+    cinder::vec2 speed = axis * 300.0F; // 一秒間あたりの速さ。
+    speed = speed * ( 1.0F - easeInOutSine( cinder::clamp( ( _radius - _setup_radius ) / 200.0F, 0.0F, 0.8F ) ) );
+    set_position( get_position( ) + speed );
 }
 }
-

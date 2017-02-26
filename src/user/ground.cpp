@@ -1,5 +1,7 @@
 ﻿#include "ground.h"
 #include "player.h"
+#include "player_manager.h"
+#include "cinder/Rand.h"
 using namespace cinder;
 namespace user
 {
@@ -18,6 +20,9 @@ bool ground::init( std::weak_ptr<node> player_manager )
     set_schedule_update( );
 
     set_scale( vec2( 4.0F ) );
+
+    // プレイヤーの位置をランダムに決める。
+    spawn_player( );
 
     return true;
 }
@@ -49,6 +54,14 @@ void ground::update( float delta )
         pos.y = clamp( pos.y, 0.0F, size.y );
         pla->set_position( pos );
     }
+}
+void ground::spawn_player( )
+{
+    auto pla_mgr = std::dynamic_pointer_cast<user::player_manager>( _player_manager.lock( ) );
+    auto pla = pla_mgr->get_player( );
+    Rand rand( app::getElapsedSeconds( ) * 100 );
+    auto size = get_content_size( ) * get_scale( );
+    pla->set_position( { rand.nextFloat( 0.0F, size.x ), rand.nextFloat( 0.0F, size.y ) } );
 }
 }
 

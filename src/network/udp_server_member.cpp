@@ -31,6 +31,10 @@ void udp_server::_member::read( )
         }
         else
         {
+            log( "【%s】通信相手の情報: %s, %d",
+                 class_name,
+                 remote_endpoint_buffer.address( ).to_string( ).c_str( ),
+                 remote_endpoint_buffer.port( ) );
             log( "【%s】受け取ったデータ: %d byte", class_name, bytes_transferred );
             log_data( buffer.data( ), bytes_transferred );
             if ( parent.on_readed ) parent.on_readed( buffer.data( ), bytes_transferred );
@@ -50,7 +54,7 @@ void udp_server::_member::write( asio::const_buffers_1 buffer, std::function<voi
                                     boost::lexical_cast<std::string>( remote_endpoint_buffer.port( ) ) );
         udp::endpoint receiver_endpoint = *resolver.resolve( query );
         auto len = socket.send_to( asio::buffer( buffer ), receiver_endpoint );
-        // log( "【udp_server】送信中..." );
+        log( "【udp_server】送信中..." );
         if ( on_send ) on_send( );
     }
     catch ( asio::error_code& error )

@@ -1,14 +1,15 @@
 ﻿#include "controller.h"
 #include "../renderer/rect_edge.h"
 #include "../action/action.hpp"
+#include "../utility/string_utility.h"
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( controller, std::weak_ptr<node> player )
+CREATE_CPP( controller, std::weak_ptr<player> player )
 {
     CREATE( controller, player );
 }
-bool controller::init( std::weak_ptr<node> player )
+bool controller::init( std::weak_ptr<player> player )
 {
     _player = player;
 
@@ -63,11 +64,14 @@ void controller::touch_ended( cinder::app::TouchEvent::Touch event )
 void controller::update( float delta )
 {
     if ( _player.lock( ) )
-        _player.lock( )->set_position( _player.lock( )->get_position( ) + _axis * delta );
+    {
+        _player.lock( )->move( get_axis( ) * delta );
+    }
 }
 cinder::vec2 controller::get_axis( )
 {
-    return _axis;
+    float len = _base_node.lock( )->get_content_size( ).x * 0.5F;
+    return _axis / len;
 }
 void controller::began( cinder::vec2 pos )
 {
