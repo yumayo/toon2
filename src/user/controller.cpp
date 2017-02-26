@@ -5,13 +5,14 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( controller, std::weak_ptr<player> player )
+CREATE_CPP( controller, std::weak_ptr<player> player, std::weak_ptr<ground> ground )
 {
-    CREATE( controller, player );
+    CREATE( controller, player, ground );
 }
-bool controller::init( std::weak_ptr<player> player )
+bool controller::init( std::weak_ptr<player> player, std::weak_ptr<ground> ground )
 {
     _player = player;
+    _ground = ground;
 
     set_schedule_mouse_event( );
     set_schedule_touch_event( );
@@ -66,6 +67,7 @@ void controller::update( float delta )
     if ( _player.lock( ) )
     {
         _player.lock( )->move( get_axis( ) * delta );
+        _ground.lock( )->collide( _player );
     }
 }
 cinder::vec2 controller::get_axis( )

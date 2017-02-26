@@ -2,6 +2,7 @@
 #include "captured_object.h"
 #include "../renderer/circle.h"
 #include "toon_packet.h"
+#include "cinder/gl/Texture.h"
 namespace user
 {
 class player : public captured_object
@@ -9,6 +10,8 @@ class player : public captured_object
 public:
     CREATE_H( player, cinder::ColorA color );
     bool init( cinder::ColorA color );
+    CREATE_H( player, cinder::ColorA color, std::string const& relative_path_skin );
+    bool init( cinder::ColorA color, std::string const& relative_path_skin );
 public:
     float get_radius( );
     void set_radius( float value );

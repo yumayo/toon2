@@ -3,7 +3,7 @@
 #include "cocoslike.h"
 #include "utility/assert_log.h"
 #include "scene_manager.h"
-#include "user/game.h"
+#include "user/title.h"
 using namespace cinder;
 using namespace utility;
 int const app_delegate::_INVALID_ID = -1;
@@ -11,13 +11,15 @@ void app_delegate::setup( )
 {
     log( "stand by ready!" );
 
-    scene_manager::get_instans( )->push( user::game::create( ) );
+    scene_manager::get_instans( )->push( user::title::create( ) );
+    scene_manager::get_instans( )->update( );
 }
 void app_delegate::update( )
 {
     auto delta = (float)getElapsedSeconds( ) - (float)_prev_second;
     scene_manager::get_instans( )->top( )->_update( delta );
     _prev_second = getElapsedSeconds( );
+    scene_manager::get_instans( )->update( );
 }
 void app_delegate::draw( )
 {

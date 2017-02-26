@@ -10,8 +10,6 @@ public:
     CREATE_H( player_manager );
     bool init( );
     void update( float delta ) override;
-public:
-    std::shared_ptr<player> get_player( );
 protected:
     std::weak_ptr<player> _player;
     std::weak_ptr<player> _enemy;

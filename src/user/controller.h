@@ -2,13 +2,14 @@
 #include "../node.h"
 #include "../renderer/circle.h"
 #include "player.h"
+#include "ground.h"
 namespace user
 {
 class controller : public node
 {
 public:
-    CREATE_H( controller, std::weak_ptr<player> player );
-    bool init( std::weak_ptr<player> player );
+    CREATE_H( controller, std::weak_ptr<player> player, std::weak_ptr<ground> ground );
+    bool init( std::weak_ptr<player> player, std::weak_ptr<ground> ground );
     bool mouse_began( cinder::app::MouseEvent event ) override;
     void mouse_moved( cinder::app::MouseEvent event ) override;
     void mouse_ended( cinder::app::MouseEvent event ) override;
@@ -29,5 +30,6 @@ private:
     std::weak_ptr<renderer::circle> _base_node;
     std::weak_ptr<renderer::circle> _axis_node;
     std::weak_ptr<player> _player;
+    std::weak_ptr<ground> _ground;
 };
 }

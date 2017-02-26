@@ -13,6 +13,11 @@ bool ground::init( std::weak_ptr<node> player_manager )
 {
     if ( !renderer::surface::init( vec2( 512 ), ColorA( 0.1F, 0.1F, 0.1F ) ) ) return false;
 
+    gl::Texture::Format format;
+    format.setMinFilter( GL_NEAREST );
+    format.setMagFilter( GL_NEAREST );
+    _texture = gl::Texture::create( _surface, format );
+
     set_name( "ground" );
 
     _player_manager = player_manager;
@@ -46,19 +51,21 @@ void ground::update( float delta )
                 }
             }
         }
-
-        // フィールド制限。
-        auto pos = pla->get_position( );
-        auto size = get_content_size( ) * get_scale( );
-        pos.x = clamp( pos.x, 0.0F, size.x );
-        pos.y = clamp( pos.y, 0.0F, size.y );
-        pla->set_position( pos );
     }
+}
+void ground::collide( std::weak_ptr<node> player )
+{
+    // フィールド制限。
+    auto pos = player.lock( )->get_position( );
+    auto size = get_content_size( ) * get_scale( );
+    pos.x = clamp( pos.x, 0.0F, size.x );
+    pos.y = clamp( pos.y, 0.0F, size.y );
+    player.lock( )->set_position( pos );
 }
 void ground::spawn_player( )
 {
-    auto pla_mgr = std::dynamic_pointer_cast<user::player_manager>( _player_manager.lock( ) );
-    auto pla = pla_mgr->get_player( );
+    auto pla_mgr = _player_manager.lock( );
+    auto pla = pla_mgr->get_child_by_name( "own" );
     Rand rand( app::getElapsedSeconds( ) * 100 );
     auto size = get_content_size( ) * get_scale( );
     pla->set_position( { rand.nextFloat( 0.0F, size.x ), rand.nextFloat( 0.0F, size.y ) } );

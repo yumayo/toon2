@@ -336,6 +336,27 @@
     <ClInclude Include="..\src\network\udp_client_member.h">
       <Filter>Source Files\network</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\user\title.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user_default.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\button_scale.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\gacha.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\sprite_nearest.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\create_dot_obeject.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\skin.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -638,6 +659,27 @@
     </ClCompile>
     <ClCompile Include="..\src\network\udp_client_member.cpp">
       <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\title.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user_default.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\button_scale.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\gacha.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\sprite_nearest.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\create_dot_obeject.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\skin.cpp">
+      <Filter>Source Files\user</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

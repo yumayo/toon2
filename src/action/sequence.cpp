@@ -25,6 +25,7 @@ void sequence::update( float delta )
     if ( is_done( ) ) return;
 
     ( *_target_action )->update( delta );
+
     if ( ( *_target_action )->is_done( ) )
     {
         _target_action++;

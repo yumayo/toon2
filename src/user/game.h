@@ -3,6 +3,7 @@
 #include "field.h"
 #include "player.h"
 #include "controller.h"
+#include "ground.h"
 namespace user
 {
 class game : public scene
@@ -14,6 +15,7 @@ public:
 private:
     std::weak_ptr<field> _field;
     std::weak_ptr<player> _own;
+    std::weak_ptr<ground> _ground;
     std::weak_ptr<controller> _controller;
 };
 }

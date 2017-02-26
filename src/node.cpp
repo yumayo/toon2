@@ -49,14 +49,15 @@ void node::render( )
 }
 bool node::_mouse_began( cinder::app::MouseEvent event )
 {
-    for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
-    {
-        // 子供がモーダルオブジェクトだった場合
-        if ( ( *itr )->_mouse_began( event ) )
+    if ( !_block_schedule_event )
+        for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
         {
-            return true;
+            // 子供がモーダルオブジェクトだった場合
+            if ( ( *itr )->_mouse_began( event ) )
+            {
+                return true;
+            }
         }
-    }
     if ( _schedule_mouse_event )
     {
         if ( mouse_began( event ) )
@@ -69,13 +70,14 @@ bool node::_mouse_began( cinder::app::MouseEvent event )
 }
 bool node::_mouse_moved( cinder::app::MouseEvent event )
 {
-    for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
-    {
-        if ( ( *itr )->_mouse_moved( event ) )
+    if ( !_block_schedule_event )
+        for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
         {
-            return true;
+            if ( ( *itr )->_mouse_moved( event ) )
+            {
+                return true;
+            }
         }
-    }
     if ( _schedule_mouse_event )
     {
         if ( _swallow )
@@ -88,13 +90,14 @@ bool node::_mouse_moved( cinder::app::MouseEvent event )
 }
 bool node::_mouse_ended( cinder::app::MouseEvent event )
 {
-    for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
-    {
-        if ( ( *itr )->_mouse_ended( event ) )
+    if ( !_block_schedule_event )
+        for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
         {
-            return true;
+            if ( ( *itr )->_mouse_ended( event ) )
+            {
+                return true;
+            }
         }
-    }
     if ( _schedule_mouse_event )
     {
         if ( _swallow )
@@ -108,14 +111,15 @@ bool node::_mouse_ended( cinder::app::MouseEvent event )
 }
 bool node::_touch_began( cinder::app::TouchEvent::Touch event )
 {
-    for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
-    {
-        // 子供がモーダルオブジェクトだった場合
-        if ( ( *itr )->_touch_began( event ) )
+    if ( !_block_schedule_event )
+        for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
         {
-            return true;
+            // 子供がモーダルオブジェクトだった場合
+            if ( ( *itr )->_touch_began( event ) )
+            {
+                return true;
+            }
         }
-    }
     if ( _schedule_touch_event )
     {
         if ( touch_began( event ) )
@@ -128,13 +132,14 @@ bool node::_touch_began( cinder::app::TouchEvent::Touch event )
 }
 bool node::_touch_moved( cinder::app::TouchEvent::Touch event )
 {
-    for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
-    {
-        if ( ( *itr )->_touch_moved( event ) )
+    if ( !_block_schedule_event )
+        for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
         {
-            return true;
+            if ( ( *itr )->_touch_moved( event ) )
+            {
+                return true;
+            }
         }
-    }
     if ( _schedule_touch_event )
     {
         if ( _swallow )
@@ -147,13 +152,14 @@ bool node::_touch_moved( cinder::app::TouchEvent::Touch event )
 }
 bool node::_touch_ended( cinder::app::TouchEvent::Touch event )
 {
-    for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
-    {
-        if ( ( *itr )->_touch_ended( event ) )
+    if ( !_block_schedule_event )
+        for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
         {
-            return true;
+            if ( ( *itr )->_touch_ended( event ) )
+            {
+                return true;
+            }
         }
-    }
     if ( _schedule_touch_event )
     {
         if ( _swallow )
@@ -167,10 +173,11 @@ bool node::_touch_ended( cinder::app::TouchEvent::Touch event )
 }
 void node::_touches_began( cinder::app::TouchEvent event )
 {
-    for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
-    {
-        ( *itr )->_touches_began( event );
-    }
+    if ( !_block_schedule_event )
+        for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
+        {
+            ( *itr )->_touches_began( event );
+        }
     if ( _schedule_touches_event )
     {
         touches_began( event );
@@ -178,10 +185,11 @@ void node::_touches_began( cinder::app::TouchEvent event )
 }
 void node::_touches_moved( cinder::app::TouchEvent event )
 {
-    for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
-    {
-        ( *itr )->_touches_moved( event );
-    }
+    if ( !_block_schedule_event )
+        for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
+        {
+            ( *itr )->_touches_moved( event );
+        }
     if ( _schedule_touches_event )
     {
         touches_moved( event );
@@ -189,10 +197,11 @@ void node::_touches_moved( cinder::app::TouchEvent event )
 }
 void node::_touches_ended( cinder::app::TouchEvent event )
 {
-    for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
-    {
-        ( *itr )->_touches_ended( event );
-    }
+    if ( !_block_schedule_event )
+        for ( auto itr = _children.rbegin( ); itr != _children.rend( ); ++itr )
+        {
+            ( *itr )->_touches_ended( event );
+        }
     if ( _schedule_touches_event )
     {
         touches_ended( event );
@@ -202,10 +211,11 @@ void node::_update( float delta )
 {
     // 途中でaddがあるため、コンテナをバックアップします。
     std::vector<std::list<std::shared_ptr<node>>::iterator> update_objects;
-    for ( auto itr = std::begin( _children ); itr != std::end( _children ); ++itr )
-    {
-        update_objects.emplace_back( itr );
-    }
+    if ( !_block_schedule_update )
+        for ( auto itr = std::begin( _children ); itr != std::end( _children ); ++itr )
+        {
+            update_objects.emplace_back( itr );
+        }
 
     for ( auto const& c : update_objects )
     {
@@ -252,6 +262,14 @@ bool node::get_schedule_update( )
 {
     return _schedule_update;
 }
+void node::set_block_schedule_update( bool value )
+{
+    _block_schedule_update = value;
+}
+bool node::get_block_schedule_update( )
+{
+    return _block_schedule_update;
+}
 void node::set_schedule_mouse_event( bool value )
 {
     _schedule_mouse_event = value;
@@ -275,6 +293,21 @@ void node::set_schedule_touches_event( bool value )
 bool node::get_schedule_touches_event( )
 {
     return _schedule_touches_event;
+}
+void node::set_schedule_all( bool value )
+{
+    _schedule_update = value;
+    _schedule_mouse_event = value;
+    _schedule_touch_event = value;
+    _schedule_touches_event = value;
+}
+void node::set_block_schedule_event( bool value )
+{
+    _block_schedule_event = value;
+}
+bool node::get_block_schedule_event( )
+{
+    return _block_schedule_event;
 }
 void node::set_position( cinder::vec2 value )
 {

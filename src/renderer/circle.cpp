@@ -7,6 +7,9 @@ CREATE_CPP( circle, float radius, float segments )
 {
     CREATE( circle, radius, segments );
 }
+circle::~circle( )
+{
+}
 bool circle::init( float radius, float segments )
 {
     set_anchor_point( { 0.5F, 0.5F } );

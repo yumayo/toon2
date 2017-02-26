@@ -17,10 +17,11 @@ bool game::init( )
         add_child( field );
     }
 
-    auto pla_mgr = std::dynamic_pointer_cast<player_manager>( _field.lock( )->get_child_by_name( "player_manager" ) );
-    _own = pla_mgr->get_player( );
+    auto pla_mgr = _field.lock( )->get_child_by_name( "player_manager" );
+    _own = std::dynamic_pointer_cast<player>( pla_mgr->get_child_by_name( "own" ) );
+    _ground = std::dynamic_pointer_cast<ground>( _field.lock( )->get_child_by_name( "ground" ) );
 
-    if ( auto controller = controller::create( _own ) )
+    if ( auto controller = controller::create( _own, _ground ) )
     {
         _controller = controller;
         add_child( controller );

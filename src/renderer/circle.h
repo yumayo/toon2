@@ -7,8 +7,9 @@ namespace renderer
     {
     public:
         CREATE_H( circle, float radius, float segments = -1.0F );
+        virtual ~circle( );
         bool init( float radius, float segments = -1.0F );
-        void render( ) override;
+        virtual void render( ) override;
     public:
         void set_radius( float value );
         float get_radius( );

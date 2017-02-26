@@ -10,6 +10,7 @@ bool hit_point_polygon_2d( cinder::vec2 a, cinder::vec2 b, cinder::vec2 c, cinde
 // http://marupeke296.com/COL_2D_No4_SquareToSquare.html
 bool hit_point_plane_2d( cinder::vec2 a, cinder::vec2 b, cinder::vec2 c, cinder::vec2 d, cinder::vec2 point );
 bool hit_point_plane_2d( std::shared_ptr<node> const& object, cinder::vec2 point );
+bool hit_point_plane_2d_default_size( std::shared_ptr<node> const& object, cinder::vec2 point );
 
 // https://gist.github.com/yoshiki/7702066
 bool hit_segment( cinder::vec2 s1, cinder::vec2 e1, cinder::vec2 s2, cinder::vec2 e2 );

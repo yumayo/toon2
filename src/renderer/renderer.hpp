@@ -4,6 +4,7 @@
 #include "sprite.h"
 #include "label.h"
 #include "surface.h"
+#include "circle.h"
 namespace renderer
 {
 void lua_setup( sol::state& lua );

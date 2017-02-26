@@ -54,6 +54,12 @@ public:
     bool get_schedule_update( );
 
 protected:
+    bool _block_schedule_update = false;
+public:
+    void set_block_schedule_update( bool value = true );
+    bool get_block_schedule_update( );
+
+protected:
     bool _schedule_mouse_event = false;
 public:
     void set_schedule_mouse_event( bool value = true );
@@ -70,6 +76,15 @@ protected:
 public:
     void set_schedule_touches_event( bool value = true );
     bool get_schedule_touches_event( );
+
+public:
+    void set_schedule_all( bool value = true );
+
+protected:
+    bool _block_schedule_event = false;
+public:
+    void set_block_schedule_event( bool value = true );
+    bool get_block_schedule_event( );
 
 protected:
     cinder::vec2 _position = cinder::vec2( 0 );

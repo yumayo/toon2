@@ -14,11 +14,13 @@ bool player_manager::init( )
 
     set_schedule_update( );
 
-    auto own = player::create( ColorA( 0.2, 0.8, 0.6 ) );
+    auto own = player::create( ColorA( 0.2, 0.8, 0.6 ), "skin/monta.png" );
+    own->set_name( "own" );
     _player = own;
     add_child( own );
 
     auto enemy = player::create( ColorA( 0.6, 0.2, 0.8 ) );
+    enemy->set_name( "enemy" );
     _enemy = enemy;
     add_child( enemy );
 
@@ -101,10 +103,6 @@ void player_manager::update( float delta )
             _enemy.lock( )->set_radius( p_data.radius );
         }
     };
-}
-std::shared_ptr<player> player_manager::get_player( )
-{
-    return _player.lock( );
 }
 }
 

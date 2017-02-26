@@ -1,6 +1,7 @@
 ﻿#include "player.h"
 #include "../action/action.hpp"
 #include "../utility/string_utility.h"
+#include "skin.h"
 using namespace cinder;
 namespace user
 {
@@ -24,6 +25,32 @@ bool player::init( cinder::ColorA color )
         {
             _mask = mask;
             mask->set_color( get_color( ) );
+            mask->set_scale( vec2( 0.9F ) );
+            base->add_child( mask );
+        }
+    }
+
+    return true;
+}
+CREATE_CPP( player, cinder::ColorA color, std::string const& relative_path_skin )
+{
+    CREATE( player, color, relative_path_skin );
+}
+bool player::init( cinder::ColorA color, std::string const& relative_path_skin )
+{
+    set_color( color );
+
+    _setup_radius = 20.0F;
+
+    _radius = _setup_radius;
+    if ( auto base = renderer::circle::create( _radius ) )
+    {
+        _base = base;
+        add_child( base );
+
+        if ( auto mask = skin::create( _radius, relative_path_skin ) )
+        {
+            _mask = mask;
             mask->set_scale( vec2( 0.9F ) );
             base->add_child( mask );
         }
