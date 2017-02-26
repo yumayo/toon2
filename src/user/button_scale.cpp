@@ -29,9 +29,11 @@ bool button_scale::mouse_began( cinder::app::MouseEvent event )
     if ( _touch && on_began ) on_began( );
     if ( _touch )
     {
-        remove_all_actions( );
+        remove_action_by_name("button_scale" );
         set_scale( vec2( 1.0F ) );
-        run_action( action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.2 ) ) ) );
+        auto act = action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.2 ) ) );
+        act->set_name( "button_scale" );
+        run_action( act );
     }
     return _touch;
 }
@@ -41,16 +43,20 @@ void button_scale::mouse_moved( cinder::app::MouseEvent event )
     // in
     if ( ( true == _touch ) && ( false == _prev_touch ) )
     {
-        remove_all_actions( );
+        remove_action_by_name( "button_scale" );
         set_scale( vec2( 1.0F ) );
-        run_action( action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.2 ) ) ) );
+        auto act = action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.2 ) ) );
+        act->set_name( "button_scale" );
+        run_action( act );
     }
     // out
     if ( ( false == _touch ) && ( true == _prev_touch ) )
     {
-        remove_all_actions( );
+        remove_action_by_name( "button_scale" );
         set_scale( vec2( 1.2F ) );
-        run_action( action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.0 ) ) ) );
+        auto act = action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.0 ) ) );
+        act->set_name( "button_scale" );
+        run_action( act );
     }
 }
 void button_scale::mouse_ended( cinder::app::MouseEvent event )
@@ -58,9 +64,11 @@ void button_scale::mouse_ended( cinder::app::MouseEvent event )
     if ( _touch && on_ended ) on_ended( );
     if ( _touch )
     {
-        remove_all_actions( );
+        remove_action_by_name( "button_scale" );
         set_scale( vec2( 1.2F ) );
-        run_action( action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.0 ) ) ) );
+        auto act = action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.0 ) ) );
+        act->set_name( "button_scale" );
+        run_action( act );
     }
     _touch = false;
 }
@@ -70,9 +78,11 @@ bool button_scale::touch_began( cinder::app::TouchEvent::Touch event )
     if ( _touch && on_began ) on_began( );
     if ( _touch )
     {
-        remove_all_actions( );
+        remove_action_by_name( "button_scale" );
         set_scale( vec2( 1.0F ) );
-        run_action( action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.2 ) ) ) );
+        auto act = action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.2 ) ) );
+        act->set_name( "button_scale" );
+        run_action( act );
     }
     return _touch;
 }
@@ -82,16 +92,20 @@ void button_scale::touch_moved( cinder::app::TouchEvent::Touch event )
     // in
     if ( ( true == _touch ) && ( false == _prev_touch ) )
     {
-        remove_all_actions( );
+        remove_action_by_name( "button_scale" );
         set_scale( vec2( 1.0F ) );
-        run_action( action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.2 ) ) ) );
+        auto act = action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.2 ) ) );
+        act->set_name( "button_scale" );
+        run_action( act );
     }
     // out
     if ( ( false == _touch ) && ( true == _prev_touch ) )
     {
-        remove_all_actions( );
+        remove_action_by_name( "button_scale" );
         set_scale( vec2( 1.2F ) );
-        run_action( action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.0 ) ) ) );
+        auto act = action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.0 ) ) );
+        act->set_name( "button_scale" );
+        run_action( act );
     }
 }
 void button_scale::touch_ended( cinder::app::TouchEvent::Touch event )
@@ -99,9 +113,11 @@ void button_scale::touch_ended( cinder::app::TouchEvent::Touch event )
     if ( _touch && on_ended ) on_ended( );
     if ( _touch )
     {
-        remove_all_actions( );
+        remove_action_by_name( "button_scale" );
         set_scale( vec2( 1.2F ) );
-        run_action( action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.0 ) ) ) );
+        auto act = action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.0 ) ) );
+        act->set_name( "button_scale" );
+        run_action( act );
     }
     _touch = false;
 }

@@ -15,10 +15,6 @@ void user_default::save( )
     auto dataRef = writeFile( app::getAssetPath( _target_file_name ) );
     dataRef->getStream( )->writeData( data.c_str( ), data.size( ) );
 }
-user_default::~user_default( )
-{
-    remove_instans( );
-}
 user_default* user_default::get_instans( )
 {
     if ( !_instans ) _instans = new user_default;

@@ -4,6 +4,7 @@ class app_delegate : public cinder::app::App
 {
 private:
     void setup( ) override;
+    void cleanup( ) override;
     void update( ) override;
     void draw( ) override;
     void mouseDown( cinder::app::MouseEvent event ) override;

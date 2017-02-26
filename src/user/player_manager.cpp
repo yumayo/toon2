@@ -1,6 +1,7 @@
 ﻿#include "player_manager.h"
 #include "player.h"
 #include "toon_packet.h"
+#include "../user_default.h"
 using namespace cinder;
 namespace user
 {
@@ -14,10 +15,23 @@ bool player_manager::init( )
 
     set_schedule_update( );
 
-    auto own = player::create( ColorA( 0.2, 0.8, 0.6 ), "skin/monta.png" );
-    own->set_name( "own" );
-    _player = own;
-    add_child( own );
+    auto& root = user_default::get_instans( )->get_root( );
+    auto& select = root["select"];
+
+    if ( select.isNull( ) )
+    {
+        auto own = player::create( ColorA( 0.2, 0.8, 0.6 ) );
+        own->set_name( "own" );
+        _player = own;
+        add_child( own );
+    }
+    else
+    {
+        auto own = player::create( ColorA( 0.2, 0.8, 0.6 ), "skin/" + select.asString( ) + ".png" );
+        own->set_name( "own" );
+        _player = own;
+        add_child( own );
+    }
 
     auto enemy = player::create( ColorA( 0.6, 0.2, 0.8 ) );
     enemy->set_name( "enemy" );

@@ -1,15 +1,15 @@
-﻿#include "label.h"
+﻿#include "dot_label.h"
 #include "../utility/assert_log.h"
 #include "cinder/gl/gl.h"
 #include "../utility/utf8.h"
 using namespace cinder;
-namespace renderer
+namespace user
 {
-CREATE_CPP( label, std::string const& text, std::string const& relative_path, float size )
+CREATE_CPP( dot_label, std::string const& text, std::string const& relative_path, float size )
 {
-    CREATE( label, text, relative_path, size );
+    CREATE( dot_label, text, relative_path, size );
 }
-bool label::init( std::string const& text, std::string const& relative_path, float size )
+bool dot_label::init( std::string const& text, std::string const& relative_path, float size )
 {
     assert_log( !app::getAssetPath( relative_path ).empty( ), "ファイルが見つかりません。", return false );
 
@@ -31,30 +31,22 @@ bool label::init( std::string const& text, std::string const& relative_path, flo
 
     return true;
 }
-void label::render( )
+void dot_label::render( )
 {
     gl::draw( _texture, Rectf( vec2( 0 ), _content_size ) );
 }
-void label::set_text( std::string const & text )
+void dot_label::set_text( std::string const & text )
 {
     _layout = std::make_shared<cinder::TextLayout>( );
     _layout->setFont( _font );
     _layout->setColor( Color( 1, 1, 1 ) );
     _layout->append( text );
 
+    gl::Texture::Format format;
+    format.setMinFilter( GL_NEAREST );
+    format.setMagFilter( GL_NEAREST );
     bool use_alpha = true;
-    _texture = gl::Texture2d::create( _layout->render( use_alpha ) );
+    _texture = gl::Texture::create( _layout->render( use_alpha ), format );
     _content_size = _texture->getSize( );
 }
-#define l_class label
-#include "lua_define.h"
-LUA_SETUP_CPP( l_class )
-{
-    l_new( label
-           , l_base( node )
-           , l_set( create )
-           , l_set( set_text )
-    );
-}
-#include "lua_undef.h"
 }

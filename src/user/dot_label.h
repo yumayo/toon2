@@ -2,12 +2,12 @@
 #include "../node.h"
 #include "cinder/gl/Texture.h"
 #include "cinder/Text.h"
-namespace renderer
+namespace user
 {
-class label : public node
+class dot_label : public node
 {
 public:
-    CREATE_H( label, std::string const& text, std::string const& relative_path, float size );
+    CREATE_H( dot_label, std::string const& text, std::string const& relative_path, float size );
     bool init( std::string const& text, std::string const& relative_path, float size );
     void render( ) override;
 public:
@@ -18,7 +18,5 @@ private:
     cinder::gl::TextureRef _texture;
     std::string _relative_path;
     float _size;
-public:
-    LUA_SETUP_H( label );
 };
 }

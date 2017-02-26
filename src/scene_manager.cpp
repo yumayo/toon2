@@ -48,7 +48,3 @@ scene_manager::scene_manager( )
 {
 
 }
-scene_manager::~scene_manager( )
-{
-    delete _instans;
-}

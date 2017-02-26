@@ -13,6 +13,8 @@ std::shared_ptr<node> create_dot( std::string const & relative_path, float targe
     logo->set_content_size( vec2( csv.getSize( ) ) * dot_size );
     logo->set_anchor_point( vec2( 0.5F ) );
 
+    auto len = length( vec2( csv.getSize( ) ) );
+
     for ( int y = 0; y < csv.getHeight( ); ++y )
     {
         for ( int x = 0; x < csv.getWidth( ); ++x )
@@ -26,7 +28,7 @@ std::shared_ptr<node> create_dot( std::string const & relative_path, float targe
                 auto up = action::ease<EaseOutBounce>::create( action::scale_by::create( 0.3F, vec2( -0.2F ) ) );
                 auto down = action::ease<EaseOutBounce>::create( action::scale_by::create( 0.3F, vec2( 0.2F ) ) );
                 auto roop = action::repeat_forever::create( action::sequence::create( action::delay::create( 2.0F ), up, down ) );
-                dot->run_action( action::sequence::create( action::delay::create( 1.0F + float( x + y ) / 30.0F ), act_scale, roop ) );
+                dot->run_action( action::sequence::create( action::delay::create( 0.3F + float( x + y ) / len ), act_scale, roop ) );
                 logo->add_child( dot );
             }
         }
@@ -44,6 +46,8 @@ std::shared_ptr<button_scale> create_dot_button( std::string const & relative_pa
     logo->set_content_size( vec2( csv.getSize( ) ) * dot_size );
     logo->set_anchor_point( vec2( 0.5F ) );
 
+    auto len = length( vec2( csv.getSize( ) ) );
+
     for ( int y = 0; y < csv.getHeight( ); ++y )
     {
         for ( int x = 0; x < csv.getWidth( ); ++x )
@@ -57,7 +61,7 @@ std::shared_ptr<button_scale> create_dot_button( std::string const & relative_pa
                 auto up = action::ease<EaseOutBounce>::create( action::scale_by::create( 0.3F, vec2( -0.2F ) ) );
                 auto down = action::ease<EaseOutBounce>::create( action::scale_by::create( 0.3F, vec2( 0.2F ) ) );
                 auto roop = action::repeat_forever::create( action::sequence::create( action::delay::create( 2.0F ), up, down ) );
-                dot->run_action( action::sequence::create( action::delay::create( 1.0F + float( x + y ) / 30.0F ), act_scale, roop ) );
+                dot->run_action( action::sequence::create( action::delay::create( 0.3F + float( x + y ) / len ), act_scale, roop ) );
                 logo->add_child( dot );
             }
         }

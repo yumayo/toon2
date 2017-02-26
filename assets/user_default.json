@@ -1,0 +1,10 @@
+{
+   "complete" : true,
+   "feed" : 512,
+   "max_size" : 20,
+   "select" : null,
+   "skin" : {
+      "miku" : true,
+      "monta" : true
+   }
+}

@@ -2,6 +2,8 @@
 #include "create_dot_obeject.h"
 #include "../scene_manager.h"
 #include "game.h"
+#include "gacha.h"
+#include "config.h"
 using namespace cinder;
 namespace user
 {
@@ -31,7 +33,6 @@ bool title::init( )
     add_child( con );
     con->set_position( vec2( app::getWindowSize( ) ) * vec2( 1.0F, 0.75F ) + vec2( -150, 60 ) );
 
-
     sta->on_ended = [ this ]
     {
         set_block_schedule_event( );
@@ -39,11 +40,13 @@ bool title::init( )
     };
     gac->on_ended = [ this ]
     {
-
+        set_block_schedule_event( );
+        change_action( [ ] { scene_manager::get_instans( )->replace( gacha::create( ) ); } );
     };
     con->on_ended = [ this ]
     {
-
+        set_block_schedule_event( );
+        change_action( [ ] { scene_manager::get_instans( )->replace( config::create( ) ); } );
     };
 
     return true;
@@ -51,33 +54,37 @@ bool title::init( )
 void title::change_action( std::function<void( )> end_fn )
 {
     float i = 0;
+    size_t size = _tit.lock( )->get_children( ).size( );
     for ( auto& c : _tit.lock( )->get_children( ) )
     {
         c->remove_all_actions( );
         c->run_action( action::sequence::create(
             action::delay::create( i ),
             action::ease<EaseOutBounce>::create( action::scale_to::create( 0.2F, vec2( 0 ) ) ) ) );
-        i += 0.01F;
+        i += 1.0F / size;
     }
     i = 0;
+    size = _sta.lock( )->get_children( ).size( );
     for ( auto& c : _sta.lock( )->get_children( ) )
     {
         c->remove_all_actions( );
         c->run_action( action::sequence::create(
             action::delay::create( i ),
             action::ease<EaseOutBounce>::create( action::scale_to::create( 0.2F, vec2( 0 ) ) ) ) );
-        i += 0.01F;
+        i += 1.0F / size;
     }
     i = 0;
+    size = _gac.lock( )->get_children( ).size( );
     for ( auto& c : _gac.lock( )->get_children( ) )
     {
         c->remove_all_actions( );
         c->run_action( action::sequence::create(
             action::delay::create( i ),
             action::ease<EaseOutBounce>::create( action::scale_to::create( 0.2F, vec2( 0 ) ) ) ) );
-        i += 0.01F;
+        i += 1.0F / size;
     }
     i = 0;
+    size = _con.lock( )->get_children( ).size( );
     auto itr = _con.lock( )->get_children( ).begin( );
     for ( ; itr != --_con.lock( )->get_children( ).end( ); ++itr )
     {
@@ -85,7 +92,7 @@ void title::change_action( std::function<void( )> end_fn )
         ( *itr )->run_action( action::sequence::create(
             action::delay::create( i ),
             action::ease<EaseOutBounce>::create( action::scale_to::create( 0.2F, vec2( 0 ) ) ) ) );
-        i += 0.01F;
+        i += 1.0F / size;
     }
     ( *itr )->remove_all_actions( );
     ( *itr )->run_action( action::sequence::create(

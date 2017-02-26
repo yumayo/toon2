@@ -19,6 +19,5 @@ public:
     static void remove_instans( );
 private:
     scene_manager( );
-    ~scene_manager( );
     static scene_manager* _instans;
 };

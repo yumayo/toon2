@@ -348,14 +348,23 @@
     <ClInclude Include="..\src\user\gacha.h">
       <Filter>Source Files\user</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\user\sprite_nearest.h">
-      <Filter>Source Files\user</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\user\create_dot_obeject.h">
       <Filter>Source Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\skin.h">
       <Filter>Source Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\config.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\dot_label.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\dot_sprite.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\renderer\sprite_animation.h">
+      <Filter>Source Files\renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -672,14 +681,23 @@
     <ClCompile Include="..\src\user\gacha.cpp">
       <Filter>Source Files\user</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\user\sprite_nearest.cpp">
-      <Filter>Source Files\user</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\user\create_dot_obeject.cpp">
       <Filter>Source Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\skin.cpp">
       <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\config.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\dot_label.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\dot_sprite.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\renderer\sprite_animation.cpp">
+      <Filter>Source Files\renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

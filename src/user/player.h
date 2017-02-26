@@ -12,10 +12,11 @@ public:
     bool init( cinder::ColorA color );
     CREATE_H( player, cinder::ColorA color, std::string const& relative_path_skin );
     bool init( cinder::ColorA color, std::string const& relative_path_skin );
+    virtual ~player( );
 public:
     float get_radius( );
     void set_radius( float value );
-    void on_captured( std::weak_ptr<node> other );
+    void on_captured( std::weak_ptr<node> other ) override;
     void capture( float score );
     void move( cinder::vec2 axis );
 protected:

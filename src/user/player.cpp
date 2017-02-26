@@ -40,6 +40,9 @@ bool player::init( cinder::ColorA color, std::string const& relative_path_skin )
 {
     set_color( color );
 
+    set_scale( vec2( 0 ) );
+    run_action( action::ease<EaseOutSine>::create( action::scale_to::create( 1.0F, vec2( 1 ) ) ) );
+
     _setup_radius = 20.0F;
 
     _radius = _setup_radius;
@@ -57,6 +60,14 @@ bool player::init( cinder::ColorA color, std::string const& relative_path_skin )
     }
 
     return true;
+}
+player::~player( )
+{
+    if ( get_name( ) == "own" )
+    {
+        auto feed_num = user_default::get_instans( )->get_root( )["feed"].asInt( );
+        user_default::get_instans( )->get_root( )["feed"] = feed_num + int( _radius - _setup_radius );
+    }
 }
 float player::get_radius( )
 {

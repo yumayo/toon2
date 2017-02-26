@@ -3,6 +3,10 @@
 using namespace cinder;
 namespace user
 {
+captured_object::~captured_object( )
+{
+
+}
 void captured_object::captured( std::weak_ptr<node> other )
 {
     _captureing = true;

@@ -14,6 +14,11 @@ void app_delegate::setup( )
     scene_manager::get_instans( )->push( user::title::create( ) );
     scene_manager::get_instans( )->update( );
 }
+void app_delegate::cleanup( )
+{
+    scene_manager::remove_instans( );
+    user_default::remove_instans( );
+}
 void app_delegate::update( )
 {
     auto delta = (float)getElapsedSeconds( ) - (float)_prev_second;
