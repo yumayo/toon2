@@ -25,15 +25,4 @@ void fade_out::step( float t )
     auto const temp = ease_liner( t, from, to );
     _target.lock( )->set_opacity( temp );
 }
-
-#define l_class fade_out
-#include "lua_define.h"
-LUA_SETUP_CPP( l_class )
-{
-    l_new( fade_out
-           , l_base( finite_time_action )
-           , l_set( create )
-    );
-}
-#include "lua_undef.h"
 }

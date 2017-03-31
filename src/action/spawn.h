@@ -13,15 +13,10 @@ public:
     template <class Head, class... Tail>
     bool init( Head const& head, Tail const& ...tail );
 public:
-    CREATE_H( spawn, sol::variadic_args const& args );
-    bool init( sol::variadic_args const& args );
-public:
     void setup( ) final override;
     bool is_done( )  final override;
     void update( float delta )  final override;
     void restart( )  final override;
-public:
-    LUA_SETUP_H( spawn );
 };
 
 template<class Head, class... Tail>

@@ -18,14 +18,4 @@ void rect::render( )
 {
     gl::drawSolidRect( Rectf( vec2( 0 ), _content_size ) );
 }
-#define l_class rect
-#include "lua_define.h"
-LUA_SETUP_CPP( l_class )
-{
-    l_new( rect
-           , l_base( node )
-           , l_set( create )
-    );
-}
-#include "lua_undef.h"
 }

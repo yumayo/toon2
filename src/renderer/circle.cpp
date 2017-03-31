@@ -31,14 +31,4 @@ float circle::get_radius( )
 {
     return _radius;
 }
-#define l_class circle
-#include "lua_define.h"
-LUA_SETUP_CPP( l_class )
-{
-    l_new( circle
-           , l_base( node )
-           , l_set( create )
-    );
-}
-#include "lua_undef.h"
 }

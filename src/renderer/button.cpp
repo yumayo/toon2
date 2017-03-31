@@ -103,20 +103,4 @@ void button::touch_ended( cinder::app::TouchEvent::Touch event )
     _render_texture = _normal_texture;
     _touch = false;
 }
-
-#define l_class button
-#include "lua_define.h"
-LUA_SETUP_CPP( l_class )
-{
-    l_new( button
-           , l_base( node )
-           , "create", sol::overload( [ ] ( vec2 const& size ) { return l_class::create( size ); },
-                                      [ ] ( std::string const & normal_texture_relative_path ) { return l_class::create( normal_texture_relative_path ); },
-                                      [ ] ( std::string const & normal_texture_relative_path, std::string const & swallow_texture_relative_path ) { return l_class::create( normal_texture_relative_path, swallow_texture_relative_path ); }
-           )
-           , l_set( on_began )
-           , l_set( on_ended )
-    );
-}
-#include "lua_undef.h"
 }

@@ -176,7 +176,6 @@ void tcp_server::_member::write( socket_object& sock_obj, asio::const_buffers_1 
 void tcp_server::_member::on_errored( socket_object& sock_obj, asio::error_code const & e )
 {
     if ( parent.on_errored ) parent.on_errored( sock_obj.handle, e );
-    if ( parent.lua_on_errored ) parent.lua_on_errored( sock_obj.handle, e.value( ) );
 }
 void tcp_server::_member::close_with_async( socket_object & sock_obj )
 {
@@ -255,61 +254,4 @@ void tcp_server::close( client_handle const& handle )
         _m->close_with_async( sock_obj );
     } );
 }
-void tcp_server::lua_write_string_default( client_handle const& handle, std::string const & message )
-{
-    write( handle, message );
-}
-void tcp_server::lua_write_binary_default( client_handle const& handle, char const * message, size_t size )
-{
-    write( handle, message, size );
-}
-void tcp_server::lua_write_string( client_handle const& handle, std::string const & message, std::function<void( )> on_send )
-{
-    write( handle, message, on_send );
-}
-void tcp_server::lua_write_binary( client_handle const& handle, char const * message, size_t size, std::function<void( )> on_send )
-{
-    write( handle, message, size, on_send );
-}
-void tcp_server::lua_speech_string_default( std::string const & message )
-{
-    speech( message );
-}
-void tcp_server::lua_speech_binary_default( char const * message, size_t size )
-{
-    speech( message, size );
-}
-void tcp_server::lua_speech_string( std::string const & message, std::function<void( )> on_send )
-{
-    speech( message, on_send );
-}
-void tcp_server::lua_speech_binary( char const * message, size_t size, std::function<void( )> on_send )
-{
-    speech( message, size, on_send );
-}
-#define l_class tcp_server
-#include "lua_define.h"
-LUA_SETUP_CPP( l_class )
-{
-    l_new( tcp_server
-           , l_base( node )
-           , l_set( create )
-           , l_set( on_startup_failed )
-           , l_set( on_connections_overflow )
-           , l_set( on_send_failed )
-           , l_set( on_readed )
-           , l_set( on_client_disconnected )
-           , "write", sol::overload( &l_class::lua_write_string_default,
-                                     &l_class::lua_write_binary_default,
-                                     &l_class::lua_write_string,
-                                     &l_class::lua_write_binary )
-           , "speech", sol::overload( &l_class::lua_speech_string_default,
-                                      &l_class::lua_speech_binary_default,
-                                      &l_class::lua_speech_string,
-                                      &l_class::lua_speech_binary )
-           , "on_errored", &l_class::lua_on_errored
-           , l_set( close )
-    );
-}
-#include "lua_undef.h"
 }

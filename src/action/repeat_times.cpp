@@ -35,14 +35,4 @@ void repeat_times::restart( )
     _number_of_times = _init_number_of_times;
     _time_action->restart( );
 }
-#define l_class repeat_times
-#include "lua_define.h"
-LUA_SETUP_CPP( l_class )
-{
-    l_new( repeat_times,
-           l_base( finite_time_action ),
-           l_set( create )
-    );
-}
-#include "lua_undef.h"
 }

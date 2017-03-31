@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include "../forward.h"
-#include "sol.hpp"
 namespace network
 {
 class client_handle
@@ -16,7 +15,5 @@ public: // 値は tcp_server のみが書き換えられます。
 private: // lua専用関数群。
     std::string get_ip_address( )const;
     std::string get_port( )const;
-public:
-    LUA_SETUP_H( client_handle );
 };
 }

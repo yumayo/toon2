@@ -11,7 +11,5 @@ private:
     void setup( ) override;
 private:
     cinder::vec2 _init_position;
-public:
-    LUA_SETUP_H( move_by );
 };
 }

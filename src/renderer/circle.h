@@ -16,7 +16,5 @@ namespace renderer
     protected:
         float _radius = 0.0F;
         float _segments = -1.0F;
-    public:
-        LUA_SETUP_H( circle );
     };
 }

@@ -25,7 +25,5 @@ namespace renderer
         cinder::gl::TextureRef _render_texture;
         cinder::gl::TextureRef _normal_texture;
         cinder::gl::TextureRef _swallow_texture;
-    public:
-        LUA_SETUP_H( button );
     };
 }

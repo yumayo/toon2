@@ -16,7 +16,5 @@ public:
 private:
     cinder::audio::GainNodeRef _gain;
     cinder::audio::BufferPlayerNodeRef _buffer_player_node;
-public:
-    LUA_SETUP_H( buffer_player );
 };
 }

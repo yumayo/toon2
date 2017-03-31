@@ -18,7 +18,5 @@ private:
     cinder::gl::TextureRef _texture;
     std::string _relative_path;
     float _size;
-public:
-    LUA_SETUP_H( label );
 };
 }

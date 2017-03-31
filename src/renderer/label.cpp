@@ -46,15 +46,4 @@ void label::set_text( std::string const & text )
     _texture = gl::Texture2d::create( _layout->render( use_alpha ) );
     _content_size = _texture->getSize( );
 }
-#define l_class label
-#include "lua_define.h"
-LUA_SETUP_CPP( l_class )
-{
-    l_new( label
-           , l_base( node )
-           , l_set( create )
-           , l_set( set_text )
-    );
-}
-#include "lua_undef.h"
 }

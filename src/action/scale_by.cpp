@@ -18,15 +18,4 @@ void scale_by::setup( )
     _start_scale = _target.lock( )->get_scale( );
     _scale = _init_scale + _start_scale;
 }
-
-#define l_class scale_by
-#include "lua_define.h"
-LUA_SETUP_CPP( l_class )
-{
-    l_new( scale_by
-           , l_base( finite_time_action )
-           , l_set( create )
-    );
-}
-#include "lua_undef.h"
 }

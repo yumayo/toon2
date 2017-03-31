@@ -14,7 +14,5 @@ public:
 private:
     cinder::TextLayout _layout;
     cinder::gl::TextureRef _texture;
-public:
-    LUA_SETUP_H( letter );
 };
 }

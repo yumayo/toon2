@@ -1,6 +1,2 @@
-#pragma once
-#include "sol.hpp"
-namespace audio
-{
-void lua_setup( sol::state& lua );
-}
+#include "buffer_player.h"
+#include "file_player.h"

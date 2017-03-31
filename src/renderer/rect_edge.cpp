@@ -21,14 +21,4 @@ void rect_edge::render( )
     gl::drawStrokedRect( Rectf( vec2( 0 ), _content_size ) );
     gl::lineWidth( 1.0F );
 }
-#define l_class rect_edge
-#include "lua_define.h"
-LUA_SETUP_CPP( l_class )
-{
-    l_new( rect_edge
-           , l_base( node )
-           , l_set( create )
-    );
-}
-#include "lua_undef.h"
 }

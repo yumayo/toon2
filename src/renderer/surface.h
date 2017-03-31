@@ -16,7 +16,5 @@ namespace renderer
     protected:
         cinder::Surface32f _surface;
         cinder::gl::TextureRef _texture;
-    public:
-        LUA_SETUP_H( surface );
     };
 }

@@ -14,7 +14,5 @@ private:
 protected:
     cinder::vec2 _start_scale;
     cinder::vec2 _scale;
-public:
-    LUA_SETUP_H( scale_to );
 };
 }

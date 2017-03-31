@@ -13,7 +13,5 @@ private:
     std::function<void( float value )> _callback;
     float _from = 0.0F;
     float _to = 0.0F;
-public:
-    LUA_SETUP_H( float_to );
 };
 }

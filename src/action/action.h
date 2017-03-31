@@ -1,7 +1,6 @@
 #pragma once
 #include "cinder/app/App.h"
 #include "../forward.h"
-#include "sol.hpp"
 namespace action
 {
 class action
@@ -51,7 +50,5 @@ public:
 
 protected:
     size_t _hash = 0;
-public:
-    LUA_SETUP_H( action );
 };
 }

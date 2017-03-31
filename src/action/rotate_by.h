@@ -11,7 +11,5 @@ private:
     void setup( ) override;
 private:
     float _init_rotation = 0.0F;
-public:
-    LUA_SETUP_H( rotate_by );
 };
 }

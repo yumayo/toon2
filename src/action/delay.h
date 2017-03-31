@@ -9,7 +9,5 @@ public:
 
 public:
     bool init( float duration );
-public:
-    LUA_SETUP_H( delay );
 };
 }

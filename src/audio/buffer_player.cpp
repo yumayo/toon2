@@ -42,17 +42,4 @@ float buffer_player::get_gain( )
 {
     return _gain->getValue( );
 }
-#define l_class buffer_player
-#include "lua_define.h"
-LUA_SETUP_CPP( l_class )
-{
-    l_new( buffer_player
-           , l_base( node )
-           , l_set( create )
-           , l_set( play )
-           , l_set( stop )
-           , l_prop( gain )
-    );
-}
-#include "lua_undef.h"
 }

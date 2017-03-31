@@ -33,14 +33,4 @@ void repeat_forever::restart( )
     finite_time_action::restart( );
     _time_action->restart( );
 }
-#define l_class repeat_forever
-#include "lua_define.h"
-LUA_SETUP_CPP( l_class )
-{
-    l_new( repeat_forever,
-           l_base( finite_time_action ),
-           l_set( create )
-    );
-}
-#include "lua_undef.h"
 }

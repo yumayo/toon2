@@ -17,8 +17,6 @@ public:
 protected:
     ease_type ease_object;
     std::shared_ptr<finite_time_action> _time_action;
-public:
-    LUA_SETUP_H( ease<ease_type> );
 };
 
 template<typename ease_type>

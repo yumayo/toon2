@@ -116,7 +116,6 @@ void tcp_client::_member::close( )
 void tcp_client::_member::error( asio::error_code const& e )
 {
     if ( parent.on_errored ) parent.on_errored( e );
-    if ( parent.lua_on_errored ) parent.lua_on_errored( e.value( ) );
 }
 CREATE_CPP( tcp_client, std::string const& ip_address, std::string const& port )
 {
@@ -152,40 +151,4 @@ void tcp_client::write( char const * message, size_t size, std::function<void( )
     log( "【tcp_client】送信中..." );
     _m->write( asio::buffer( message, size ), on_send );
 }
-void tcp_client::lua_write_string_default( std::string const & message )
-{
-    write( message );
-}
-void tcp_client::lua_write_binary_default( char const * message, size_t size )
-{
-    write( message, size );
-}
-void tcp_client::lua_write_string( std::string const & message, std::function<void( )> on_send )
-{
-    write( message, on_send );
-}
-void tcp_client::lua_write_binary( char const * message, size_t size, std::function<void( )> on_send )
-{
-    write( message, size, on_send );
-}
-#define l_class tcp_client
-#include "lua_define.h"
-LUA_SETUP_CPP( l_class )
-{
-    l_new( tcp_client
-           , l_base( node )
-           , l_set( create )
-           , l_set( on_send_failed )
-           , l_set( on_readed )
-           , l_set( on_connect_failed )
-           , l_set( on_disconnected )
-           , l_set( on_closed )
-           , "write", sol::overload( &l_class::lua_write_string_default,
-                                     &l_class::lua_write_binary_default,
-                                     &l_class::lua_write_string,
-                                     &l_class::lua_write_binary )
-           , "on_errored", &l_class::lua_on_errored
-    );
-}
-#include "lua_undef.h"
 }

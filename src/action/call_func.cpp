@@ -16,14 +16,4 @@ void call_func::update( float delta )
 {
     if ( _call ) _call( );
 }
-#define l_class call_func
-#include "lua_define.h"
-LUA_SETUP_CPP( l_class )
-{
-    l_new( call_func
-           , l_base( finite_time_action )
-           , l_set( create )
-    );
-}
-#include "lua_undef.h"
 }

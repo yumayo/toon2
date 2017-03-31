@@ -26,15 +26,4 @@ void rotate_to::step( float t )
     auto const temp = ease_liner( t, from, to );
     _target.lock( )->set_rotation( temp );
 }
-
-#define l_class rotate_to
-#include "lua_define.h"
-LUA_SETUP_CPP( l_class )
-{
-    l_new( rotate_to
-           , l_base( finite_time_action )
-           , l_set( create )
-    );
-}
-#include "lua_undef.h"
 }

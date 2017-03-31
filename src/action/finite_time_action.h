@@ -28,7 +28,5 @@ protected:
 public:
     void set_duration( float value );
     float get_duration( );
-public:
-    LUA_SETUP_H( finite_time_action );
 };
 }

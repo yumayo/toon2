@@ -1,21 +1,9 @@
-#pragma once
 #include "button.h"
-#include "rect.h"
-#include "sprite.h"
-#include "label.h"
-#include "surface.h"
 #include "circle.h"
+#include "label.h"
+#include "letter.h"
+#include "rect.h"
+#include "rect_edge.h"
+#include "sprite.h"
 #include "sprite_animation.h"
-namespace renderer
-{
-void lua_setup( sol::state& lua );
-
-inline void lua_setup( sol::state& lua )
-{
-    button::lua_setup( lua );
-    rect::lua_setup( lua );
-    sprite::lua_setup( lua );
-    label::lua_setup( lua );
-    surface::lua_setup( lua );
-}
-}
+#include "surface.h"

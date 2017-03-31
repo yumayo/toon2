@@ -11,7 +11,5 @@ public:
     virtual void update( float delta ) override;
 private:
     std::function<void( )> _call;
-public:
-    LUA_SETUP_H( call_func );
 };
 }

@@ -35,14 +35,4 @@ void letter::render( )
 {
     gl::draw( _texture, Rectf( vec2( 0 ), _content_size ) );
 }
-#define l_class letter
-#include "lua_define.h"
-LUA_SETUP_CPP( l_class )
-{
-    l_new( letter
-           , l_base( node )
-           , l_set( create )
-    );
-}
-#include "lua_undef.h"
 }

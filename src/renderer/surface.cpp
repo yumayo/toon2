@@ -38,16 +38,4 @@ cinder::ColorA surface::get_pixel( cinder::vec2 pixel )
 {
     return _surface.getPixel( pixel );
 }
-#define l_class surface
-#include "lua_define.h"
-LUA_SETUP_CPP( l_class )
-{
-    l_new( surface
-           , l_base( node )
-           , l_set( create )
-           , l_set( set_pixel )
-           , l_set( get_pixel )
-    );
-}
-#include "lua_undef.h"
 }

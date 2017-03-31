@@ -1,22 +1,9 @@
 ﻿#include "spawn.h"
 namespace action
 {
-CREATE_CPP( spawn, sol::variadic_args const& args )
-{
-    CREATE( spawn, args );
-}
 bool spawn::init( )
 {
     return true;
-}
-bool spawn::init( sol::variadic_args const & args )
-{
-    for ( auto& act : args )
-    {
-        std::shared_ptr<finite_time_action> sa = act;
-        _actions.emplace_back( std::move( sa ) );
-    }
-    return init( );
 }
 void spawn::setup( )
 {
@@ -54,14 +41,4 @@ void spawn::restart( )
         setup( );
     }
 }
-#define l_class spawn
-#include "lua_define.h"
-LUA_SETUP_CPP( l_class )
-{
-    l_new( spawn,
-           l_base( timeline ),
-           "create", [ ] ( sol::variadic_args const& args ) { return spawn::create( args ); }
-    );
-}
-#include "lua_undef.h"
 }

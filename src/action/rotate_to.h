@@ -14,7 +14,5 @@ private:
 protected:
     float _start_rotation = 0.0F;
     float _rotation = 0.0F;
-public:
-    LUA_SETUP_H( rotate_to );
 };
 }

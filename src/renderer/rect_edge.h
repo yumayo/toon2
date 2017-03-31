@@ -10,7 +10,5 @@ public:
     void render( ) override;
 private:
     float _line_width = 1.0F;
-public:
-    LUA_SETUP_H( rect_edge );
 };
 }

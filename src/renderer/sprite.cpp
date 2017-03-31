@@ -24,14 +24,4 @@ void sprite::render( )
 {
     gl::draw( _texture, Rectf( vec2( 0 ), _content_size ) );
 }
-#define l_class sprite
-#include "lua_define.h"
-LUA_SETUP_CPP( l_class )
-{
-    l_new( sprite
-           , l_base( node )
-           , l_set( create )
-    );
-}
-#include "lua_undef.h"
 }

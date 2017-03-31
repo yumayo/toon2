@@ -6,7 +6,6 @@
 #include <string>
 #include "forward.h"
 #include "action/action_manager.h"
-#include "sol.hpp"
 
 class node : public std::enable_shared_from_this<node>
 {
@@ -209,7 +208,4 @@ public:
 
 public:
     cinder::mat3 get_world_matrix( );
-
-public:
-    LUA_SETUP_H( node );
 };

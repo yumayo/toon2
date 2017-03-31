@@ -15,7 +15,5 @@ public:
     virtual void restart( ) override;
 protected:
     std::shared_ptr<finite_time_action> _time_action;
-public:
-    LUA_SETUP_H( repeat_forever );
 };
 }

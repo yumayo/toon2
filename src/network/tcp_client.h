@@ -28,13 +28,5 @@ public:
     std::function<void( )> on_closed;
     // その他のエラーが出たときに呼ばれます。
     std::function<void( asio::error_code const& )> on_errored;
-public:
-    LUA_SETUP_H( tcp_client );
-private:
-    void lua_write_string_default( std::string const& message );
-    void lua_write_binary_default( char const* message, size_t size );
-    void lua_write_string( std::string const& message, std::function<void( )> on_send );
-    void lua_write_binary( char const* message, size_t size, std::function<void( )> on_send );
-    std::function<void( int )> lua_on_errored;
 };
 }

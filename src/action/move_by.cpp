@@ -18,15 +18,4 @@ void move_by::setup( )
     _start_position = _target.lock( )->get_position( );
     _position = _init_position + _start_position;
 }
-
-#define l_class move_by
-#include "lua_define.h"
-LUA_SETUP_CPP( l_class )
-{
-    l_new( move_by
-           , l_base( finite_time_action )
-           , l_set( create )
-    );
-}
-#include "lua_undef.h"
 }

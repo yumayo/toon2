@@ -14,7 +14,5 @@ private:
 protected:
     cinder::vec2 _start_position;
     std::weak_ptr<node> _new_target;
-public:
-    LUA_SETUP_H( move_to_target );
 };
 }

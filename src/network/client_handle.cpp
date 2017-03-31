@@ -19,14 +19,4 @@ std::string client_handle::get_port( ) const
 {
     return port;
 }
-#define l_class client_handle
-#include "lua_define.h"
-LUA_SETUP_CPP( l_class )
-{
-    l_new( client_handle
-           , l_readonly( ip_address )
-           , l_readonly( port )
-    );
-}
-#include "lua_undef.h"
 }

@@ -14,15 +14,4 @@ void remove_self::update( float delta )
 {
     _target.lock( )->remove_from_parent( );
 }
-
-#define l_class remove_self
-#include "lua_define.h"
-LUA_SETUP_CPP( l_class )
-{
-    l_new( remove_self
-           , l_base( finite_time_action )
-           , l_set( create )
-    );
-}
-#include "lua_undef.h"
 }

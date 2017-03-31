@@ -11,7 +11,5 @@ namespace renderer
         void render( ) override;
     private:
         cinder::gl::TextureRef _texture;
-    public:
-        LUA_SETUP_H( sprite );
     };
 }

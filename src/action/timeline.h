@@ -12,7 +12,5 @@ public:
 
 protected:
     std::vector<std::shared_ptr<finite_time_action>> _actions;
-public:
-    LUA_SETUP_H( timeline );
 };
 }

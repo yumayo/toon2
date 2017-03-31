@@ -7,8 +7,4 @@
 #include "../src/action/action.hpp"
 #include "../src/network/network.hpp"
 
-// Lua
-#include "sol.hpp"
-#include "../src/utility/lmake.h"
-
 #include "../src/user_default.h"
