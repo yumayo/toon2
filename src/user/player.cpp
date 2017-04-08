@@ -5,14 +5,12 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( player, cinder::ColorA color )
+CREATE_CPP( player )
 {
-    CREATE( player, color );
+    CREATE( player );
 }
-bool player::init( cinder::ColorA color )
+bool player::init( )
 {
-    set_color( color );
-
     _setup_radius = 20.0F;
 
     _radius = _setup_radius;
@@ -24,7 +22,6 @@ bool player::init( cinder::ColorA color )
         if ( auto mask = renderer::circle::create( _radius ) )
         {
             _mask = mask;
-            mask->set_color( get_color( ) );
             mask->set_scale( vec2( 0.9F ) );
             base->add_child( mask );
         }
@@ -32,14 +29,12 @@ bool player::init( cinder::ColorA color )
 
     return true;
 }
-CREATE_CPP( player, cinder::ColorA color, std::string const& relative_path_skin )
+CREATE_CPP( player, std::string const& relative_path_skin )
 {
-    CREATE( player, color, relative_path_skin );
+    CREATE( player, relative_path_skin );
 }
-bool player::init( cinder::ColorA color, std::string const& relative_path_skin )
+bool player::init( std::string const& relative_path_skin )
 {
-    set_color( color );
-
     set_scale( vec2( 0 ) );
     run_action( action::ease<EaseOutSine>::create( action::scale_to::create( 1.0F, vec2( 1 ) ) ) );
 
@@ -108,5 +103,10 @@ void player::move( cinder::vec2 axis )
     cinder::vec2 speed = axis * 300.0F; // 一秒間あたりの速さ。
     speed = speed * ( 1.0F - easeInOutSine( cinder::clamp( ( _radius - _setup_radius ) / 200.0F, 0.0F, 0.8F ) ) );
     set_position( get_position( ) + speed );
+}
+void user::player::set_color( cinder::ColorA value )
+{
+    node::set_color( value );
+    _mask.lock( )->set_color( value );
 }
 }

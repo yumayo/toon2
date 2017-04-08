@@ -90,7 +90,7 @@ bool gacha::init( )
             eff->run_action( ease<EaseOutExpo>::create( move_to::create( 0.75F, vec2( app::getWindowSize( ) ) * vec2( 0.5F ) ) ) );
             add_child( eff );
 
-            auto pla = player::create( ColorA::white( ), "skin/" + get_new_skin_name( ) + ".png" );
+            auto pla = player::create( "skin/" + get_new_skin_name( ) + ".png" );
             pla->run_action( repeat_forever::create( rotate_by::create( 10.0F, M_PI * 2 ) ) );
             eff->add_child( pla );
 

@@ -14,7 +14,7 @@ bool field::init( )
 {
     set_name( "field" );
 
-    auto player_manager = player_manager_client::create( );
+    auto player_manager = player_manager_host::create( );
     auto ground = ground::create( player_manager );
     auto feed_manager = feed_manager::create( player_manager, ground );
 

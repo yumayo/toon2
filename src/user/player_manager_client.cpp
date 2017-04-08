@@ -26,6 +26,11 @@ bool player_manager_client::init( )
     assert_log( !port.empty( ), "無効なポートです。", return false );
 
     auto client = network::udp_client::create( address, port );
+
+    auto col = _player.lock( )->get_color( );
+    _player.lock( )->set_color( _enemy.lock( )->get_color( ) );
+    _enemy.lock( )->set_color( col );
+
     _udp = client;
     add_child( client );
 

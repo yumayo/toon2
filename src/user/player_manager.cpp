@@ -20,20 +20,23 @@ bool player_manager::init( )
 
     if ( select.isNull( ) )
     {
-        auto own = player::create( ColorA( 0.2, 0.8, 0.6 ) );
+        auto own = player::create( );
+        own->set_color( ColorA( 0.2, 0.8, 0.6 ) );
         own->set_name( "own" );
         _player = own;
         add_child( own );
     }
     else
     {
-        auto own = player::create( ColorA( 0.2, 0.8, 0.6 ), "skin/" + select.asString( ) + ".png" );
+        auto own = player::create( "skin/" + select.asString( ) + ".png" );
+        own->set_color( ColorA( 0.2, 0.8, 0.6 ) );
         own->set_name( "own" );
         _player = own;
         add_child( own );
     }
 
-    auto enemy = player::create( ColorA( 0.6, 0.2, 0.8 ) );
+    auto enemy = player::create( );
+    enemy->set_color( ColorA( 0.6, 0.2, 0.8 ) );
     enemy->set_name( "enemy" );
     _enemy = enemy;
     add_child( enemy );
