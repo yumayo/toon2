@@ -53,7 +53,7 @@ void udp_client::_member::write( asio::const_buffers_1 buffer, std::function<voi
                                     port );
         udp::endpoint receiver_endpoint = *resolver.resolve( query );
         auto len = socket.send_to( asio::buffer( buffer ), receiver_endpoint );
-        // log( "【udp_client】送信中..." );
+        log( "【udp_client】送信中..." );
         if ( on_send ) on_send( );
     }
     catch ( asio::error_code& error )

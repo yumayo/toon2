@@ -2,6 +2,7 @@
 #include "ground.h"
 #include "feed_manager.h"
 #include "player_manager_client.h"
+#include "player_manager_host.h"
 using namespace cinder;
 namespace user
 {

@@ -9,6 +9,7 @@ CREATE_CPP( udp_client, std::string const & ip_address, std::string const & port
 bool udp_client::init( std::string const & ip_address, std::string const & port )
 {
     _m = std::make_shared<_member>( *this, ip_address, port );
+    set_schedule_update( );
     return true;
 }
 void udp_client::update( float delta )
