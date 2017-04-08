@@ -31,6 +31,12 @@
     <Filter Include="Source Files\user">
       <UniqueIdentifier>{76809bbe-fa27-4eef-ae00-452241302363}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\library">
+      <UniqueIdentifier>{57567c92-5e78-49c2-8f16-9e79f5e99e01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\library\font">
+      <UniqueIdentifier>{97e5951f-7f03-4bd0-ab25-3d9e57ccd33c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -267,6 +273,15 @@
     <ClInclude Include="..\src\network\network.hpp">
       <Filter>Source Files\network</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\library\font\fontstash.h">
+      <Filter>Source Files\library\font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\library\font\stb_truetype.h">
+      <Filter>Source Files\library\font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\library\font\font.h">
+      <Filter>Source Files\library\font</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -479,6 +494,9 @@
     </ClCompile>
     <ClCompile Include="..\src\renderer\sprite_animation.cpp">
       <Filter>Source Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\library\font\font.cpp">
+      <Filter>Source Files\library\font</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

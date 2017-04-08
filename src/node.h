@@ -49,84 +49,84 @@ protected:
 protected:
     bool _schedule_update = false;
 public:
-    void set_schedule_update( bool value = true );
+    virtual void set_schedule_update( bool value = true );
     bool get_schedule_update( );
 
 protected:
     bool _block_schedule_update = false;
 public:
-    void set_block_schedule_update( bool value = true );
+    virtual void set_block_schedule_update( bool value = true );
     bool get_block_schedule_update( );
 
 protected:
     bool _schedule_mouse_event = false;
 public:
-    void set_schedule_mouse_event( bool value = true );
+    virtual void set_schedule_mouse_event( bool value = true );
     bool get_schedule_mouse_event( );
 
 protected:
     bool _schedule_touch_event = false;
 public:
-    void set_schedule_touch_event( bool value = true );
+    virtual void set_schedule_touch_event( bool value = true );
     bool get_schedule_touch_event( );
 
 protected:
     bool _schedule_touches_event = false;
 public:
-    void set_schedule_touches_event( bool value = true );
+    virtual void set_schedule_touches_event( bool value = true );
     bool get_schedule_touches_event( );
 
 public:
-    void set_schedule_all( bool value = true );
+    virtual void set_schedule_all( bool value = true );
 
 protected:
     bool _block_schedule_event = false;
 public:
-    void set_block_schedule_event( bool value = true );
+    virtual void set_block_schedule_event( bool value = true );
     bool get_block_schedule_event( );
 
 protected:
     cinder::vec2 _position = cinder::vec2( 0 );
 public:
-    void set_position( cinder::vec2 value );
+    virtual void set_position( cinder::vec2 value );
     cinder::vec2 get_position( );
 
 protected:
     cinder::vec2 _scale = cinder::vec2( 1 );
 public:
-    void set_scale( cinder::vec2 value );
+    virtual void set_scale( cinder::vec2 value );
     cinder::vec2 get_scale( );
 
 protected:
     cinder::vec2 _content_size = cinder::vec2( 0 );
 public:
-    void set_content_size( cinder::vec2 value );
+    virtual void set_content_size( cinder::vec2 value );
     cinder::vec2 get_content_size( );
 
 protected:
     float _rotation = 0.0F;
 public:
-    void set_rotation( float value );
+    virtual void set_rotation( float value );
     float get_rotation( );
 
 protected:
     cinder::vec2 _anchor_point = cinder::vec2( 0 );
 public:
-    void set_anchor_point( cinder::vec2 value );
+    virtual void set_anchor_point( cinder::vec2 value );
     cinder::vec2 get_anchor_point( );
 
 protected:
     cinder::vec2 _pivot = cinder::vec2( 0 );
 public:
-    void set_pivot( cinder::vec2 value );
+    virtual void set_pivot( cinder::vec2 value );
     cinder::vec2 get_pivot( );
 
 protected:
     cinder::ColorA _color = cinder::ColorA::white( );
 public:
-    void set_color( cinder::ColorA value );
+    virtual void set_color( cinder::ColorA value );
     cinder::ColorA get_color( );
-    void set_opacity( float alpha );
+    virtual void set_opacity( float alpha );
     float get_opacity( );
 
 protected:
@@ -137,25 +137,25 @@ public:
 protected:
     std::weak_ptr<node> _parent;
 public:
-    void set_parent( std::shared_ptr<node> const& value );
+    virtual void set_parent( std::shared_ptr<node> const& value );
     std::shared_ptr<node> get_parent( );
 
 protected:
     int _tag = node::INVALID_TAG;
 public:
-    void set_tag( int value );
+    virtual void set_tag( int value );
     int get_tag( );
 
 private:
     int _order = 0;
 public:
-    void set_order( int value );
+    virtual void set_order( int value );
     int get_order( );
 
 protected:
     std::string _name = u8"";
 public:
-    void set_name( std::string const& value );
+    virtual void set_name( std::string const& value );
     std::string get_name( );
 
 private:
@@ -164,13 +164,13 @@ private:
 protected:
     bool _running = true;
 public:
-    void set_running( bool value );
+    virtual void set_running( bool value );
     bool get_running( );
 
 protected:
     bool _visible = true;
 public:
-    void set_visible( bool value );
+    virtual void set_visible( bool value );
     bool get_visible( );
 
 public:

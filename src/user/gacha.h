@@ -14,7 +14,7 @@ private:
     std::weak_ptr<node> _mas;
     std::weak_ptr<node> _gar;
     std::weak_ptr<node> _bac;
-    std::weak_ptr<dot_label> _fla;
+    std::weak_ptr<renderer::label> _fla;
     void change_action( std::function<void( )> end_fn );
     std::string get_new_skin_name( );
 };

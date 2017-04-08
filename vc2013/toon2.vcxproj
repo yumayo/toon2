@@ -136,6 +136,7 @@
     <ClCompile Include="..\src\action\timeline.cpp" />
     <ClCompile Include="..\src\audio\buffer_player.cpp" />
     <ClCompile Include="..\src\audio\file_player.cpp" />
+    <ClCompile Include="..\src\library\font\font.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\network\client_handle.cpp" />
     <ClCompile Include="..\src\network\tcp_client.cpp" />
@@ -212,6 +213,9 @@
     <ClInclude Include="..\src\audio\buffer_player.h" />
     <ClInclude Include="..\src\audio\file_player.h" />
     <ClInclude Include="..\src\forward.h" />
+    <ClInclude Include="..\src\library\font\font.h" />
+    <ClInclude Include="..\src\library\font\fontstash.h" />
+    <ClInclude Include="..\src\library\font\stb_truetype.h" />
     <ClInclude Include="..\src\network\client_handle.h" />
     <ClInclude Include="..\src\network\network.hpp" />
     <ClInclude Include="..\src\network\tcp_client.h" />

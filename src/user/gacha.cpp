@@ -46,15 +46,15 @@ bool gacha::init( )
 
     auto feed_num = root["feed"].asInt( );
 
-    auto fla = dot_label::create( "x" + boost::lexical_cast<std::string>( feed_num ), "misaki_gothic.ttf", 86 );
+    auto fla = renderer::label::create( "x" + boost::lexical_cast<std::string>( feed_num ), "misaki_gothic.ttf", 86 );
     _fla = fla;
-    fla->set_position( vec2( app::getWindowSize( ) ) * vec2( 1, 1 ) + vec2( -25, -100 ) );
-    fla->set_anchor_point( vec2( 1, 0 ) );
-    fla->set_pivot( vec2( 0, 0.5 ) );
+    fla->set_position( vec2( app::getWindowSize( ) ) * vec2( 1, 1 ) + vec2( -50, -50 ) );
+    fla->set_anchor_point( vec2( 1, 1 ) );
+    fla->set_pivot( vec2( 0, 0.6 ) );
     add_child( fla );
 
     auto fee = feed::create( );
-    fee->set_position( vec2( -20, 0 ) );
+    fee->set_position( vec2( -50, 0 ) );
     fla->add_child( fee );
 
     auto m = fee->get_world_matrix( );
@@ -73,7 +73,7 @@ bool gacha::init( )
         {
             auto feed_num = root["feed"].asInt( ) - 1;
             root["feed"] = feed_num;
-            _fla.lock( )->set_text( "x" + boost::lexical_cast<std::string>( feed_num ) );
+            _fla.lock( )->set_text( "x " + boost::lexical_cast<std::string>( feed_num ) );
             auto f = feed::create( );
             f->set_position( start_pos );
             f->run_action( sequence::create( ease<EaseInOutCirc>::create( move_to::create( 1.0F, end_pos ) ), remove_self::create( ) ) );
