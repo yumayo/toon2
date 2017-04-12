@@ -3,25 +3,21 @@
 #include "jsoncpp/json.h"
 #include "../utility/string_utility.h"
 #include "../utility/assert_log.h"
+#include "boost/lexical_cast.hpp"
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( player_manager_host )
+CREATE_CPP( player_manager_host, Json::Value& root )
 {
-    CREATE( player_manager_host );
+    CREATE( player_manager_host, root );
 }
-bool player_manager_host::init( )
+bool player_manager_host::init( Json::Value& root )
 {
     if ( !player_manager::init( ) ) return false;
 
-    Json::Value root;
-    Json::Reader reader;
-    std::string port;
-    if ( reader.parse( app::loadString( "udp.json" ), root ) )
-    {
-        port = root["server"]["port"].asString( );
-    }
-    assert_log( !port.empty( ), "無効なポートです。", return false );
+    std::string ip_address = root["DATA"]["ip_address"].asString( );
+    // udp_objectを使いまわせていないのでportに +1 してしのいでいます。
+    std::string port = boost::lexical_cast<std::string>( root["DATA"]["port"].asInt( ) + 1 );
 
     auto server = network::udp_server::create( port );
     _udp = server;

@@ -216,9 +216,6 @@
     <ClInclude Include="..\src\network\udp_client.h">
       <Filter>Source Files\network</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\network\udp_server.h">
-      <Filter>Source Files\network</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\user\player_manager_host.h">
       <Filter>Source Files\user</Filter>
     </ClInclude>
@@ -226,9 +223,6 @@
       <Filter>Source Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\network\udp_object.h">
-      <Filter>Source Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\network\udp_server_member.h">
       <Filter>Source Files\network</Filter>
     </ClInclude>
     <ClInclude Include="..\src\network\udp_client_member.h">
@@ -281,6 +275,15 @@
     </ClInclude>
     <ClInclude Include="..\src\library\font\font.h">
       <Filter>Source Files\library\font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\search_room.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\network\udp_server.h">
+      <Filter>Source Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\network\udp_server_member.h">
+      <Filter>Source Files\network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -450,17 +453,11 @@
     <ClCompile Include="..\src\network\udp_client.cpp">
       <Filter>Source Files\network</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\network\udp_server.cpp">
-      <Filter>Source Files\network</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\user\player_manager_host.cpp">
       <Filter>Source Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\player_manager_client.cpp">
       <Filter>Source Files\user</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\network\udp_server_member.cpp">
-      <Filter>Source Files\network</Filter>
     </ClCompile>
     <ClCompile Include="..\src\network\udp_client_member.cpp">
       <Filter>Source Files\network</Filter>
@@ -497,6 +494,18 @@
     </ClCompile>
     <ClCompile Include="..\src\library\font\font.cpp">
       <Filter>Source Files\library\font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\search_room.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\network\udp_object.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\network\udp_server.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\network\udp_server_member.cpp">
+      <Filter>Source Files\network</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

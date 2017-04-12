@@ -34,6 +34,10 @@ void scene_manager::update( )
     }
     _fn.clear( );
 }
+std::weak_ptr<node> scene_manager::get_dont_destroy_node( )
+{
+    return _root;
+}
 scene_manager * scene_manager::get_instans( )
 {
     if ( !_instans ) _instans = new scene_manager;
@@ -46,5 +50,5 @@ void scene_manager::remove_instans( )
 }
 scene_manager::scene_manager( )
 {
-
+    _root = node::create( );
 }

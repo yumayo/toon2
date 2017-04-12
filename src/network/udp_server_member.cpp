@@ -16,7 +16,8 @@ udp_server::_member::~_member( )
 void udp_server::_member::update( )
 {
     io.reset( );
-    io.poll( );
+    auto num = io.poll( );
+    log( "【%s】%d件のデータを更新しました。", class_name, num );
 }
 void udp_server::_member::read( )
 {

@@ -142,8 +142,9 @@
     <ClCompile Include="..\src\network\tcp_client.cpp" />
     <ClCompile Include="..\src\network\tcp_server.cpp" />
     <ClCompile Include="..\src\network\udp_client_member.cpp" />
-    <ClCompile Include="..\src\network\udp_server.cpp" />
     <ClCompile Include="..\src\network\udp_client.cpp" />
+    <ClCompile Include="..\src\network\udp_object.cpp" />
+    <ClCompile Include="..\src\network\udp_server.cpp" />
     <ClCompile Include="..\src\network\udp_server_member.cpp" />
     <ClCompile Include="..\src\node.cpp" />
     <ClCompile Include="..\src\app_delegate.cpp" />
@@ -175,6 +176,7 @@
     <ClCompile Include="..\src\user\player_manager_host.cpp" />
     <ClCompile Include="..\src\user\player.cpp" />
     <ClCompile Include="..\src\user\player_manager.cpp" />
+    <ClCompile Include="..\src\user\search_room.cpp" />
     <ClCompile Include="..\src\user\skin.cpp" />
     <ClCompile Include="..\src\user\dot_sprite.cpp" />
     <ClCompile Include="..\src\user\title.cpp" />
@@ -222,8 +224,8 @@
     <ClInclude Include="..\src\network\tcp_server.h" />
     <ClInclude Include="..\src\network\udp_client_member.h" />
     <ClInclude Include="..\src\network\udp_object.h" />
-    <ClInclude Include="..\src\network\udp_server.h" />
     <ClInclude Include="..\src\network\udp_client.h" />
+    <ClInclude Include="..\src\network\udp_server.h" />
     <ClInclude Include="..\src\network\udp_server_member.h" />
     <ClInclude Include="..\src\node.h" />
     <ClInclude Include="..\src\app_delegate.h" />
@@ -256,6 +258,7 @@
     <ClInclude Include="..\src\user\player_manager_host.h" />
     <ClInclude Include="..\src\user\player.h" />
     <ClInclude Include="..\src\user\player_manager.h" />
+    <ClInclude Include="..\src\user\search_room.h" />
     <ClInclude Include="..\src\user\skin.h" />
     <ClInclude Include="..\src\user\dot_sprite.h" />
     <ClInclude Include="..\src\user\title.h" />

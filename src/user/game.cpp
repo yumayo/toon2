@@ -6,15 +6,15 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( game )
+CREATE_CPP( game, Json::Value root )
 {
-    CREATE( game );
+    CREATE( game, root );
 }
-bool game::init( )
+bool game::init( Json::Value& root )
 {
     set_schedule_update( );
 
-    if ( auto field = field::create( ) )
+    if ( auto field = field::create( root ) )
     {
         _field = field;
         add_child( field );

@@ -4,6 +4,7 @@
 #include "game.h"
 #include "gacha.h"
 #include "config.h"
+#include "search_room.h"
 using namespace cinder;
 namespace user
 {
@@ -36,7 +37,16 @@ bool title::init( )
     sta->on_ended = [ this ]
     {
         set_block_schedule_event( );
-        change_action( [ ] { scene_manager::get_instans( )->replace( game::create( ) ); } );
+        auto search_handle = search_room::create( );
+        search_handle->on_founded = [ this ] ( Json::Value& root )
+        {
+            change_action( [ root ] { scene_manager::get_instans( )->replace( game::create( root ) ); } );
+        };
+        search_handle->on_not_found = [ this ] ( )
+        {
+            set_block_schedule_event(  false );
+        };
+        add_child( search_handle );
     };
     gac->on_ended = [ this ]
     {

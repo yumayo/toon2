@@ -9,8 +9,8 @@ namespace user
 class game : public scene
 {
 public:
-    CREATE_H( game );
-    bool init( );
+    CREATE_H( game, Json::Value root );
+    bool init( Json::Value& root );
     void update( float delta ) override;
 private:
     std::weak_ptr<field> _field;
