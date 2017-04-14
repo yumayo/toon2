@@ -15,9 +15,9 @@ bool player_manager_host::init( Json::Value& root )
 {
     if ( !player_manager::init( ) ) return false;
 
-    std::string ip_address = root["DATA"]["ip_address"].asString( );
+    std::string ip_address = root["data"]["ip_address"].asString( );
     // udp_objectを使いまわせていないのでportに +1 してしのいでいます。
-    std::string port = boost::lexical_cast<std::string>( root["DATA"]["port"].asInt( ) + 1 );
+    std::string port = boost::lexical_cast<std::string>( root["data"]["port"].asInt( ) + 1 );
 
     auto server = network::udp_server::create( port );
     _udp = server;

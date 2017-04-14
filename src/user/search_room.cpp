@@ -18,7 +18,7 @@ bool search_room::init( )
         port = root["server"]["port"].asString( );
         auto client = network::udp_client::create( address, port );
         client->set_name( "search_handle" );
-        client->write( "{\"NAME\":\"find_room\"}" );
+        client->write( "{\"name\":\"find_room\"}" );
         client->on_read_failed = [ this ] ( )
         {
             scene_manager::get_instans( )->top( )->set_block_schedule_event( false );

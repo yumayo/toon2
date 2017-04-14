@@ -15,7 +15,7 @@ bool field::init( Json::Value& root )
     set_name( "field" );
 
     std::shared_ptr<player_manager> player_manager_base;
-    if ( root["DATA"]["is_host"].asBool( ) )
+    if ( root["data"]["is_host"].asBool( ) )
     {
         player_manager_base = player_manager_host::create( root );
     }
