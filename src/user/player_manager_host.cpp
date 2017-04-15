@@ -1,8 +1,8 @@
 ﻿#include "player_manager_host.h"
-#include "../network/udp_server.h"
+#include "network/udp_server.h"
 #include "jsoncpp/json.h"
-#include "../utility/string_utility.h"
-#include "../utility/assert_log.h"
+#include "utility/string_utility.h"
+#include "utility/assert_log.h"
 #include "boost/lexical_cast.hpp"
 using namespace cinder;
 namespace user

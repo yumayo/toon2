@@ -2,7 +2,7 @@
 #include "ground.h"
 #include "feed.h"
 #include "player.h"
-#include "../action/action.hpp"
+#include "action.hpp"
 #include "cinder/Rand.h"
 #include "player_manager.h"
 using namespace cinder;

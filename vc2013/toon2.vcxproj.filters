@@ -1,294 +1,312 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
-    <Filter Include="Source Files\network">
-      <UniqueIdentifier>{d024d38e-57e9-4087-bc48-85713323c7b8}</UniqueIdentifier>
+    <Filter Include="Include Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Source Files\renderer">
-      <UniqueIdentifier>{2ff79420-2004-4333-9938-55b8b2af6e06}</UniqueIdentifier>
+    <Filter Include="Include Files\action">
+      <UniqueIdentifier>{34a2e6f2-2437-4c80-9d7a-ab9e62ade5c4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\action">
-      <UniqueIdentifier>{73f383e2-960f-403c-b204-26e836964973}</UniqueIdentifier>
+    <Filter Include="Include Files\audio">
+      <UniqueIdentifier>{46ab3c65-6417-4892-b5d4-ddffa373aa6c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\utility">
-      <UniqueIdentifier>{ddce2b48-5ad8-46ab-904c-1f5777ac9d2e}</UniqueIdentifier>
+    <Filter Include="Include Files\network">
+      <UniqueIdentifier>{0b844c97-8955-459c-a920-618bbb9d9eb7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\audio">
-      <UniqueIdentifier>{8437e4b0-5347-4a62-aa82-5688962ab1f3}</UniqueIdentifier>
+    <Filter Include="Include Files\renderer">
+      <UniqueIdentifier>{b80de476-6dda-46b3-9657-c0ed12b50b92}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\user">
+    <Filter Include="Include Files\utility">
+      <UniqueIdentifier>{24117f4c-57b1-496e-a030-7bc1f841793d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="User Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="User Files\user">
       <UniqueIdentifier>{76809bbe-fa27-4eef-ae00-452241302363}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\library">
-      <UniqueIdentifier>{57567c92-5e78-49c2-8f16-9e79f5e99e01}</UniqueIdentifier>
+    <Filter Include="Library Files">
+      <UniqueIdentifier>{c132514b-50d8-4547-95d0-a80be6c33a2c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\library\font">
-      <UniqueIdentifier>{97e5951f-7f03-4bd0-ab25-3d9e57ccd33c}</UniqueIdentifier>
+    <Filter Include="Library Files\font">
+      <UniqueIdentifier>{f373f483-6fdd-4095-8b4d-1f0bdd15c72b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\Resources.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClCompile Include="..\src\main.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>User Files</Filter>
     </ClCompile>
-    <ClInclude Include="..\src\node.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\app_delegate.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\cocoslike.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\renderer\rect.h">
-      <Filter>Source Files\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\renderer\button.h">
-      <Filter>Source Files\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\renderer\sprite.h">
-      <Filter>Source Files\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\action.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\action_manager.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\move_to.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\float_to.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\forward.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\finite_time_action.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\delay.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\remove_self.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\sequence.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\spawn.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\timeline.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\ease.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\network\tcp_server.h">
-      <Filter>Source Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\network\tcp_client.h">
-      <Filter>Source Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\repeat_forever.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\action.hpp">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\renderer\label.h">
-      <Filter>Source Files\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\renderer\letter.h">
-      <Filter>Source Files\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\utility\utf8.h">
-      <Filter>Source Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\utility\assert_log.h">
-      <Filter>Source Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\utility\collision.h">
-      <Filter>Source Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\utility\string_utility.h">
-      <Filter>Source Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\call_func.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\move_by.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\scale_to.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\scale_by.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\rotate_to.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\rotate_by.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\repeat_times.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\network\client_handle.h">
-      <Filter>Source Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\audio\buffer_player.h">
-      <Filter>Source Files\audio</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\audio\file_player.h">
-      <Filter>Source Files\audio</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\fade_in.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\fade_out.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\user\game.h">
-      <Filter>Source Files\user</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\renderer\surface.h">
-      <Filter>Source Files\renderer</Filter>
+      <Filter>User Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\field.h">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\controller.h">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\feed.h">
-      <Filter>Source Files\user</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\renderer\circle.h">
-      <Filter>Source Files\renderer</Filter>
+      <Filter>User Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\ground.h">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\feed_manager.h">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\player.h">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\player_manager.h">
-      <Filter>Source Files\user</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\action\move_to_target.h">
-      <Filter>Source Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\renderer\rect_edge.h">
-      <Filter>Source Files\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\scene_manager.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\scene.h">
-      <Filter>Source Files</Filter>
+      <Filter>User Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\captured_object.h">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\meeting_room.h">
-      <Filter>Source Files\user</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\network\udp_client.h">
-      <Filter>Source Files\network</Filter>
+      <Filter>User Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\player_manager_host.h">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\player_manager_client.h">
-      <Filter>Source Files\user</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\network\udp_object.h">
-      <Filter>Source Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\network\udp_client_member.h">
-      <Filter>Source Files\network</Filter>
+      <Filter>User Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\title.h">
-      <Filter>Source Files\user</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\user_default.h">
-      <Filter>Source Files</Filter>
+      <Filter>User Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\button_scale.h">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\gacha.h">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\create_dot_obeject.h">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\skin.h">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\config.h">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\dot_label.h">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\dot_sprite.h">
-      <Filter>Source Files\user</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\renderer\sprite_animation.h">
-      <Filter>Source Files\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\audio\audio.hpp">
-      <Filter>Source Files\audio</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\renderer\renderer.hpp">
-      <Filter>Source Files\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\network\network.hpp">
-      <Filter>Source Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\library\font\fontstash.h">
-      <Filter>Source Files\library\font</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\library\font\stb_truetype.h">
-      <Filter>Source Files\library\font</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\library\font\font.h">
-      <Filter>Source Files\library\font</Filter>
+      <Filter>User Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\search_room.h">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\network\udp_server.h">
-      <Filter>Source Files\network</Filter>
+    <ClInclude Include="..\include\action\action.h">
+      <Filter>Include Files\action</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\network\udp_server_member.h">
-      <Filter>Source Files\network</Filter>
+    <ClInclude Include="..\include\action\action_manager.h">
+      <Filter>Include Files\action</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\action\call_func.h">
+      <Filter>Include Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\action\delay.h">
+      <Filter>Include Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\action\ease.h">
+      <Filter>Include Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\action\fade_in.h">
+      <Filter>Include Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\action\fade_out.h">
+      <Filter>Include Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\action\finite_time_action.h">
+      <Filter>Include Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\action\float_to.h">
+      <Filter>Include Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\action\move_by.h">
+      <Filter>Include Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\action\move_to.h">
+      <Filter>Include Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\action\move_to_target.h">
+      <Filter>Include Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\action\remove_self.h">
+      <Filter>Include Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\action\repeat_forever.h">
+      <Filter>Include Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\action\repeat_times.h">
+      <Filter>Include Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\action\rotate_by.h">
+      <Filter>Include Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\action\rotate_to.h">
+      <Filter>Include Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\action\scale_by.h">
+      <Filter>Include Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\action\scale_to.h">
+      <Filter>Include Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\action\sequence.h">
+      <Filter>Include Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\action\spawn.h">
+      <Filter>Include Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\action\timeline.h">
+      <Filter>Include Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\audio\buffer_player.h">
+      <Filter>Include Files\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\audio\file_player.h">
+      <Filter>Include Files\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\network\client_handle.h">
+      <Filter>Include Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\network\tcp_client.h">
+      <Filter>Include Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\network\tcp_server.h">
+      <Filter>Include Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\network\udp_client.h">
+      <Filter>Include Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\network\udp_client_member.h">
+      <Filter>Include Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\network\udp_object.h">
+      <Filter>Include Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\network\udp_server.h">
+      <Filter>Include Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\network\udp_server_member.h">
+      <Filter>Include Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\utility\assert_log.h">
+      <Filter>Include Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\utility\collision.h">
+      <Filter>Include Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\utility\string_utility.h">
+      <Filter>Include Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\utility\utf8.h">
+      <Filter>Include Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\renderer\button.h">
+      <Filter>Include Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\renderer\circle.h">
+      <Filter>Include Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\renderer\label.h">
+      <Filter>Include Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\renderer\letter.h">
+      <Filter>Include Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\renderer\rect.h">
+      <Filter>Include Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\renderer\rect_edge.h">
+      <Filter>Include Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\renderer\sprite.h">
+      <Filter>Include Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\renderer\sprite_animation.h">
+      <Filter>Include Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\renderer\surface.h">
+      <Filter>Include Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\library\font\font.h">
+      <Filter>Library Files\font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\library\font\fontstash.h">
+      <Filter>Library Files\font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\library\font\stb_truetype.h">
+      <Filter>Library Files\font</Filter>
+    </ClInclude>
+    <ClCompile Include="..\include\app_delegate.cpp">
+      <Filter>Include Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\node.cpp">
+      <Filter>Include Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\scene.cpp">
+      <Filter>Include Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\scene_manager.cpp">
+      <Filter>Include Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\user_default.cpp">
+      <Filter>Include Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\action.hpp">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\app_delegate.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\audio.hpp">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cocoslike.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\forward.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\network.hpp">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\node.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\renderer.hpp">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Resources.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\scene.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\scene_manager.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\user_default.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\utility.hpp">
+      <Filter>Include Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -297,215 +315,200 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\node.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\app_delegate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\renderer\rect.cpp">
-      <Filter>Source Files\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\renderer\button.cpp">
-      <Filter>Source Files\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\renderer\sprite.cpp">
-      <Filter>Source Files\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\action\action.cpp">
-      <Filter>Source Files\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\action\action_manager.cpp">
-      <Filter>Source Files\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\action\move_to.cpp">
-      <Filter>Source Files\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\action\float_to.cpp">
-      <Filter>Source Files\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\action\finite_time_action.cpp">
-      <Filter>Source Files\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\action\delay.cpp">
-      <Filter>Source Files\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\action\remove_self.cpp">
-      <Filter>Source Files\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\action\sequence.cpp">
-      <Filter>Source Files\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\action\spawn.cpp">
-      <Filter>Source Files\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\action\timeline.cpp">
-      <Filter>Source Files\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\network\tcp_server.cpp">
-      <Filter>Source Files\network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\network\tcp_client.cpp">
-      <Filter>Source Files\network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\action\repeat_forever.cpp">
-      <Filter>Source Files\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\renderer\label.cpp">
-      <Filter>Source Files\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\renderer\letter.cpp">
-      <Filter>Source Files\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\utility\utf8.cpp">
-      <Filter>Source Files\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\utility\collision.cpp">
-      <Filter>Source Files\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\utility\string_utility.cpp">
-      <Filter>Source Files\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\action\call_func.cpp">
-      <Filter>Source Files\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\action\move_by.cpp">
-      <Filter>Source Files\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\action\scale_to.cpp">
-      <Filter>Source Files\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\action\scale_by.cpp">
-      <Filter>Source Files\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\action\rotate_to.cpp">
-      <Filter>Source Files\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\action\rotate_by.cpp">
-      <Filter>Source Files\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\action\repeat_times.cpp">
-      <Filter>Source Files\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\network\client_handle.cpp">
-      <Filter>Source Files\network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\audio\buffer_player.cpp">
-      <Filter>Source Files\audio</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\audio\file_player.cpp">
-      <Filter>Source Files\audio</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\action\fade_in.cpp">
-      <Filter>Source Files\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\action\fade_out.cpp">
-      <Filter>Source Files\action</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\user\game.cpp">
-      <Filter>Source Files\user</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\renderer\surface.cpp">
-      <Filter>Source Files\renderer</Filter>
+      <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\field.cpp">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\controller.cpp">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\feed.cpp">
-      <Filter>Source Files\user</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\renderer\circle.cpp">
-      <Filter>Source Files\renderer</Filter>
+      <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\ground.cpp">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\feed_manager.cpp">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\player.cpp">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\player_manager.cpp">
-      <Filter>Source Files\user</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\action\move_to_target.cpp">
-      <Filter>Source Files\action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\renderer\rect_edge.cpp">
-      <Filter>Source Files\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\scene_manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\scene.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\captured_object.cpp">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\meeting_room.cpp">
-      <Filter>Source Files\user</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\network\udp_client.cpp">
-      <Filter>Source Files\network</Filter>
+      <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\player_manager_host.cpp">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\player_manager_client.cpp">
-      <Filter>Source Files\user</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\network\udp_client_member.cpp">
-      <Filter>Source Files\network</Filter>
+      <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\title.cpp">
-      <Filter>Source Files\user</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\user_default.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\button_scale.cpp">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\gacha.cpp">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\create_dot_obeject.cpp">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\skin.cpp">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\config.cpp">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\dot_label.cpp">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\dot_sprite.cpp">
-      <Filter>Source Files\user</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\renderer\sprite_animation.cpp">
-      <Filter>Source Files\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\library\font\font.cpp">
-      <Filter>Source Files\library\font</Filter>
+      <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\search_room.cpp">
-      <Filter>Source Files\user</Filter>
+      <Filter>User Files\user</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\network\udp_object.cpp">
-      <Filter>Source Files\network</Filter>
+    <ClCompile Include="..\include\action\action.cpp">
+      <Filter>Include Files\action</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\network\udp_server.cpp">
-      <Filter>Source Files\network</Filter>
+    <ClCompile Include="..\include\action\action_manager.cpp">
+      <Filter>Include Files\action</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\network\udp_server_member.cpp">
-      <Filter>Source Files\network</Filter>
+    <ClCompile Include="..\include\action\call_func.cpp">
+      <Filter>Include Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\action\delay.cpp">
+      <Filter>Include Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\action\fade_in.cpp">
+      <Filter>Include Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\action\fade_out.cpp">
+      <Filter>Include Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\action\finite_time_action.cpp">
+      <Filter>Include Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\action\float_to.cpp">
+      <Filter>Include Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\action\move_by.cpp">
+      <Filter>Include Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\action\move_to.cpp">
+      <Filter>Include Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\action\move_to_target.cpp">
+      <Filter>Include Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\action\remove_self.cpp">
+      <Filter>Include Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\action\repeat_forever.cpp">
+      <Filter>Include Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\action\repeat_times.cpp">
+      <Filter>Include Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\action\rotate_by.cpp">
+      <Filter>Include Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\action\rotate_to.cpp">
+      <Filter>Include Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\action\scale_by.cpp">
+      <Filter>Include Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\action\scale_to.cpp">
+      <Filter>Include Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\action\sequence.cpp">
+      <Filter>Include Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\action\spawn.cpp">
+      <Filter>Include Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\action\timeline.cpp">
+      <Filter>Include Files\action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\audio\buffer_player.cpp">
+      <Filter>Include Files\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\audio\file_player.cpp">
+      <Filter>Include Files\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\network\client_handle.cpp">
+      <Filter>Include Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\network\tcp_client.cpp">
+      <Filter>Include Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\network\tcp_server.cpp">
+      <Filter>Include Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\network\udp_client.cpp">
+      <Filter>Include Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\network\udp_client_member.cpp">
+      <Filter>Include Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\network\udp_object.cpp">
+      <Filter>Include Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\network\udp_server.cpp">
+      <Filter>Include Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\network\udp_server_member.cpp">
+      <Filter>Include Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\utility\collision.cpp">
+      <Filter>Include Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\utility\string_utility.cpp">
+      <Filter>Include Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\utility\utf8.cpp">
+      <Filter>Include Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\renderer\button.cpp">
+      <Filter>Include Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\renderer\circle.cpp">
+      <Filter>Include Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\renderer\label.cpp">
+      <Filter>Include Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\renderer\letter.cpp">
+      <Filter>Include Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\renderer\rect.cpp">
+      <Filter>Include Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\renderer\rect_edge.cpp">
+      <Filter>Include Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\renderer\sprite.cpp">
+      <Filter>Include Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\renderer\sprite_animation.cpp">
+      <Filter>Include Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\renderer\surface.cpp">
+      <Filter>Include Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\library\font\font.cpp">
+      <Filter>Library Files\font</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

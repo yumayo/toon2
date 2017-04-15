@@ -1,11 +1,11 @@
 ﻿#include "title.h"
 #include "create_dot_obeject.h"
-#include "../scene_manager.h"
+#include "scene_manager.h"
 #include "game.h"
 #include "gacha.h"
 #include "config.h"
 #include "search_room.h"
-#include "../network/udp_server.h"
+#include "network/udp_server.h"
 using namespace cinder;
 namespace user
 {

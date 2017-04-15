@@ -1,7 +1,7 @@
 #pragma once
-#include "../node.h"
+#include "node.h"
 #include "player.h"
-#include "../network/udp_object.h"
+#include "network/udp_object.h"
 namespace user
 {
 class player_manager : public node

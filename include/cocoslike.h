@@ -1,10 +1,11 @@
 #pragma once
 
-#include "../src/forward.h"
-#include "../src/node.h"
-#include "../src/scene.h"
-#include "../src/renderer/renderer.hpp"
-#include "../src/action/action.hpp"
-#include "../src/network/network.hpp"
+#include "forward.h"
+#include "node.h"
+#include "scene.h"
+#include "user_default.h"
 
-#include "../src/user_default.h"
+#include "audio.hpp"
+#include "renderer.hpp"
+#include "action.hpp"
+#include "network.hpp"

@@ -1,7 +1,7 @@
 ﻿#include "game.h"
 #include "player_manager.h"
 #include "create_dot_obeject.h"
-#include "../scene_manager.h"
+#include "scene_manager.h"
 #include "title.h"
 using namespace cinder;
 namespace user

@@ -1,6 +1,6 @@
 ﻿#include "player.h"
-#include "../action/action.hpp"
-#include "../utility/string_utility.h"
+#include "action.hpp"
+#include "utility/string_utility.h"
 #include "skin.h"
 using namespace cinder;
 namespace user

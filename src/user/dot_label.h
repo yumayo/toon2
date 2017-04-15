@@ -1,5 +1,5 @@
 #pragma once
-#include "../node.h"
+#include "node.h"
 #include "cinder/gl/Texture.h"
 #include "cinder/Text.h"
 namespace user

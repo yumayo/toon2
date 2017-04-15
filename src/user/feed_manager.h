@@ -1,5 +1,5 @@
 #pragma once
-#include "../node.h"
+#include "node.h"
 namespace user
 {
 class feed_manager : public node

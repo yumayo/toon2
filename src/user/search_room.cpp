@@ -1,7 +1,7 @@
 ﻿#include "search_room.h"
-#include "../utility/string_utility.h"
-#include "../network/udp_client.h"
-#include "../scene_manager.h"
+#include "utility/string_utility.h"
+#include "network/udp_client.h"
+#include "scene_manager.h"
 namespace user
 {
 CREATE_CPP( search_room )

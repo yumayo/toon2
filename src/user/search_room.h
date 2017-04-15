@@ -1,7 +1,7 @@
 #pragma once
 #include "cocoslike.h"
 #include "jsoncpp/json.h"
-#include "../network/udp_client.h"
+#include "network/udp_client.h"
 namespace user
 {
 class search_room : public node

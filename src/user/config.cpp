@@ -1,9 +1,9 @@
 ﻿#include "config.h"
 #include "create_dot_obeject.h"
-#include "../user_default.h"
+#include "user_default.h"
 #include "player.h"
 #include "title.h"
-#include "../scene_manager.h"
+#include "scene_manager.h"
 using namespace cinder;
 using namespace action;
 namespace user

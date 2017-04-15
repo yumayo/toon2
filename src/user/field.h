@@ -1,5 +1,5 @@
 #pragma once
-#include "../node.h"
+#include "node.h"
 #include <jsoncpp/json.h>
 namespace user
 {

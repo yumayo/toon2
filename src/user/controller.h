@@ -1,6 +1,6 @@
 #pragma once
-#include "../node.h"
-#include "../renderer/circle.h"
+#include "node.h"
+#include "renderer/circle.h"
 #include "player.h"
 #include "ground.h"
 namespace user

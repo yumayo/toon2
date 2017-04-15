@@ -2,7 +2,7 @@
 #include "cinder/gl/gl.h"
 #include "cinder/Rand.h"
 #include "feed_manager.h"
-#include "../action/action.hpp"
+#include "action.hpp"
 #include "player.h"
 using namespace cinder;
 namespace user

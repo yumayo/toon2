@@ -1,6 +1,6 @@
 #pragma once
 #include "captured_object.h"
-#include "../renderer/circle.h"
+#include "renderer/circle.h"
 #include "toon_packet.h"
 #include "cinder/gl/Texture.h"
 namespace user

@@ -1,8 +1,8 @@
 ﻿#include "button_scale.h"
 #include "cinder/gl/gl.h"
-#include "../utility/collision.h"
-#include "../utility/assert_log.h"
-#include "../action/action.hpp"
+#include "utility/collision.h"
+#include "utility/assert_log.h"
+#include "action.hpp"
 using namespace cinder;
 namespace user
 {

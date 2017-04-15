@@ -1,7 +1,7 @@
 ﻿#include "player_manager_client.h"
-#include "../network/udp_client.h"
-#include "../utility/string_utility.h"
-#include "../utility/assert_log.h"
+#include "network/udp_client.h"
+#include "utility/string_utility.h"
+#include "utility/assert_log.h"
 #include "boost/lexical_cast.hpp"
 using namespace cinder;
 namespace user

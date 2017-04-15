@@ -1,5 +1,5 @@
 ﻿#include "skin.h"
-#include "../utility/assert_log.h"
+#include "utility/assert_log.h"
 #include "cinder/gl/gl.h"
 
 using namespace cinder;

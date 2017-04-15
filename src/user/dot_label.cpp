@@ -1,7 +1,7 @@
 ﻿#include "dot_label.h"
-#include "../utility/assert_log.h"
+#include "utility/assert_log.h"
 #include "cinder/gl/gl.h"
-#include "../utility/utf8.h"
+#include "utility/utf8.h"
 using namespace cinder;
 namespace user
 {
