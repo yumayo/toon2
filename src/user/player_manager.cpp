@@ -5,119 +5,98 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( player_manager )
-{
-    CREATE( player_manager );
-}
-bool player_manager::init( )
+bool player_manager::init( Json::Value& root )
 {
     set_name( "player_manager" );
 
     set_schedule_update( );
 
-    auto& root = user_default::get_instans( )->get_root( );
-    auto& select = root["select"];
+    auto clients = node::create( );
+    _clients = clients;
+    add_child( clients );
 
-    if ( select.isNull( ) )
-    {
-        auto own = player::create( );
-        own->set_color( ColorA( 0.2, 0.8, 0.6 ) );
-        own->set_name( "own" );
-        _player = own;
-        add_child( own );
-    }
-    else
-    {
-        auto own = player::create( "skin/" + select.asString( ) + ".png" );
-        own->set_color( ColorA( 0.2, 0.8, 0.6 ) );
-        own->set_name( "own" );
-        _player = own;
-        add_child( own );
-    }
+    auto& skin_name_value = user_default::get_instans( )->get_root( )["select"];
 
-    auto enemy = player::create( );
-    enemy->set_color( ColorA( 0.6, 0.2, 0.8 ) );
-    enemy->set_name( "enemy" );
-    _enemy = enemy;
-    add_child( enemy );
+    auto& j = root["data"]["player"][0];
+    auto player = player::create( j["ip_address"].asString( ), j["port"].asInt( ), "" );
+    _player = player;
+    player->set_color( ColorA( j["color"][0].asFloat( ),
+                               j["color"][1].asFloat( ),
+                               j["color"][2].asFloat( ) ) );
+    player->set_name( "own" );
+    add_child( player );
+
+    for ( auto& j : root["data"]["clients"] )
+    {
+        auto enemy = player::create( j["ip_address"].asString( ),
+                                     j["port"].asInt( ), "" );
+        enemy->set_color( ColorA( j["color"][0].asFloat( ),
+                                  j["color"][1].asFloat( ),
+                                  j["color"][2].asFloat( ) ) );
+        enemy->set_name( "enemy" );
+        _clients.lock( )->add_child( enemy );
+    }
 
     return true;
 }
 void player_manager::update( float delta )
 {
     // 大きさで、描画順を変更。
-    get_children( ).sort( [ ] ( std::shared_ptr<node>& a, std::shared_ptr<node>& b )
+    _clients.lock( )->get_children( ).sort( [ ] ( std::shared_ptr<node>& a, std::shared_ptr<node>& b )
     {
         std::weak_ptr<player> p_a = std::dynamic_pointer_cast<player>( a );
         std::weak_ptr<player> p_b = std::dynamic_pointer_cast<player>( b );
-        if ( p_a.lock( ) && p_b.lock( ) )
-        {
-            return p_a.lock( )->get_radius( ) < p_b.lock( )->get_radius( );
-        }
-        return false;
+        return p_a.lock( )->get_radius( ) < p_b.lock( )->get_radius( );
     } );
 
-    // プレイヤーオブジェクトを詰め込みます。
-    // サーバーが含まれているので、ダイキャスト時にnullチェック。
-    std::vector<std::weak_ptr<player>> players;
-    for ( auto& child : get_children( ) )
-    {
-        if ( auto pla = std::dynamic_pointer_cast<player>( child ) )
-        {
-            players.emplace_back( pla );
-        }
-    }
-
     // プレイヤー同士の当たり判定。
-    for ( auto& child : players )
+    // 他のエネミー同士は計算しません。
+    for ( auto& child : _clients.lock( )->get_children( ) )
     {
-        for ( auto& other : players )
+        std::weak_ptr<player> client = std::dynamic_pointer_cast<player>( child );
+
+        if ( _player.lock( ) == client.lock( ) ) continue;
+
+        // 自分の大きさは加味しません。
+        if ( distance( _player.lock( )->get_position( ), client.lock( )->get_position( ) )
+             < _player.lock( )->get_radius( ) * 0 + client.lock( )->get_radius( ) )
         {
-            if ( child.lock( ) == other.lock( ) ) continue;
-
-            // 自分の大きさは加味しません。
-            if ( distance( child.lock( )->get_position( ), other.lock( )->get_position( ) )
-                 < child.lock( )->get_radius( ) * 0 + other.lock( )->get_radius( ) )
+            std::weak_ptr<player> small = _player;
+            std::weak_ptr<player> large = client;
+            if ( large.lock( )->get_radius( ) < small.lock( )->get_radius( ) )
             {
-                std::weak_ptr<player> small = child;
-                std::weak_ptr<player> large = other;
-                if ( large.lock( )->get_radius( ) < small.lock( )->get_radius( ) )
-                {
-                    swap( small, large );
-                }
+                swap( small, large );
+            }
 
-                if ( small.lock( )->get_radius( ) < large.lock( )->get_radius( ) / 2 )
-                {
-                    if ( !small.lock( )->is_captureing( ) ) small.lock( )->captured( large );
-                }
+            if ( small.lock( )->get_radius( ) < large.lock( )->get_radius( ) / 2 )
+            {
+                if ( !small.lock( )->is_captureing( ) ) small.lock( )->captured( large );
             }
         }
     }
 
-    struct player_data
-    {
-        vec2 position;
-        float radius;
-    };
-
     if ( _player.lock( ) )
     {
-        player_data p_data = { _player.lock( )->get_position( ), _player.lock( )->get_radius( ) };
-        std::unique_ptr<char [ ]> send_data( new char[sizeof( player_data )] );
-        memcpy( send_data.get( ), &p_data, sizeof( player_data ) );
-        _udp.lock( )->write( send_data.get( ), sizeof( player_data ) );
+        for ( auto& child : _clients.lock( )->get_children( ) )
+        {
+            std::weak_ptr<player> client = std::dynamic_pointer_cast<player>( child );
+            Json::Value root;
+            root["name"] = "player_data";
+            root["data"]["position"][0] = _player.lock( )->get_position( ).x;
+            root["data"]["position"][1] = _player.lock( )->get_position( ).y;
+            root["data"]["radius"] = _player.lock( )->get_radius( );
+            _udp.lock( )->write( client.lock( )->get_handle( ), root );
+        }
     }
 
-    _udp.lock( )->on_readed = [ this ] ( const char* data, size_t size )
+    _udp.lock( )->on_received_json = [ this ] ( network::network_handle handle, Json::Value root )
     {
-        if ( _enemy.lock( ) )
+        for ( auto& child : _clients.lock( )->get_children( ) )
         {
-            if ( size != sizeof( player_data ) ) return;
-
-            player_data p_data;
-            memcpy( &p_data, data, sizeof( player_data ) );
-            _enemy.lock( )->set_position( p_data.position );
-            _enemy.lock( )->set_radius( p_data.radius );
+            std::weak_ptr<player> client = std::dynamic_pointer_cast<player>( child );
+            client.lock( )->set_position( vec2( root["data"]["position"][0].asFloat( ),
+                                                root["data"]["position"][1].asFloat( ) ) );
+            client.lock( )->set_radius( root["data"]["radius"].asFloat( ) );
         }
     };
 }

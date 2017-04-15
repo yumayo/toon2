@@ -177,30 +177,6 @@
     <ClInclude Include="..\include\audio\file_player.h">
       <Filter>Include Files\audio</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\network\client_handle.h">
-      <Filter>Include Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\network\tcp_client.h">
-      <Filter>Include Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\network\tcp_server.h">
-      <Filter>Include Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\network\udp_client.h">
-      <Filter>Include Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\network\udp_client_member.h">
-      <Filter>Include Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\network\udp_object.h">
-      <Filter>Include Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\network\udp_server.h">
-      <Filter>Include Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\network\udp_server_member.h">
-      <Filter>Include Files\network</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\utility\assert_log.h">
       <Filter>Include Files\utility</Filter>
     </ClInclude>
@@ -264,6 +240,39 @@
     <ClCompile Include="..\include\user_default.cpp">
       <Filter>Include Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\include\utility\recursion_usable_mutex.cpp">
+      <Filter>Include Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\utility\scoped_mutex.cpp">
+      <Filter>Include Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\utility\write_file_on_destroyed.cpp">
+      <Filter>Include Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\network\udp_connection.cpp">
+      <Filter>Include Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\network\udp_connection_member.cpp">
+      <Filter>Include Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\network\use_destroy_object.cpp">
+      <Filter>Include Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\network\client_handle.cpp">
+      <Filter>Include Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\network\network_factory.cpp">
+      <Filter>Include Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\network\network_object.cpp">
+      <Filter>Include Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\network\tcp_client.cpp">
+      <Filter>Include Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\network\tcp_server.cpp">
+      <Filter>Include Files\network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -307,6 +316,42 @@
     </ClInclude>
     <ClInclude Include="..\include\utility.hpp">
       <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\utility\recursion_usable_mutex.h">
+      <Filter>Include Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\utility\scoped_mutex.h">
+      <Filter>Include Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\utility\user_pointer.hpp">
+      <Filter>Include Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\utility\write_file_on_destroyed.h">
+      <Filter>Include Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\network\udp_connection.h">
+      <Filter>Include Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\network\udp_connection_member.h">
+      <Filter>Include Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\network\use_destroy_object.h">
+      <Filter>Include Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\network\client_handle.h">
+      <Filter>Include Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\network\network_factory.h">
+      <Filter>Include Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\network\network_object.h">
+      <Filter>Include Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\network\tcp_client.h">
+      <Filter>Include Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\network\tcp_server.h">
+      <Filter>Include Files\network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -446,30 +491,6 @@
     </ClCompile>
     <ClCompile Include="..\include\audio\file_player.cpp">
       <Filter>Include Files\audio</Filter>
-    </ClCompile>
-    <ClCompile Include="..\include\network\client_handle.cpp">
-      <Filter>Include Files\network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\include\network\tcp_client.cpp">
-      <Filter>Include Files\network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\include\network\tcp_server.cpp">
-      <Filter>Include Files\network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\include\network\udp_client.cpp">
-      <Filter>Include Files\network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\include\network\udp_client_member.cpp">
-      <Filter>Include Files\network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\include\network\udp_object.cpp">
-      <Filter>Include Files\network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\include\network\udp_server.cpp">
-      <Filter>Include Files\network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\include\network\udp_server_member.cpp">
-      <Filter>Include Files\network</Filter>
     </ClCompile>
     <ClCompile Include="..\include\utility\collision.cpp">
       <Filter>Include Files\utility</Filter>

@@ -10,7 +10,7 @@ CREATE_CPP( node )
 }
 node::~node( )
 {
-    log( "Destroy node: [%s]", _name.c_str( ) );
+    if ( !_name.empty( ) ) log( "Destroy node: [%s]", _name.c_str( ) );
 }
 bool node::mouse_began( cinder::app::MouseEvent event )
 {
@@ -384,7 +384,7 @@ void node::set_parent( std::shared_ptr<node> const& value )
 
     if ( prev_parent.lock( ) )
     {
-        prev_parent.lock( )->remove_child( value );
+        prev_parent.lock( )->remove_child( shared_from_this( ) );
     }
 }
 std::shared_ptr<node> node::get_parent( )

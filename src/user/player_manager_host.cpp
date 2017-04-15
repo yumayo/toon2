@@ -1,5 +1,5 @@
 ﻿#include "player_manager_host.h"
-#include "network/udp_server.h"
+#include "network/udp_connection.h"
 #include "jsoncpp/json.h"
 #include "utility/string_utility.h"
 #include "utility/assert_log.h"
@@ -7,21 +7,16 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( player_manager_host, Json::Value& root )
+CREATE_CPP( player_manager_host, Json::Value& root, std::shared_ptr<network::udp_connection>& connection )
 {
-    CREATE( player_manager_host, root );
+    CREATE( player_manager_host, root, connection );
 }
-bool player_manager_host::init( Json::Value& root )
+bool player_manager_host::init( Json::Value& root, std::shared_ptr<network::udp_connection>& connection )
 {
-    if ( !player_manager::init( ) ) return false;
+    if ( !player_manager::init( root ) ) return false;
 
-    std::string ip_address = root["data"]["ip_address"].asString( );
-    // udp_objectを使いまわせていないのでportに +1 してしのいでいます。
-    std::string port = boost::lexical_cast<std::string>( root["data"]["port"].asInt( ) + 1 );
-
-    auto server = network::udp_server::create( port );
-    _udp = server;
-    add_child( server );
+    _udp = connection;
+    connection->set_parent( shared_from_this( ) );
 
     return true;
 }

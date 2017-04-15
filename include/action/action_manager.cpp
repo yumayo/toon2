@@ -103,8 +103,9 @@ bool action_manager::is_running( )
 
 void action_manager::update( float delta )
 {
-    for ( auto const& obj : _actions )
+    for ( auto const& obj : _actions ) // ここでエラってる時がある。
     {
+        // managerまで溢れてくる値はシークエンス系以外なので無視して問題ありません。
         obj->update( delta );
     }
     auto erase = std::remove_if( std::begin( _actions ), std::end( _actions ), [ ] ( std::shared_ptr<action>& act )

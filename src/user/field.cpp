@@ -3,6 +3,7 @@
 #include "feed_manager.h"
 #include "player_manager_client.h"
 #include "player_manager_host.h"
+#include "scene_manager.h"
 using namespace cinder;
 namespace user
 {
@@ -17,10 +18,17 @@ bool field::init( Json::Value& root )
     std::shared_ptr<player_manager> player_manager_base;
     if ( root["data"]["is_host"].asBool( ) )
     {
-        player_manager_base = player_manager_host::create( root );
+        auto node = scene_manager::get_instans( )->get_dont_destroy_node( );
+        auto connection = node.lock( )->get_child_by_name( "connection" );
+        player_manager_base =
+            player_manager_host::create( root,
+                                         std::dynamic_pointer_cast
+                                         <network::udp_connection>( connection ) );
     }
     else
     {
+        auto node = scene_manager::get_instans( )->get_dont_destroy_node( );
+        node.lock( )->remove_child_by_name( "connection" );
         player_manager_base = player_manager_client::create( root );
     }
     auto ground = ground::create( player_manager_base );

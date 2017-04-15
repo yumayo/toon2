@@ -5,36 +5,16 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( player )
+CREATE_CPP( player, std::string const& ip_address,
+            int port, std::string const& relative_path_skin )
 {
-    CREATE( player );
+    CREATE( player, ip_address, port, relative_path_skin );
 }
-bool player::init( )
+bool player::init( std::string const& ip_address,
+                   int port, std::string const& relative_path_skin )
 {
-    _setup_radius = 20.0F;
+    _handle = std::make_shared<network::network_object>( ip_address, port );
 
-    _radius = _setup_radius;
-    if ( auto base = renderer::circle::create( _radius ) )
-    {
-        _base = base;
-        add_child( base );
-
-        if ( auto mask = renderer::circle::create( _radius ) )
-        {
-            _mask = mask;
-            mask->set_scale( vec2( 0.9F ) );
-            base->add_child( mask );
-        }
-    }
-
-    return true;
-}
-CREATE_CPP( player, std::string const& relative_path_skin )
-{
-    CREATE( player, relative_path_skin );
-}
-bool player::init( std::string const& relative_path_skin )
-{
     set_scale( vec2( 0 ) );
     run_action( action::ease<EaseOutSine>::create( action::scale_to::create( 1.0F, vec2( 1 ) ) ) );
 
@@ -46,7 +26,8 @@ bool player::init( std::string const& relative_path_skin )
         _base = base;
         add_child( base );
 
-        if ( auto mask = skin::create( _radius, relative_path_skin ) )
+        if ( auto mask = relative_path_skin.empty( ) ? 
+             renderer::circle::create( _radius ) : skin::create( _radius, relative_path_skin ) )
         {
             _mask = mask;
             mask->set_scale( vec2( 0.9F ) );
@@ -108,5 +89,9 @@ void user::player::set_color( cinder::ColorA value )
 {
     node::set_color( value );
     _mask.lock( )->set_color( value );
+}
+network::network_handle user::player::get_handle( )
+{
+    return _handle;
 }
 }
