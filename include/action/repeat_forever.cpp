@@ -19,14 +19,16 @@ bool repeat_forever::is_done( )
     // 無限ループを作成するクラスなので。
     return false;
 }
-void repeat_forever::update( float delta )
+float repeat_forever::update( float delta )
 {
-    _time_action->update( delta );
-
+    delta = _time_action->update( delta );
     if ( _time_action->is_done( ) )
     {
         _time_action->restart( );
+        if ( delta != 0.0F ) 
+            delta = _time_action->update( delta );
     }
+    return delta;
 }
 void repeat_forever::restart( )
 {

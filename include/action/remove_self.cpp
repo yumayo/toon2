@@ -10,8 +10,9 @@ bool remove_self::init( )
 {
     return true;
 }
-void remove_self::update( float delta )
+float remove_self::update( float delta )
 {
     _target.lock( )->remove_from_parent( );
+    return delta;
 }
 }

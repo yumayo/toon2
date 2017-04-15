@@ -10,7 +10,7 @@ public:
     bool init( std::shared_ptr<finite_time_action> const& time_action, int number_of_times );
 public:
     virtual bool is_done( ) override;
-    virtual void update( float delta ) override;
+    virtual float update( float delta ) override;
     virtual void restart( ) override;
 private:
     int _init_number_of_times = 0;

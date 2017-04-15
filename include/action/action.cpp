@@ -16,8 +16,9 @@ void action::setup( std::shared_ptr<node> const& target, bool pause )
     _pause = pause;
     setup( );
 }
-void action::update( float delta )
+float action::update( float delta )
 {
+    return 0.0F;
 }
 bool action::is_done( )
 {

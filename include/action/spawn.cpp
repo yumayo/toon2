@@ -1,4 +1,5 @@
 ﻿#include "spawn.h"
+#include <algorithm>
 namespace action
 {
 bool spawn::init( )
@@ -21,12 +22,15 @@ bool spawn::is_done( )
     }
     return done;
 }
-void spawn::update( float delta )
+float spawn::update( float delta )
 {
+    if ( _actions.empty( ) ) return delta;
+    std::vector<float> overflow_seconds;
     for ( auto const& act : _actions )
     {
-        act->update( delta );
+        overflow_seconds.emplace_back( act->update( delta ) );
     }
+    return *std::max_element( std::begin( overflow_seconds ), std::end( overflow_seconds ) );
 }
 void spawn::restart( )
 {

@@ -22,7 +22,7 @@ public:
     // t ( 0.0 ~ 1.0 )
     virtual void step( float t );
     virtual bool is_done( );
-    virtual void update( float delta );
+    virtual float update( float delta );
 
 protected:
     std::weak_ptr<node> _target;

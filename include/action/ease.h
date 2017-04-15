@@ -12,7 +12,7 @@ public:
 public:
     virtual void setup( ) override;
     virtual bool is_done( ) override;
-    virtual void update( float delta ) override;
+    virtual float update( float delta ) override;
     virtual void restart( ) override;
 protected:
     ease_type ease_object;
@@ -41,10 +41,11 @@ inline bool ease<ease_type>::is_done( )
     return _time_action->is_done( );
 }
 template<typename ease_type>
-inline void ease<ease_type>::update( float delta )
+inline float ease<ease_type>::update( float delta )
 {
-    _time_action->set_time( _time_action->get_time( ) + delta );
+    auto overflow_second = _time_action->set_time( _time_action->get_time( ) + delta );
     _time_action->step( ease_object( _time_action->get_time( ) / _time_action->get_duration( ) ) );
+    return overflow_second;
 }
 template<typename ease_type>
 inline void ease<ease_type>::restart( )

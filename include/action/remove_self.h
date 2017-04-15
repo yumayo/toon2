@@ -10,6 +10,6 @@ public:
 public:
     bool init( );
 public:
-    void update( float delta ) override;
+    float update( float delta ) override;
 };
 }

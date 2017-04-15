@@ -16,9 +16,9 @@ bool repeat_times::is_done( )
 {
     return _number_of_times <= 0 && _time_action->is_done( );
 }
-void repeat_times::update( float delta )
+float repeat_times::update( float delta )
 {
-    _time_action->update( delta );
+    delta = _time_action->update( delta );
 
     if ( _time_action->is_done( ) )
     {
@@ -26,8 +26,11 @@ void repeat_times::update( float delta )
         if ( !is_done( ) )
         {
             _time_action->restart( );
+            if ( delta != 0.0F )
+                delta = _time_action->update( delta );
         }
     }
+    return delta;
 }
 void repeat_times::restart( )
 {

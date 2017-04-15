@@ -12,7 +12,7 @@ public:
     bool init( float duration );
 public:
     virtual bool is_done( ) override;
-    virtual void update( float delta ) override;
+    virtual float update( float delta ) override;
 public:
     // 新しいバーチャル関数
     virtual void restart( );
@@ -20,7 +20,7 @@ public:
 protected:
     float _time = 0.0F;
 public:
-    void set_time( float value );
+    float set_time( float value );
     float get_time( );
 
 protected:

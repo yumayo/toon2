@@ -12,8 +12,9 @@ bool call_func::init( std::function<void( )> call )
     _call = call;
     return true;
 }
-void call_func::update( float delta )
+float call_func::update( float delta )
 {
     if ( _call ) _call( );
+    return delta;
 }
 }

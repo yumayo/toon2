@@ -15,7 +15,7 @@ public:
 public:
     void setup( ) final override;
     bool is_done( ) final override;
-    void update( float delta ) final override;
+    float update( float delta ) final override;
     void restart( ) final override;
 private:
     std::vector<std::shared_ptr<finite_time_action>>::iterator _target_action;

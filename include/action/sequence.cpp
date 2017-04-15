@@ -15,18 +15,16 @@ bool sequence::is_done( )
 {
     return _target_action == _actions.end( );
 }
-void sequence::update( float delta )
+float sequence::update( float delta )
 {
-    if ( is_done( ) ) return;
-
-    ( *_target_action )->update( delta );
-
-    if ( ( *_target_action )->is_done( ) )
+    for ( ;
+          !( delta == 0.0F || is_done( ) );
+          ++_target_action, setup( ) )
     {
-        _target_action++;
-
-        setup( );
+        delta = ( *_target_action )->update( delta );
+        if ( !( *_target_action )->is_done( ) ) return 0.0F;
     }
+    return delta;
 }
 void sequence::restart( )
 {
