@@ -5,11 +5,21 @@
 using namespace cinder;
 namespace user
 {
-bool player_manager::init( Json::Value& root )
+void player_manager::create_client( Json::Value const & root_client )
+{
+    auto enemy = player::create( root_client["ip_address"].asString( ), root_client["port"].asInt( ), "" );
+    enemy->set_color( { 0.6F, 0.2F, 0.8F } );
+    enemy->set_name( "enemy" );
+    _clients.lock( )->add_child( enemy );
+}
+bool player_manager::init( Json::Value& root, std::shared_ptr<network::udp_connection>& connection )
 {
     set_name( "player_manager" );
 
     set_schedule_update( );
+
+    _udp = connection;
+    connection->set_parent( shared_from_this( ) );
 
     auto clients = node::create( );
     _clients = clients;
@@ -17,24 +27,16 @@ bool player_manager::init( Json::Value& root )
 
     auto& skin_name_value = user_default::get_instans( )->get_root( )["select"];
 
-    auto& j = root["data"]["player"][0];
+    auto& j = root["data"];
     auto player = player::create( j["ip_address"].asString( ), j["port"].asInt( ), "" );
     _player = player;
-    player->set_color( ColorA( j["color"][0].asFloat( ),
-                               j["color"][1].asFloat( ),
-                               j["color"][2].asFloat( ) ) );
+    player->set_color( { 0.2F, 0.8F, 0.6F } );
     player->set_name( "own" );
     add_child( player );
 
     for ( auto& j : root["data"]["clients"] )
     {
-        auto enemy = player::create( j["ip_address"].asString( ),
-                                     j["port"].asInt( ), "" );
-        enemy->set_color( ColorA( j["color"][0].asFloat( ),
-                                  j["color"][1].asFloat( ),
-                                  j["color"][2].asFloat( ) ) );
-        enemy->set_name( "enemy" );
-        _clients.lock( )->add_child( enemy );
+        create_client( j );
     }
 
     return true;
@@ -81,7 +83,7 @@ void player_manager::update( float delta )
         {
             std::weak_ptr<player> client = std::dynamic_pointer_cast<player>( child );
             Json::Value root;
-            root["name"] = "player_data";
+            root["name"] = "game_update";
             root["data"]["position"][0] = _player.lock( )->get_position( ).x;
             root["data"]["position"][1] = _player.lock( )->get_position( ).y;
             root["data"]["radius"] = _player.lock( )->get_radius( );
@@ -91,12 +93,23 @@ void player_manager::update( float delta )
 
     _udp.lock( )->on_received_json = [ this ] ( network::network_handle handle, Json::Value root )
     {
-        for ( auto& child : _clients.lock( )->get_children( ) )
+        if ( root["name"] == "new_client" )
         {
-            std::weak_ptr<player> client = std::dynamic_pointer_cast<player>( child );
-            client.lock( )->set_position( vec2( root["data"]["position"][0].asFloat( ),
-                                                root["data"]["position"][1].asFloat( ) ) );
-            client.lock( )->set_radius( root["data"]["radius"].asFloat( ) );
+            create_client( root["data"] );
+        }
+        else if ( root["name"] == "game_update" )
+        {
+            for ( auto& child : _clients.lock( )->get_children( ) )
+            {
+                std::weak_ptr<player> client = std::dynamic_pointer_cast<player>( child );
+                client.lock( )->set_position( vec2( root["data"]["position"][0].asFloat( ),
+                                                    root["data"]["position"][1].asFloat( ) ) );
+                client.lock( )->set_radius( root["data"]["radius"].asFloat( ) );
+            }
+        }
+        else
+        {
+
         }
     };
 }

@@ -13,10 +13,7 @@ CREATE_CPP( player_manager_host, Json::Value& root, std::shared_ptr<network::udp
 }
 bool player_manager_host::init( Json::Value& root, std::shared_ptr<network::udp_connection>& connection )
 {
-    if ( !player_manager::init( root ) ) return false;
-
-    _udp = connection;
-    connection->set_parent( shared_from_this( ) );
+    if ( !player_manager::init( root, connection ) ) return false;
 
     return true;
 }

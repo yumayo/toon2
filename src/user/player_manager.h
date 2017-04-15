@@ -6,8 +6,9 @@ namespace user
 {
 class player_manager : public node
 {
+    void create_client( Json::Value const& root_client );
 public:
-    bool init( Json::Value& root );
+    bool init( Json::Value& root, std::shared_ptr<network::udp_connection>& connection );
     void update( float delta ) override;
 protected:
     std::weak_ptr<node> _clients;

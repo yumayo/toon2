@@ -5,17 +5,13 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( player_manager_client, Json::Value& root )
+CREATE_CPP( player_manager_client, Json::Value& root, std::shared_ptr<network::udp_connection>& connection )
 {
-    CREATE( player_manager_client, root );
+    CREATE( player_manager_client, root, connection );
 }
-bool player_manager_client::init( Json::Value& root )
+bool player_manager_client::init( Json::Value& root, std::shared_ptr<network::udp_connection>& connection )
 {
-    if ( !player_manager::init( root ) ) return false;
-
-    auto client = network::udp_connection::create( );
-    _udp = client;
-    add_child( client );
+    if ( !player_manager::init( root, connection ) ) return false;
 
     return true;
 }

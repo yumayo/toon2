@@ -15,11 +15,11 @@ bool field::init( Json::Value& root )
 {
     set_name( "field" );
 
+    auto node = scene_manager::get_instans( )->get_dont_destroy_node( );
+    auto connection = node.lock( )->get_child_by_name( "connection" );
     std::shared_ptr<player_manager> player_manager_base;
     if ( root["data"]["is_host"].asBool( ) )
     {
-        auto node = scene_manager::get_instans( )->get_dont_destroy_node( );
-        auto connection = node.lock( )->get_child_by_name( "connection" );
         player_manager_base =
             player_manager_host::create( root,
                                          std::dynamic_pointer_cast
@@ -27,9 +27,10 @@ bool field::init( Json::Value& root )
     }
     else
     {
-        auto node = scene_manager::get_instans( )->get_dont_destroy_node( );
-        node.lock( )->remove_child_by_name( "connection" );
-        player_manager_base = player_manager_client::create( root );
+        player_manager_base =
+            player_manager_client::create( root,
+                                           std::dynamic_pointer_cast
+                                           <network::udp_connection>( connection ) );
     }
     auto ground = ground::create( player_manager_base );
     auto feed_manager = feed_manager::create( player_manager_base, ground );
