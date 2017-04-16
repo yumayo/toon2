@@ -1,11 +1,8 @@
 *.DS_Store
-
-git.lnk
-
-resources/
+*.lnk
 
 vc2013/*
-!vc2013/Resouces.rc
-!vc2013/toon2.sln
-!vc2013/toon2.vcxproj
-!vc2013/toon2.vcxproj.filters
+!vc2013/*.rc
+!vc2013/*.sln
+!vc2013/*.vcxproj
+!vc2013/*.vcxproj.filters

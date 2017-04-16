@@ -1,5 +1,5 @@
 #pragma once
-#include "cocoslike.h"
+#include "cocoslike.hpp"
 #include "cinder/gl/Texture.h"
 #include "cinder/gl/GlslProg.h"
 #include "cinder/gl/Batch.h"

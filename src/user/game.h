@@ -1,5 +1,5 @@
 #pragma once
-#include "cocoslike.h"
+#include "cocoslike.hpp"
 #include "field.h"
 #include "player.h"
 #include "controller.h"

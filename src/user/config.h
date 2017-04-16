@@ -1,5 +1,5 @@
 #pragma once
-#include "cocoslike.h"
+#include "cocoslike.hpp"
 namespace user
 {
 class config : public scene
