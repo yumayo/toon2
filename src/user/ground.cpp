@@ -26,36 +26,25 @@ bool ground::init( std::weak_ptr<node> player_manager )
 
     set_scale( vec2( 4.0F ) );
 
-    // プレイヤーの位置をランダムに決める。
     spawn_player( );
 
     return true;
 }
 void ground::update( float delta )
 {
-    for ( auto child : _player_manager.lock( )->get_children( ) )
+    // プレイヤーマネージャからプレイヤーを抽出し、グラウンドに色を塗る。
+    if ( auto& player_mgr = std::dynamic_pointer_cast<player_manager>( _player_manager.lock( ) ) )
     {
-        auto pla = std::dynamic_pointer_cast<player>( child );
-        if ( !pla ) continue;
+        player_paint_ground( player_mgr->get_player( ) );
 
-        // フィールドに色を塗る。
-        float radius = pla->get_radius( ) / get_scale( ).x;
-        for ( int y = -radius; y < radius; ++y )
+        for ( auto& client : player_mgr->get_clients( ) )
         {
-            for ( int x = -radius; x < radius; ++x )
-            {
-                auto len = length( vec2( x, y ) );
-                if ( len < radius )
-                {
-                    set_pixel( pla->get_position( ) / get_scale( ).x + vec2( x, y ), pla->get_color( ) );
-                }
-            }
+            player_paint_ground( client );
         }
     }
 }
 void ground::collide( std::weak_ptr<node> player )
 {
-    // フィールド制限。
     auto pos = player.lock( )->get_position( );
     auto size = get_content_size( ) * get_scale( );
     pos.x = clamp( pos.x, 0.0F, size.x );
@@ -69,6 +58,24 @@ void ground::spawn_player( )
     Rand rand( app::getElapsedSeconds( ) * 100 );
     auto size = get_content_size( ) * get_scale( );
     pla->set_position( { rand.nextFloat( 0.0F, size.x ), rand.nextFloat( 0.0F, size.y ) } );
+}
+void ground::player_paint_ground( std::weak_ptr<node> player_node )
+{
+    if ( !player_node.lock( ) )return;
+    auto player = std::dynamic_pointer_cast<user::player>( player_node.lock( ) );
+    float radius = player->get_radius( ) / get_scale( ).x;
+    for ( int y = -radius; y < radius; ++y )
+    {
+        for ( int x = -radius; x < radius; ++x )
+        {
+            auto len = length( vec2( x, y ) );
+            if ( len < radius )
+            {
+                set_pixel( player->get_position( ) / get_scale( ).x + vec2( x, y ),
+                           player->get_color( ) );
+            }
+        }
+    }
 }
 }
 

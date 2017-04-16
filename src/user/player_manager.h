@@ -10,6 +10,9 @@ class player_manager : public node
 public:
     bool init( Json::Value& root, std::shared_ptr<network::udp_connection>& connection );
     void update( float delta ) override;
+public:
+    std::list<std::shared_ptr<node>>& get_clients( );
+    std::weak_ptr<player>& get_player( );
 protected:
     std::weak_ptr<node> _clients;
     std::weak_ptr<player> _player;

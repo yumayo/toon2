@@ -79,14 +79,15 @@ void player_manager::update( float delta )
 
     if ( _player.lock( ) )
     {
+        Json::Value root;
+        root["name"] = "game_update";
+        root["data"]["position"][0] = _player.lock( )->get_position( ).x;
+        root["data"]["position"][1] = _player.lock( )->get_position( ).y;
+        root["data"]["radius"] = _player.lock( )->get_radius( );
+
         for ( auto& child : _clients.lock( )->get_children( ) )
         {
             std::weak_ptr<player> client = std::dynamic_pointer_cast<player>( child );
-            Json::Value root;
-            root["name"] = "game_update";
-            root["data"]["position"][0] = _player.lock( )->get_position( ).x;
-            root["data"]["position"][1] = _player.lock( )->get_position( ).y;
-            root["data"]["radius"] = _player.lock( )->get_radius( );
             _udp.lock( )->write( client.lock( )->get_handle( ), root );
         }
     }
@@ -112,6 +113,14 @@ void player_manager::update( float delta )
 
         }
     };
+}
+std::list<std::shared_ptr<node>>& player_manager::get_clients( )
+{
+    return _clients.lock( )->get_children( );
+}
+std::weak_ptr<player>& player_manager::get_player( )
+{
+    return _player;
 }
 }
 
