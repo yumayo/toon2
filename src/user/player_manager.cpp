@@ -21,6 +21,28 @@ bool player_manager::init( Json::Value& root, std::shared_ptr<network::udp_conne
     _udp = connection;
     connection->set_parent( shared_from_this( ) );
 
+    _udp.lock( )->on_received_json = [ this ] ( network::network_handle handle, Json::Value root )
+    {
+        if ( root["name"] == "new_client" )
+        {
+            create_client( root["data"] );
+        }
+        else if ( root["name"] == "game_update" )
+        {
+            for ( auto& child : _clients.lock( )->get_children( ) )
+            {
+                std::weak_ptr<player> client = std::dynamic_pointer_cast<player>( child );
+                client.lock( )->set_position( vec2( root["data"]["position"][0].asFloat( ),
+                                                    root["data"]["position"][1].asFloat( ) ) );
+                client.lock( )->set_radius( root["data"]["radius"].asFloat( ) );
+            }
+        }
+        else
+        {
+
+        }
+    };
+
     auto clients = node::create( );
     _clients = clients;
     add_child( clients );
@@ -43,6 +65,8 @@ bool player_manager::init( Json::Value& root, std::shared_ptr<network::udp_conne
 }
 void player_manager::update( float delta )
 {
+    if ( !_player.lock( ) || _player.expired( ) ) return;
+
     // 大きさで、描画順を変更。
     _clients.lock( )->get_children( ).sort( [ ] ( std::shared_ptr<node>& a, std::shared_ptr<node>& b )
     {
@@ -72,47 +96,25 @@ void player_manager::update( float delta )
 
             if ( small.lock( )->get_radius( ) < large.lock( )->get_radius( ) / 2 )
             {
-                if ( !small.lock( )->is_captureing( ) ) small.lock( )->captured( large );
+                if ( !small.lock( )->is_captureing( ) )
+                {
+                    small.lock( )->captured( large );
+                }
             }
         }
     }
 
-    if ( _player.lock( ) )
-    {
-        Json::Value root;
-        root["name"] = "game_update";
-        root["data"]["position"][0] = _player.lock( )->get_position( ).x;
-        root["data"]["position"][1] = _player.lock( )->get_position( ).y;
-        root["data"]["radius"] = _player.lock( )->get_radius( );
+    Json::Value root;
+    root["name"] = "game_update";
+    root["data"]["position"][0] = _player.lock( )->get_position( ).x;
+    root["data"]["position"][1] = _player.lock( )->get_position( ).y;
+    root["data"]["radius"] = _player.lock( )->get_radius( );
 
-        for ( auto& child : _clients.lock( )->get_children( ) )
-        {
-            std::weak_ptr<player> client = std::dynamic_pointer_cast<player>( child );
-            _udp.lock( )->write( client.lock( )->get_handle( ), root );
-        }
+    for ( auto& child : _clients.lock( )->get_children( ) )
+    {
+        std::weak_ptr<player> client = std::dynamic_pointer_cast<player>( child );
+        _udp.lock( )->write( client.lock( )->get_handle( ), root );
     }
-
-    _udp.lock( )->on_received_json = [ this ] ( network::network_handle handle, Json::Value root )
-    {
-        if ( root["name"] == "new_client" )
-        {
-            create_client( root["data"] );
-        }
-        else if ( root["name"] == "game_update" )
-        {
-            for ( auto& child : _clients.lock( )->get_children( ) )
-            {
-                std::weak_ptr<player> client = std::dynamic_pointer_cast<player>( child );
-                client.lock( )->set_position( vec2( root["data"]["position"][0].asFloat( ),
-                                                    root["data"]["position"][1].asFloat( ) ) );
-                client.lock( )->set_radius( root["data"]["radius"].asFloat( ) );
-            }
-        }
-        else
-        {
-
-        }
-    };
 }
 std::list<std::shared_ptr<node>>& player_manager::get_clients( )
 {
