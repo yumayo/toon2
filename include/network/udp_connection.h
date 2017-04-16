@@ -31,6 +31,8 @@ public:
                         size_t received_data_byte )> on_received;
     std::function<void( network_handle handle,
                         Json::Value root )> on_received_json;
+    std::map<std::string, std::function<void( network_handle handle,
+                                              Json::Value root )>> on_received_named_json;
     std::function<void( )> on_read_failed;
 
     std::function<void( )> on_sended;

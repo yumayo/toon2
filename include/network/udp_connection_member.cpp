@@ -97,14 +97,22 @@ void udp_connection::member::_receive( )
             auto handle = _client_manager.regist( _remote_endpoint.address( ).to_string( ),
                                                   _remote_endpoint.port( ) );
             handle->timeout_restart( );
+
+            // データを受け取ったら呼び出されます。
             if ( _connection.on_received ) _connection.on_received( handle,
                                                                     _remote_buffer.data( ), bytes_transferred );
-            if ( _connection.on_received_json )
+
+            Json::Value root;
+            if ( Json::Reader( ).parse( std::string( _remote_buffer.data( ), bytes_transferred ), root ) )
             {
-                Json::Value root;
-                if ( Json::Reader( ).parse( std::string( _remote_buffer.data( ), bytes_transferred ), root ) )
+                // 通常用のjson関数を呼び出します。
+                if ( _connection.on_received_json )_connection.on_received_json( handle, root );
+                
+                // map式のjson関数を呼び出します。
+                auto itr = _connection.on_received_named_json.find( root["name"].asString( ) );
+                if ( itr != std::end( _connection.on_received_named_json ) )
                 {
-                    _connection.on_received_json( handle, root );
+                    if ( itr->second ) itr->second( handle, root );
                 }
             }
 
