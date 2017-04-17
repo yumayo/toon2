@@ -21,27 +21,21 @@ bool player_manager::init( Json::Value& root, std::shared_ptr<network::udp_conne
     _udp = connection;
     connection->set_parent( shared_from_this( ) );
 
-    _udp.lock( )->on_received_json = [ this ] ( network::network_handle handle, Json::Value root )
+    _udp.lock( )->on_received_named_json.insert( std::make_pair( "new_client" , [ this ] ( network::network_handle handle, Json::Value root )
     {
-        if ( root["name"] == "new_client" )
+        create_client( root["data"] );
+    } ) );
+    _udp.lock( )->on_received_named_json.insert( std::make_pair( "game_update", [ this ] ( network::network_handle handle, Json::Value root )
+    {
+        for ( auto& child : _clients.lock( )->get_children( ) )
         {
-            create_client( root["data"] );
+            std::weak_ptr<player> client = std::dynamic_pointer_cast<player>( child );
+            client.lock( )->set_position( vec2( root["data"]["position"][0].asFloat( ),
+                                                root["data"]["position"][1].asFloat( ) ) );
+            client.lock( )->set_radius( root["data"]["radius"].asFloat( ) );
         }
-        else if ( root["name"] == "game_update" )
-        {
-            for ( auto& child : _clients.lock( )->get_children( ) )
-            {
-                std::weak_ptr<player> client = std::dynamic_pointer_cast<player>( child );
-                client.lock( )->set_position( vec2( root["data"]["position"][0].asFloat( ),
-                                                    root["data"]["position"][1].asFloat( ) ) );
-                client.lock( )->set_radius( root["data"]["radius"].asFloat( ) );
-            }
-        }
-        else
-        {
-
-        }
-    };
+    } ) );
+    _udp.lock( )->set_schedule_update( true );
 
     auto clients = node::create( );
     _clients = clients;

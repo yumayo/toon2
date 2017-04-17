@@ -20,7 +20,7 @@ bool search_room::init( )
         _client = client;
         add_child( client );
         client->set_name( "connection" );
-        client->on_read_failed = [ this ] ( )
+        client->on_receive_failed = [ this ] ( )
         {
             scene_manager::get_instans( )->top( )->set_block_schedule_event( false );
             if ( on_not_found ) on_not_found( );
@@ -33,7 +33,8 @@ bool search_room::init( )
             auto node = scene_manager::get_instans( )->get_dont_destroy_node( );
             _client.lock( )->set_parent( node.lock( ) );
             _client.lock( )->on_received_json = nullptr;
-            _client.lock( )->on_read_failed = nullptr;
+            _client.lock( )->on_receive_failed = nullptr;
+            _client.lock( )->set_schedule_update( false );
         };
         client->write( std::make_shared<network::network_object>( address, port ),
                        "{\"name\":\"find_room\"}" );
