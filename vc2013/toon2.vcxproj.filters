@@ -266,9 +266,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\Resources.h">
       <Filter>Include Files</Filter>
     </ClInclude>
     <ClInclude Include="..\cinder_cocoslike\action\action.h">
@@ -465,6 +462,9 @@
     </ClInclude>
     <ClInclude Include="..\cinder_cocoslike\cocoslike.hpp">
       <Filter>cinder_cocoslike</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Resources.h">
+      <Filter>Include Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
