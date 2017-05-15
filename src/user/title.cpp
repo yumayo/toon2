@@ -15,22 +15,22 @@ CREATE_CPP( title )
 bool title::init( )
 {
     auto tit = create_dot( "title.png", app::getWindowWidth( ) * 0.9F );
-    _tit = tit;
+    _title_logo = tit;
     add_child( tit );
     tit->set_position( vec2( app::getWindowSize( ) ) * vec2( 0.5F, 0.35F ) );
 
     auto sta = create_dot_button( "start.png", 200 );
-    _sta = sta;
+    _start_button = sta;
     add_child( sta );
     sta->set_position( vec2( app::getWindowSize( ) ) * vec2( 0.5F, 0.75F ) );
 
     auto gac = create_dot_button( "gacha.png", 100 );
-    _gac = gac;
+    _gacha_button = gac;
     add_child( gac );
     gac->set_position( vec2( app::getWindowSize( ) ) * vec2( 1.0F, 0.75F ) + vec2( -150, -60 ) );
 
     auto con = create_dot_button( "config.png", 100 );
-    _con = con;
+    _config_button = con;
     add_child( con );
     con->set_position( vec2( app::getWindowSize( ) ) * vec2( 1.0F, 0.75F ) + vec2( -150, 60 ) );
 
@@ -64,8 +64,8 @@ bool title::init( )
 void title::change_action( std::function<void( )> end_fn )
 {
     float i = 0;
-    size_t size = _tit.lock( )->get_children( ).size( );
-    for ( auto& c : _tit.lock( )->get_children( ) )
+    size_t size = _title_logo.lock( )->get_children( ).size( );
+    for ( auto& c : _title_logo.lock( )->get_children( ) )
     {
         c->remove_all_actions( );
         c->run_action( action::sequence::create(
@@ -74,8 +74,8 @@ void title::change_action( std::function<void( )> end_fn )
         i += 1.0F / size;
     }
     i = 0;
-    size = _sta.lock( )->get_children( ).size( );
-    for ( auto& c : _sta.lock( )->get_children( ) )
+    size = _start_button.lock( )->get_children( ).size( );
+    for ( auto& c : _start_button.lock( )->get_children( ) )
     {
         c->remove_all_actions( );
         c->run_action( action::sequence::create(
@@ -84,8 +84,8 @@ void title::change_action( std::function<void( )> end_fn )
         i += 1.0F / size;
     }
     i = 0;
-    size = _gac.lock( )->get_children( ).size( );
-    for ( auto& c : _gac.lock( )->get_children( ) )
+    size = _gacha_button.lock( )->get_children( ).size( );
+    for ( auto& c : _gacha_button.lock( )->get_children( ) )
     {
         c->remove_all_actions( );
         c->run_action( action::sequence::create(
@@ -94,9 +94,9 @@ void title::change_action( std::function<void( )> end_fn )
         i += 1.0F / size;
     }
     i = 0;
-    size = _con.lock( )->get_children( ).size( );
-    auto itr = _con.lock( )->get_children( ).begin( );
-    for ( ; itr != --_con.lock( )->get_children( ).end( ); ++itr )
+    size = _config_button.lock( )->get_children( ).size( );
+    auto itr = _config_button.lock( )->get_children( ).begin( );
+    for ( ; itr != --_config_button.lock( )->get_children( ).end( ); ++itr )
     {
         ( *itr )->remove_all_actions( );
         ( *itr )->run_action( action::sequence::create(

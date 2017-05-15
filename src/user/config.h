@@ -20,6 +20,8 @@ private:
     cinder::vec2 _tap_position;
     cinder::vec2 _tap_prev_position;
     cinder::vec2 _tap_start_slide_object_position;
+    cinder::vec2 _object_select_position;
+    std::vector<std::string> _skin_names;
     float _slide_power = 0.0F;
     float _friction = 30.0F;
 private:

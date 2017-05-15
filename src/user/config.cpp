@@ -18,34 +18,6 @@ bool config::init( )
     set_schedule_mouse_event( );
     set_schedule_touch_event( );
 
-    auto slide = node::create( );
-    _slide = slide;
-    slide->set_anchor_point( vec2( 0.5 ) );
-    slide->set_position( vec2( app::getWindowSize( ) ) * vec2( 0.5 ) );
-    add_child( slide );
-
-    // デフォルト仕様。
-    int i = 0;
-    auto tex = renderer::sprite::create( "skin/null.png" );
-    tex->set_position( vec2( 100 * 2, 0 ) * float( i ) );
-    tex->set_content_size( vec2( 200 ) );
-    slide->add_child( tex );
-    i++;
-
-    auto& root = user_default::get_instans( )->get_root( );
-    auto& skin = root["skin"];
-    for ( auto& name : skin.getMemberNames( ) )
-    {
-        if ( skin[name].asBool( ) )
-        {
-            auto tex = renderer::sprite::create( "skin/" + name + ".png" );
-            tex->set_position( vec2( 100 * 2, 0 ) * float( i ) );
-            tex->set_content_size( vec2( 200 ) );
-            slide->add_child( tex );
-        }
-        i++;
-    }
-
     auto edge = create_dot( "edge.png", 200 );
     _edg = edge;
     edge->set_position( vec2( app::getWindowSize( ) ) * vec2( 0.5 ) );
@@ -62,13 +34,52 @@ bool config::init( )
         change_action( [ ] { scene_manager::get_instans( )->replace( title::create( ) ); } );
     };
 
+    auto slide = node::create( );
+    _slide = slide;
+    _edg.lock( )->add_child( slide );
+
+    // デフォルト仕様。
+    _skin_names.emplace_back( "null" );
+    auto& root = user_default::get_instans( )->get_root( );
+    auto& skin = root["skin"];
+    for ( auto& name : skin.getMemberNames( ) )
+    {
+        if ( skin[name].asBool( ) )
+        {
+            _skin_names.emplace_back( name );
+        }
+    }
+
+    for ( int i = 0; i < _skin_names.size( ); ++i )
+    {
+        auto tex = renderer::sprite::create( "skin/" + _skin_names[i] + ".png" );
+        tex->set_anchor_point( vec2( 0 ) );
+        tex->set_position( vec2( 100 * 2, 0 ) * float( i ) );
+        tex->set_content_size( vec2( 200 ) );
+        slide->add_child( tex );
+    }
+
     return true;
 }
 void config::update( float delta )
 {
     _tap_prev_position = _tap_position;
 
+    auto calc_select_position = _object_select_position;
+    auto posx = calc_select_position.x;
+    posx -= 100.0F; // 半分ずらす
+    auto index = int( posx / 200.0F ); // 200毎区切りにする。
+    if ( 0.0F + 70.0F < abs( fmodf( posx, 200.0F ) ) &&
+         abs( fmodf( posx, 200.0F ) ) < 200.0F - 70.0F )
+    {
+        calc_select_position.x = index * 200.0F;
+    }
+    calc_select_position.x = std::min( calc_select_position.x, 0.0F );
+    //calc_select_position.x = std::max( calc_select_position.x, -( _skin_names.size( ) - 1 ) * 200.0F );
+    _slide.lock( )->set_position( calc_select_position );
 
+    auto& root = user_default::get_instans( )->get_root( );
+    root["select"] = _skin_names[abs( index )];
 }
 bool config::mouse_began( cinder::app::MouseEvent event )
 {
@@ -84,7 +95,7 @@ void config::mouse_moved( cinder::app::MouseEvent event )
     _tap_position = event.getPos( );
 
     auto slide_size = _tap_position.x - _tap_start_position.x;
-    _slide.lock( )->set_position( _tap_start_slide_object_position + vec2( slide_size, 0 ) );
+    _object_select_position = _tap_start_slide_object_position + vec2( slide_size, 0 );
 }
 void config::mouse_ended( cinder::app::MouseEvent event )
 {

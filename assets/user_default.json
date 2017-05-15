@@ -2,7 +2,7 @@
    "complete" : true,
    "feed" : 1179,
    "max_size" : 20,
-   "select" : null,
+   "select" : "skin/miku.png",
    "skin" : {
       "miku" : true,
       "monta" : true
