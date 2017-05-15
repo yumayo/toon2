@@ -107,11 +107,10 @@
     <ResourceCompile Include="Resources.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Cinder\proj\vc2013\cinder.vcxproj">
+    <ProjectReference Include="..\..\Cinder\proj\vc2015\cinder.vcxproj">
       <Project>{92b5be70-dcaa-40e4-92d8-cc2b95aa28be}</Project>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ClCompile Include="..\cinder_cocoslike\action\action.cpp" />
     <ClCompile Include="..\cinder_cocoslike\action\action_manager.cpp" />
