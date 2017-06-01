@@ -35,7 +35,7 @@ bool search_room::init( )
 
     Json::Value root;
     root["name"] = "find_room";
-    root["data"]["select_skin_name"] = user_default::get_instans( )->get_root( )["data"]["select_skin_name"].asString( );
+    root["data"]["select_skin_name"] = user_default::get_instans( )->get_root( )["select_skin_name"].asString( );
     auto address = user_default::get_instans( )->get_root( )["server"]["address"].asString( );
     auto port = user_default::get_instans( )->get_root( )["server"]["port"].asInt( );
     client->write( std::make_shared<network::network_object>( address, port ),
