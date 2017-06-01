@@ -7,7 +7,8 @@ namespace user
 {
 void player_manager::create_client( Json::Value const & root_client )
 {
-    auto enemy = player::create( root_client["ip_address"].asString( ), root_client["port"].asInt( ), "" );
+    auto enemy = player::create( root_client["ip_address"].asString( ), root_client["port"].asInt( ),
+                                 root_client["select_skin_name"].asString( ).empty( ) ? "" : "skin/" + root_client["select_skin_name"].asString( ) + ".png" );
     enemy->set_color( { 0.6F, 0.2F, 0.8F } );
     enemy->set_name( "enemy" );
     _clients.lock( )->add_child( enemy );
@@ -42,10 +43,11 @@ bool player_manager::init( Json::Value& root, std::shared_ptr<network::udp_conne
     _clients = clients;
     add_child( clients );
 
-    auto& skin_name_value = user_default::get_instans( )->get_root( )["select"];
+    auto& skin_name_value = user_default::get_instans( )->get_root( )["select_skin_name"];
 
     auto& j = root["data"];
-    auto player = player::create( j["ip_address"].asString( ), j["port"].asInt( ), "" );
+    auto player = player::create( j["ip_address"].asString( ), j["port"].asInt( ), 
+                                  skin_name_value.asString( ).empty( ) ? "" : "skin/" + skin_name_value.asString( ) + ".png" );
     _player = player;
     player->set_color( { 0.2F, 0.8F, 0.6F } );
     player->set_name( "own" );

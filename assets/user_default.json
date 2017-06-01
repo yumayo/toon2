@@ -1,8 +1,11 @@
 {
    "complete" : true,
-   "feed" : 1526,
+   "data" : {
+      "select_skin_name" : null
+   },
+   "feed" : 1575,
    "max_size" : 20,
-   "select" : "monta",
+   "select_skin_name" : "monta",
    "server" : {
       "address" : "192.168.11.2",
       "port" : 25565
