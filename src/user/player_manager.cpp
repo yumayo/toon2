@@ -10,7 +10,7 @@ void player_manager::create_client( Json::Value const & root_client )
     auto enemy = player::create( root_client["ip_address"].asString( ), root_client["port"].asInt( ),
                                  root_client["select_skin_name"].asString( ).empty( ) ? "" : "skin/" + root_client["select_skin_name"].asString( ) + ".png" );
 
-    enemy->set_color( root_client["color"] == "purple" ? ColorA { 0.6F, 0.2F, 0.8F } : ColorA { 0.2F, 0.8F, 0.6F } );
+    enemy->set_color( root_client["color"].asString( ) == "purple" ? ColorA { 0.6F, 0.2F, 0.8F } : ColorA { 0.2F, 0.8F, 0.6F } );
     enemy->set_name( "enemy" );
     _clients.lock( )->add_child( enemy );
 }
@@ -48,7 +48,7 @@ bool player_manager::init( Json::Value& root, std::shared_ptr<network::udp_conne
     auto player = player::create( j["ip_address"].asString( ), j["port"].asInt( ),
                                   j["select_skin_name"].asString( ).empty( ) ? "" : "skin/" + j["select_skin_name"].asString( ) + ".png" );
     _player = player;
-    player->set_color( j["color"] == "purple" ? ColorA { 0.6F, 0.2F, 0.8F } : ColorA { 0.2F, 0.8F, 0.6F } );
+    player->set_color( j["color"].asString( ) == "purple" ? ColorA { 0.6F, 0.2F, 0.8F } : ColorA { 0.2F, 0.8F, 0.6F } );
     player->set_name( "own" );
     add_child( player );
 
