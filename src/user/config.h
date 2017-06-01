@@ -15,15 +15,14 @@ public:
     void touch_moved( cinder::app::TouchEvent::Touch event )override;
     void touch_ended( cinder::app::TouchEvent::Touch event )override;
 private:
-    std::weak_ptr<node> _slide;
+    std::weak_ptr<node> _slider;
     cinder::vec2 _tap_start_position;
     cinder::vec2 _tap_position;
     cinder::vec2 _tap_prev_position;
     cinder::vec2 _tap_start_slide_object_position;
     cinder::vec2 _object_select_position;
     std::vector<std::string> _skin_names;
-    float _slide_power = 0.0F;
-    float _friction = 30.0F;
+    float _skin_width = 200.0F;
 private:
     std::weak_ptr<node> _bac;
     std::weak_ptr<node> _edg;

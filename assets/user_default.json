@@ -1,8 +1,8 @@
 {
    "complete" : true,
-   "feed" : 1248,
+   "feed" : 1526,
    "max_size" : 20,
-   "select" : "skin/miku.png",
+   "select" : "monta",
    "server" : {
       "address" : "192.168.11.2",
       "port" : 25565

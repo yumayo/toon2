@@ -11,7 +11,7 @@ CREATE_CPP( ground, std::weak_ptr<node> player_manager )
 }
 bool ground::init( std::weak_ptr<node> player_manager )
 {
-    if ( !renderer::surface::init( vec2( 512 ), ColorA( 0.1F, 0.1F, 0.1F ) ) ) return false;
+    if ( !renderer::surface::init( vec2( 4096 ), ColorA( 0.1F, 0.1F, 0.1F ) ) ) return false;
 
     gl::Texture::Format format;
     format.setMinFilter( GL_NEAREST );
@@ -24,7 +24,7 @@ bool ground::init( std::weak_ptr<node> player_manager )
 
     set_schedule_update( );
 
-    set_scale( vec2( 4.0F ) );
+    set_scale( vec2( 1.0F ) );
 
     spawn_player( );
 
@@ -64,18 +64,7 @@ void ground::player_paint_ground( std::weak_ptr<node> player_node )
     if ( !player_node.lock( ) )return;
     auto player = std::dynamic_pointer_cast<user::player>( player_node.lock( ) );
     float radius = player->get_radius( ) / get_scale( ).x;
-    for ( int y = -radius; y < radius; ++y )
-    {
-        for ( int x = -radius; x < radius; ++x )
-        {
-            auto len = length( vec2( x, y ) );
-            if ( len < radius )
-            {
-                set_pixel( player->get_position( ) / get_scale( ).x + vec2( x, y ),
-                           player->get_color( ) );
-            }
-        }
-    }
+    paint_fill_circle( player->get_position( ) / get_scale( ).x, radius, player->get_color( ) );
 }
 }
 
