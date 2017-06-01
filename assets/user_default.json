@@ -3,6 +3,10 @@
    "feed" : 1179,
    "max_size" : 20,
    "select" : "skin/miku.png",
+   "server" : {
+      "address" : "192.168.11.2",
+      "port" : 25565
+   },
    "skin" : {
       "miku" : true,
       "monta" : true

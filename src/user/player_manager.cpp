@@ -19,9 +19,10 @@ bool player_manager::init( Json::Value& root, std::shared_ptr<network::udp_conne
     set_schedule_update( );
 
     _udp = connection;
+    _udp.lock( )->set_name( "udp_connection" );
     connection->set_parent( shared_from_this( ) );
 
-    _udp.lock( )->on_received_named_json.insert( std::make_pair( "new_client" , [ this ] ( network::network_handle handle, Json::Value root )
+    _udp.lock( )->on_received_named_json.insert( std::make_pair( "new_client", [ this ] ( network::network_handle handle, Json::Value root )
     {
         create_client( root["data"] );
     } ) );

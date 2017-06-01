@@ -15,7 +15,10 @@ bool search_room::init( )
     if ( Json::Reader( ).parse( cinder::app::loadString( "udp.json" ), root ) )
     {
         std::string address = root["server"]["address"].asString( );
+        user_default::get_instans( )->get_root( )["server"]["address"] = address;
         int port = boost::lexical_cast<int>( root["server"]["port"].asString( ) );
+        user_default::get_instans( )->get_root( )["server"]["port"] = port;
+
         auto client = network::udp_connection::create( );
         _client = client;
         add_child( client );
@@ -36,6 +39,7 @@ bool search_room::init( )
             _client.lock( )->on_receive_failed = nullptr;
             _client.lock( )->set_schedule_update( false );
         };
+        
         client->write( std::make_shared<network::network_object>( address, port ),
                        "{\"name\":\"find_room\"}" );
         return true;
