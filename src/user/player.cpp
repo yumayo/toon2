@@ -2,6 +2,7 @@
 #include "action.hpp"
 #include "utility/string_utility.h"
 #include "skin.h"
+#include "title.h"
 using namespace cinder;
 namespace user
 {
@@ -26,7 +27,7 @@ bool player::init( std::string const& ip_address,
         _base = base;
         add_child( base );
 
-        if ( auto mask = relative_path_skin.empty( ) ? 
+        if ( auto mask = relative_path_skin.empty( ) ?
              renderer::circle::create( _radius ) : skin::create( _radius, relative_path_skin ) )
         {
             _mask = mask;
@@ -59,6 +60,10 @@ void player::on_captured( std::weak_ptr<node> other )
 {
     auto pla = std::dynamic_pointer_cast<user::player>( other.lock( ) );
     pla->capture( _radius );
+    if ( get_name( ) == "own" )
+    {
+        scene_manager::get_instans( )->replace( title::create( ) );
+    }
 }
 void player::capture( float score )
 {

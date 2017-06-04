@@ -2,6 +2,8 @@
 #include "renderer/rect_edge.h"
 #include "action.hpp"
 #include "utility/string_utility.h"
+#include "scene_manager.h"
+#include "title.h"
 using namespace cinder;
 namespace user
 {

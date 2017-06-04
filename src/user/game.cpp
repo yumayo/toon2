@@ -10,6 +10,15 @@ CREATE_CPP( game, Json::Value root )
 {
     CREATE( game, root );
 }
+game::~game( )
+{
+    auto pla_mgr = _field.lock( )->get_child_by_name( "player_manager" );
+    std::weak_ptr<network::udp_connection> udp = std::dynamic_pointer_cast<network::udp_connection>( pla_mgr->get_child_by_name( "udp_connection" ) );
+    std::string address = user_default::get_instans( )->get_root( )["server"]["address"].asString( );
+    int port = user_default::get_instans( )->get_root( )["server"]["port"].asInt( );
+    udp.lock( )->write( std::make_shared<network::network_object>( address, port ), "{\"name\":\"close\"}" );
+    pla_mgr->remove_child_by_name( "udp_connection" );
+}
 bool game::init( Json::Value& root )
 {
     set_schedule_update( );
@@ -33,17 +42,8 @@ bool game::init( Json::Value& root )
     auto bac = create_dot_button( "back.png", 64 );
     bac->set_position( vec2( 64 ) + vec2( 10 ) );
 
-    std::string address = user_default::get_instans( )->get_root( )["server"]["address"].asString( );
-    int port = user_default::get_instans( )->get_root( )["server"]["port"].asInt( );
-    std::weak_ptr<network::udp_connection> udp = std::dynamic_pointer_cast<network::udp_connection>( pla_mgr->get_child_by_name( "udp_connection" ) );
-    bac->on_ended = [ address, port, udp ]
+    bac->on_ended = [ ]
     {
-        // 一秒ごとにサーバーにデータを送っている方が先に届く可能性がある。
-        // TCPと一緒に用いたほうが良さそうですかね。
-        // 命令の実行とかは時間かけていい部分ですしね。
-        udp.lock( )->set_schedule_update( false );
-        udp.lock( )->write( std::make_shared<network::network_object>( address, port ), "{\"name\":\"close\"}" );
-        udp.lock( )->remove_from_parent( );
         scene_manager::get_instans( )->replace( title::create( ) );
     };
     add_child( bac );
