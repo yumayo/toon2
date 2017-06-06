@@ -40,10 +40,16 @@ bool game::init( Json::Value& root )
     }
 
     auto bac = create_dot_button( "back.png", 64 );
-    bac->set_position( vec2( 64 ) + vec2( 10 ) );
-
-    bac->on_ended = [ ]
     {
+        auto sound = ::audio::buffer_player::create( "sound/back.wav" );
+        sound->set_name( "sound" );
+        bac->add_child( sound );
+    }
+    _back_button = bac;
+    bac->set_position( vec2( 64 ) + vec2( 10 ) );
+    bac->on_ended = [ this ]
+    {
+        std::dynamic_pointer_cast<::audio::buffer_player> ( _back_button.lock( )->get_child_by_name( "sound" ) )->play( );
         scene_manager::get_instans( )->replace( title::create( ) );
     };
     add_child( bac );

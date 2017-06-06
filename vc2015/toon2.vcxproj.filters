@@ -170,12 +170,6 @@
     <ClCompile Include="..\cinder_cocoslike\action\timeline.cpp">
       <Filter>cinder_cocoslike\action</Filter>
     </ClCompile>
-    <ClCompile Include="..\cinder_cocoslike\audio\buffer_player.cpp">
-      <Filter>cinder_cocoslike\audio</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cinder_cocoslike\audio\file_player.cpp">
-      <Filter>cinder_cocoslike\audio</Filter>
-    </ClCompile>
     <ClCompile Include="..\cinder_cocoslike\network\client_handle.cpp">
       <Filter>cinder_cocoslike\network</Filter>
     </ClCompile>
@@ -262,6 +256,15 @@
     </ClCompile>
     <ClCompile Include="..\cinder_cocoslike\user_default.cpp">
       <Filter>cinder_cocoslike</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cinder_cocoslike\audio\base_player.cpp">
+      <Filter>cinder_cocoslike\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cinder_cocoslike\audio\buffer_player.cpp">
+      <Filter>cinder_cocoslike\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cinder_cocoslike\audio\file_player.cpp">
+      <Filter>cinder_cocoslike\audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -465,6 +468,9 @@
     </ClInclude>
     <ClInclude Include="..\include\Resources.h">
       <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cinder_cocoslike\audio\base_player.h">
+      <Filter>cinder_cocoslike\audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -134,6 +134,7 @@
     <ClCompile Include="..\cinder_cocoslike\action\spawn.cpp" />
     <ClCompile Include="..\cinder_cocoslike\action\timeline.cpp" />
     <ClCompile Include="..\cinder_cocoslike\app_delegate.cpp" />
+    <ClCompile Include="..\cinder_cocoslike\audio\base_player.cpp" />
     <ClCompile Include="..\cinder_cocoslike\audio\buffer_player.cpp" />
     <ClCompile Include="..\cinder_cocoslike\audio\file_player.cpp" />
     <ClCompile Include="..\cinder_cocoslike\network\client_handle.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="..\cinder_cocoslike\action\timeline.h" />
     <ClInclude Include="..\cinder_cocoslike\app_delegate.h" />
     <ClInclude Include="..\cinder_cocoslike\audio.hpp" />
+    <ClInclude Include="..\cinder_cocoslike\audio\base_player.h" />
     <ClInclude Include="..\cinder_cocoslike\audio\buffer_player.h" />
     <ClInclude Include="..\cinder_cocoslike\audio\file_player.h" />
     <ClInclude Include="..\cinder_cocoslike\cocoslike.hpp" />

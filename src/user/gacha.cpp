@@ -39,6 +39,11 @@ bool gacha::init( )
     }
 
     auto bac = create_dot_button( "back.png", 150 );
+    {
+        auto sound = ::audio::buffer_player::create( "sound/back.wav" );
+        sound->set_name( "sound" );
+        bac->add_child( sound );
+    }
     _bac = bac;
     bac->set_position( vec2( app::getWindowSize( ) ) * vec2( 0, 1 ) + vec2( 100, -100 ) );
     add_child( bac );
@@ -100,6 +105,7 @@ bool gacha::init( )
     };
     bac->on_ended = [ this ]
     {
+        std::dynamic_pointer_cast<::audio::buffer_player> ( _bac.lock( )->get_child_by_name( "sound" ) )->play( );
         set_block_schedule_event( );
         change_action( [ ] { scene_manager::get_instans( )->replace( title::create( ) ); } );
     };
