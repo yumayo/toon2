@@ -1,5 +1,6 @@
 #pragma once
 #include "node.h"
+#include "cinder/Rand.h"
 namespace user
 {
 class feed_manager : public node
@@ -14,5 +15,6 @@ private:
     std::weak_ptr<node> _player_manager;
     std::weak_ptr<node> _ground;
     int _now_tag = 1;
+    std::shared_ptr<cinder::Rand> random;
 };
 }

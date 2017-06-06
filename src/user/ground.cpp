@@ -11,7 +11,7 @@ CREATE_CPP( ground, std::weak_ptr<node> player_manager )
 }
 bool ground::init( std::weak_ptr<node> player_manager )
 {
-    if ( !renderer::surface::init( vec2( 4096 ), ColorA( 0.1F, 0.1F, 0.1F ) ) ) return false;
+    if ( !renderer::surface::init( vec2( 2048 ), ColorA( 0.1F, 0.1F, 0.1F ) ) ) return false;
 
     gl::Texture::Format format;
     format.setMinFilter( GL_NEAREST );

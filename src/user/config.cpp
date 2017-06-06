@@ -84,8 +84,7 @@ void config::update( float delta )
     }
     _slider.lock( )->set_position( calc_select_position );
 
-    auto& root = user_default::get_instans( )->get_root( );
-    root["select_skin_name"] = _skin_names[abs( index )];
+    user_default::get_instans( )->get_root( )["select_skin_name"] = _skin_names[abs( index )] == "null" ? Json::Value::null : _skin_names[abs( index )];
 }
 bool config::mouse_began( cinder::app::MouseEvent event )
 {

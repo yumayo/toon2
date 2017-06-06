@@ -16,10 +16,10 @@ bool player::init( std::string const& ip_address,
 {
     _handle = std::make_shared<network::network_object>( ip_address, port );
 
+    _setup_radius = 20.0F;
+
     set_scale( vec2( 0 ) );
     run_action( action::ease<EaseOutSine>::create( action::scale_to::create( 1.0F, vec2( 1 ) ) ) );
-
-    _setup_radius = 20.0F;
 
     _radius = _setup_radius;
     if ( auto base = renderer::circle::create( _radius ) )
@@ -67,10 +67,7 @@ void player::on_captured( std::weak_ptr<node> other )
 }
 void player::capture( float score )
 {
-    if ( is_running_action( ) )
-    {
-        remove_all_actions( );
-    }
+    remove_action_by_name( "capture_animation" );
 
     // どの大きさまで大きくなるのかを設定する。
     _target_radius = _radius + score;
@@ -78,11 +75,13 @@ void player::capture( float score )
     // アクションは終了済み。
     auto sub = _target_radius - _radius;
     sub = clamp( sub, 0.0F, 2.0F );
-    run_action( action::ease<EaseOutSine>::create( action::float_to::create( sub, _radius, _target_radius, [ this ] ( float value )
+    auto act = action::ease<EaseOutSine>::create( action::float_to::create( sub, _radius, _target_radius, [ this ] ( float value )
     {
         set_radius( value );
     }
-    ) ) );
+    ) );
+    act->set_name( "capture_animation" );
+    run_action( act );
 }
 void player::move( cinder::vec2 axis )
 {
