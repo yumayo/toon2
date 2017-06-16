@@ -20,44 +20,48 @@ bool search_room::init( )
     tcp_connection->set_name( "tcp_connection" );
     _tcp_connection = tcp_connection;
     dont_destroy_node.lock( )->add_child( tcp_connection );
+    tcp_connection->on_connection = [ this ]
+    {
+        Json::Value root;
+        root["name"] = "check_handle";
+        root["id"] = user_default::get_instans( )->get_root( )["id"];
+        root["data"]["udp_port"] = _udp_connection.lock( )->get_port( );
+        _tcp_connection.lock( )->write( Json::FastWriter( ).write( root ) );
+        _tcp_connection.lock( )->on_received_json = [ this ] ( Json::Value root )
+        {
+            if ( root["name"].asString( ) == "id_received" )
+            {
+                user_default::get_instans( )->get_root( )["id"] = root["data"]["id"].asInt( );
+
+                Json::Value root;
+                root["name"] = "find_room";
+                root["id"] = user_default::get_instans( )->get_root( )["id"].asInt( );
+                root["data"]["select_skin_name"] = user_default::get_instans( )->get_root( )["select_skin_name"].asString( );
+                _tcp_connection.lock( )->write( Json::FastWriter( ).write( root ) );
+                _tcp_connection.lock( )->on_received_json = [ this ] ( Json::Value root )
+                {
+                    if ( root["name"].asString( ) == "founded" )
+                    {
+                        _tcp_connection.lock( )->on_received_json = nullptr;
+                        _tcp_connection.lock( )->on_send_failed = nullptr;
+                        _udp_connection.lock( )->on_received_json = nullptr;
+
+                        _tcp_connection.lock( )->set_schedule_update( false );
+                        _udp_connection.lock( )->set_schedule_update( false );
+
+                        if ( on_founded ) on_founded( root );
+                    }
+                };
+            }
+        };
+    };
 
     auto udp_connection = network::udp_connection::create( );
     udp_connection->set_name( "udp_connection" );
     _udp_connection = udp_connection;
     dont_destroy_node.lock( )->add_child( udp_connection );
 
-    Json::Value root;
-    root["name"] = "check_handle";
-    root["id"] = user_default::get_instans( )->get_root( )["id"];
-    root["data"]["udp_port"] = udp_connection->get_port( );
-    tcp_connection->write( Json::FastWriter( ).write( root ) );
-    tcp_connection->on_received_json = [ this ] ( Json::Value root )
-    {
-        if ( root["name"].asString( ) == "id_received" )
-        {
-            user_default::get_instans( )->get_root( )["id"] = root["data"]["id"].asInt( );
 
-            Json::Value root;
-            root["name"] = "find_room";
-            root["id"] = user_default::get_instans( )->get_root( )["id"].asInt( );
-            root["data"]["select_skin_name"] = user_default::get_instans( )->get_root( )["select_skin_name"].asString( );
-            _tcp_connection.lock( )->write( Json::FastWriter( ).write( root ) );
-            _tcp_connection.lock( )->on_received_json = [ this ] ( Json::Value root )
-            {
-                if ( root["name"].asString( ) == "founded" )
-                {
-                    _tcp_connection.lock( )->on_received_json = nullptr;
-                    _tcp_connection.lock( )->on_send_failed = nullptr;
-                    _udp_connection.lock( )->on_received_json = nullptr;
-
-                    _tcp_connection.lock( )->set_schedule_update( false );
-                    _udp_connection.lock( )->set_schedule_update( false );
-
-                    if ( on_founded ) on_founded( root );
-                }
-            };
-        }
-    };
     tcp_connection->on_disconnected = [ this ]
     {
         scene_manager::get_instans( )->top( )->set_block_schedule_event( false );
