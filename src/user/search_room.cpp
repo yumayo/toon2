@@ -26,7 +26,6 @@ bool search_room::init( )
     _udp_connection = udp_connection;
     dont_destroy_node.lock( )->add_child( udp_connection );
 
-
     Json::Value root;
     root["name"] = "check_handle";
     root["id"] = user_default::get_instans( )->get_root( )["id"];

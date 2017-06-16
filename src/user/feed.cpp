@@ -53,6 +53,10 @@ void feed::on_captured( std::weak_ptr<node> other )
 {
     if ( auto pla = std::dynamic_pointer_cast<user::player>( other.lock( ) ) )
     {
+        // プレイヤー以外は送信処理はしません。
+        // 吸い込まれるアニメーションさえできればオッケーです。
+        if ( pla->get_name( ) != "player" ) return;
+
         pla->capture( _score );
 
         if ( auto feed_mgr = std::dynamic_pointer_cast<feed_manager>( get_parent( ) ) )

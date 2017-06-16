@@ -3,6 +3,7 @@
 #include "create_dot_obeject.h"
 #include "scene_manager.h"
 #include "title.h"
+#include "network.hpp"
 using namespace cinder;
 namespace user
 {
@@ -10,9 +11,28 @@ CREATE_CPP( game, Json::Value root )
 {
     CREATE( game, root );
 }
+game::~game( )
+{
+    auto dont_destroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
+    dont_destroy_node.lock( )->remove_child_by_name( "udp_connection" );
+    dont_destroy_node.lock( )->remove_child_by_name( "tcp_connection" );
+}
 bool game::init( Json::Value& root )
 {
     set_schedule_update( );
+
+    auto dont_destroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
+
+    auto tcp_connection = std::dynamic_pointer_cast<network::tcp_client>( dont_destroy_node.lock( )->get_child_by_name( "tcp_connection" ) );
+    
+    tcp_connection->on_errored = [ this ] (asio::error_code const& e )
+    {
+        scene_manager::get_instans( )->replace( title::create( ) );
+    };
+    tcp_connection->on_disconnected = [ this ]
+    {
+        scene_manager::get_instans( )->replace( title::create( ) );
+    };
 
     if ( auto field = field::create( root ) )
     {
@@ -39,10 +59,6 @@ bool game::init( Json::Value& root )
     bac->on_ended = [ this ]
     {
         std::dynamic_pointer_cast<::audio::buffer_player> ( _back_button.lock( )->get_child_by_name( "sound" ) )->play( );
-
-        auto dont_destroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
-        dont_destroy_node.lock( )->remove_child_by_name( "udp_connection" );
-        dont_destroy_node.lock( )->remove_child_by_name( "tcp_connection" );
 
         scene_manager::get_instans( )->replace( title::create( ) );
     };
