@@ -4,16 +4,23 @@
 #include "feed_manager.h"
 #include "action.hpp"
 #include "player.h"
+#include "utility.hpp"
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( feed )
+CREATE_CPP( feed, int tag, cinder::vec2 position )
 {
-    CREATE( feed );
+    CREATE( feed, tag, position );
 }
-bool feed::init( )
+bool feed::init( int tag, cinder::vec2 position )
 {
+    utility::log( "create_feed: [%d]", tag );
+
     set_name( "feed" );
+
+    set_tag( tag );
+
+    set_position( position );
 
     if ( auto circle = renderer::circle::create( 12, 5 ) )
     {
@@ -44,9 +51,17 @@ float feed::get_radius( )
 }
 void feed::on_captured( std::weak_ptr<node> other )
 {
-    auto pla = std::dynamic_pointer_cast<user::player>( other.lock( ) );
-    pla->capture( _score );
-    auto mgr = std::dynamic_pointer_cast<user::feed_manager>( get_parent( ) );
-    mgr->create_feed( );
+    if ( auto pla = std::dynamic_pointer_cast<user::player>( other.lock( ) ) )
+    {
+        pla->capture( _score );
+
+        if ( auto feed_mgr = std::dynamic_pointer_cast<feed_manager>( get_parent( ) ) )
+        {
+            Json::Value root;
+            root["name"] = "feed_captured";
+            root["data"]["tag"] = get_tag( );
+            feed_mgr->on_feed_captured( root );
+        }
+    }
 }
 }

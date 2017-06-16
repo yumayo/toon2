@@ -1,16 +1,17 @@
 ﻿#include "player_manager.h"
 #include "player.h"
-#include "toon_packet.h"
 #include "user_default.h"
 #include "action.hpp"
+#include "scene_manager.h"
+#include "network.hpp"
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( player_manager, Json::Value& root, std::shared_ptr<network::udp_connection>& connection )
+CREATE_CPP( player_manager, Json::Value& root )
 {
-    CREATE( player_manager, root, connection );
+    CREATE( player_manager, root );
 }
-bool player_manager::init( Json::Value& root, std::shared_ptr<network::udp_connection>& connection )
+bool player_manager::init( Json::Value& root )
 {
     app::console( ) << root << std::endl;
 
@@ -18,29 +19,37 @@ bool player_manager::init( Json::Value& root, std::shared_ptr<network::udp_conne
 
     set_schedule_update( );
 
-    _udp = connection;
+    auto clients = node::create( );
+    _clients = clients;
+    add_child( clients );
 
-    _udp.lock( )->run_action( action::repeat_forever::create( action::sequence::create( action::call_func::create( [ this ]
+    auto& j = root["data"];
+    auto pla = player::create( j["ip_address"].asString( ),
+                               j["udp_port"].asInt( ),
+                               j["select_skin_name"].asString( ).empty( ) ? "" : "skin/" + j["select_skin_name"].asString( ) + ".png" );
+    _player = pla;
+    pla->set_color( j["color"].asString( ) == "purple" ? ColorA { 0.6F, 0.2F, 0.8F } : ColorA { 0.2F, 0.8F, 0.6F } );
+    pla->set_name( "own" );
+    add_child( pla );
+
+    for ( auto& j : root["data"]["clients"] )
     {
-        Json::Value root;
-        root["name"] = "server_connection";
-        _udp.lock( )->write( std::make_shared<network::network_object>( user_default::get_instans( )->get_root( )["server"]["address"].asString( ),
-                                                                        user_default::get_instans( )->get_root( )["server"]["port"].asInt( ) ), 
-                             Json::FastWriter( ).write( root ) );
-    } ), action::delay::create( 1.0F ) ) ) );
+        create_client( j );
+    }
 
-    _udp.lock( )->set_name( "udp_connection" );
-    connection->set_parent( shared_from_this( ) );
+    auto dont_destroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
+    _udp_connection = std::dynamic_pointer_cast<network::udp_connection>( dont_destroy_node.lock( )->get_child_by_name( "udp_connection" ) );
+    _tcp_connection = std::dynamic_pointer_cast<network::tcp_client>( dont_destroy_node.lock( )->get_child_by_name( "tcp_connection" ) );
 
     // 他のクライアントが接続を切ったら呼ばれます。
-    _udp.lock( )->on_received_named_json.insert( std::make_pair( "close_client", [ this ] ( network::network_handle handle, Json::Value root )
+    _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "close_client", [ this ] ( Json::Value root )
     {
         if ( _clients.lock( )->get_children( ).empty( ) ) return;
         std::shared_ptr<node> target;
-        network::network_object info( root["data"]["ip_address"].asString( ), root["data"]["port"].asInt( ) );
+        auto info = std::make_shared<network::network_object>( root["data"]["ip_address"].asString( ), root["data"]["udp_port"].asInt( ) );
         for ( auto& c : _clients.lock( )->get_children( ) )
         {
-            if ( **std::dynamic_pointer_cast<player>( c )->get_handle( ) == info )
+            if ( **std::dynamic_pointer_cast<player>( c )->get_handle( ) == *info )
             {
                 target = c;
                 break;
@@ -50,35 +59,84 @@ bool player_manager::init( Json::Value& root, std::shared_ptr<network::udp_conne
         {
             _clients.lock( )->remove_child( target );
         }
-        _udp.lock( )->destroy_client( handle );
+        _udp_connection.lock( )->destroy_client( info );
     } ) );
 
     // 新しいクライアントが接続してきたら呼ばれます。
-    _udp.lock( )->on_received_named_json.insert( std::make_pair( "new_client", [ this ] ( network::network_handle handle, Json::Value root )
+    _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "new_client", [ this ] ( Json::Value root )
     {
+        // udpの方にクライアントの情報を渡してあげます。
+        _udp_connection.lock( )->regist_client( root["data"]["ip_address"].asString( ), root["data"]["udp_port"].asInt( ) );
         create_client( root["data"] );
     } ) );
-    _udp.lock( )->set_schedule_update( true );
 
-    auto clients = node::create( );
-    _clients = clients;
-    add_child( clients );
-
-    auto& j = root["data"];
-    auto player = player::create( j["ip_address"].asString( ),
-                                  j["port"].asInt( ),
-                                  j["select_skin_name"].asString( ).empty( ) ? "" : "skin/" + j["select_skin_name"].asString( ) + ".png" );
-    _player = player;
-    player->set_color( j["color"].asString( ) == "purple" ? ColorA { 0.6F, 0.2F, 0.8F } : ColorA { 0.2F, 0.8F, 0.6F } );
-    player->set_name( "own" );
-    add_child( player );
-
-    for ( auto& j : root["data"]["clients"] )
+    // 他のオブジェクトからゲームの更新命令がされたら呼ばれます。
+    // 毎フレーム呼ぶのでudpで通信します。
+    _udp_connection.lock( )->on_received_named_json.insert( std::make_pair( "game_update", [ this ] ( network::network_handle handle, Json::Value root )
     {
-        create_client( j );
-    }
+        for ( auto& child : _clients.lock( )->get_children( ) )
+        {
+            std::weak_ptr<player> client = std::dynamic_pointer_cast<player>( child );
+            client.lock( )->set_position( vec2( root["data"]["position"][0].asFloat( ),
+                                                root["data"]["position"][1].asFloat( ) ) );
+            client.lock( )->set_radius( root["data"]["radius"].asFloat( ) );
+        }
+    } ) );
 
     return true;
+}
+void player_manager::update( float delta )
+{
+    if ( !_player.lock( ) || _player.expired( ) ) return;
+
+    // 大きさで、描画順を変更。
+    _clients.lock( )->get_children( ).sort( [ ] ( std::shared_ptr<node>& a, std::shared_ptr<node>& b )
+    {
+        std::weak_ptr<player> p_a = std::dynamic_pointer_cast<player>( a );
+        std::weak_ptr<player> p_b = std::dynamic_pointer_cast<player>( b );
+        return p_a.lock( )->get_radius( ) < p_b.lock( )->get_radius( );
+    } );
+
+    // プレイヤー同士の当たり判定。
+    // 他のエネミー同士は計算しません。
+    for ( auto& child : _clients.lock( )->get_children( ) )
+    {
+        std::weak_ptr<player> client = std::dynamic_pointer_cast<player>( child );
+
+        if ( _player.lock( ) == client.lock( ) ) continue;
+
+        // 自分の大きさは加味しません。
+        if ( distance( _player.lock( )->get_position( ), client.lock( )->get_position( ) )
+             < _player.lock( )->get_radius( ) * 0 + client.lock( )->get_radius( ) )
+        {
+            std::weak_ptr<player> small = _player;
+            std::weak_ptr<player> large = client;
+            if ( large.lock( )->get_radius( ) < small.lock( )->get_radius( ) )
+            {
+                swap( small, large );
+            }
+
+            if ( small.lock( )->get_radius( ) < large.lock( )->get_radius( ) / 2 )
+            {
+                if ( !small.lock( )->is_captureing( ) )
+                {
+                    small.lock( )->captured( large );
+                }
+            }
+        }
+    }
+
+    Json::Value root;
+    root["name"] = "game_update";
+    root["data"]["position"][0] = _player.lock( )->get_position( ).x;
+    root["data"]["position"][1] = _player.lock( )->get_position( ).y;
+    root["data"]["radius"] = _player.lock( )->get_radius( );
+
+    for ( auto& child : _clients.lock( )->get_children( ) )
+    {
+        auto client = std::dynamic_pointer_cast<player>( child );
+        _udp_connection.lock( )->write( client->get_handle( ), root );
+    }
 }
 std::list<std::shared_ptr<node>>& player_manager::get_clients( )
 {
@@ -90,7 +148,9 @@ std::weak_ptr<player>& player_manager::get_player( )
 }
 void player_manager::create_client( Json::Value const & data )
 {
-    auto enemy = player::create( data["ip_address"].asString( ), data["port"].asInt( ),
+    app::console( ) << data << std::endl;
+
+    auto enemy = player::create( data["ip_address"].asString( ), data["udp_port"].asInt( ),
                                  data["select_skin_name"].asString( ).empty( ) ? "" : "skin/" + data["select_skin_name"].asString( ) + ".png" );
 
     enemy->set_color( data["color"].asString( ) == "purple" ? ColorA { 0.6F, 0.2F, 0.8F } : ColorA { 0.2F, 0.8F, 0.6F } );

@@ -6,7 +6,8 @@ namespace user
 {
 class search_room : public node
 {
-    std::weak_ptr<network::udp_connection> _client;
+    std::weak_ptr<network::udp_connection> _udp_connection;
+    std::weak_ptr<network::tcp_client> _tcp_connection;
 public:
     CREATE_H( search_room );
     bool init( );

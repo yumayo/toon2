@@ -12,12 +12,8 @@ CREATE_CPP( game, Json::Value root )
 }
 game::~game( )
 {
-    auto pla_mgr = _field.lock( )->get_child_by_name( "player_manager" );
-    std::weak_ptr<network::udp_connection> udp = std::dynamic_pointer_cast<network::udp_connection>( pla_mgr->get_child_by_name( "udp_connection" ) );
-    std::string address = user_default::get_instans( )->get_root( )["server"]["address"].asString( );
-    int port = user_default::get_instans( )->get_root( )["server"]["port"].asInt( );
-    udp.lock( )->write( std::make_shared<network::network_object>( address, port ), "{\"name\":\"close\"}" );
-    pla_mgr->remove_child_by_name( "udp_connection" );
+    scene_manager::get_instans( )->get_dont_destroy_node( ).lock( )->remove_child_by_name( "udp_connection" );
+    scene_manager::get_instans( )->get_dont_destroy_node( ).lock( )->remove_child_by_name( "tcp_connection" );
 }
 bool game::init( Json::Value& root )
 {

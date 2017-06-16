@@ -58,7 +58,7 @@ bool gacha::init( )
     fla->set_pivot( vec2( 0, 0.6 ) );
     add_child( fla );
 
-    auto fee = feed::create( );
+    auto fee = feed::create( node::INVALID_TAG, vec2( 0 ) );
     fee->set_position( vec2( -50, 0 ) );
     fla->add_child( fee );
 
@@ -79,7 +79,7 @@ bool gacha::init( )
             auto feed_num = root["feed"].asInt( ) - 1;
             root["feed"] = feed_num;
             _fla.lock( )->set_text( "x " + boost::lexical_cast<std::string>( feed_num ) );
-            auto f = feed::create( );
+            auto f = feed::create( node::INVALID_TAG, vec2( 0 ) );
             f->set_position( start_pos );
             f->run_action( sequence::create( ease<EaseInOutCirc>::create( move_to::create( 1.0F, end_pos ) ), remove_self::create( ) ) );
             add_child( f );

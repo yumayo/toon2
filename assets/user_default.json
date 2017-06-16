@@ -1,11 +1,13 @@
 {
    "complete" : false,
-   "feed" : 1704,
+   "feed" : 1741,
+   "id" : 7,
    "max_size" : 20,
    "select_skin_name" : null,
    "server" : {
       "address" : "127.0.0.1",
-      "port" : 25565
+      "port" : 25565,
+      "tcp_port" : 25564
    },
    "skin" : {
       "miku" : false,

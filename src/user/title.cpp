@@ -69,7 +69,10 @@ bool title::init( )
         auto search_handle = search_room::create( );
         search_handle->on_founded = [ this ] ( Json::Value& root )
         {
-            change_action( [ root ] { scene_manager::get_instans( )->replace( game::create( root ) ); } );
+            change_action( [ root ] 
+            {
+                scene_manager::get_instans( )->replace( game::create( root ) );
+            } );
         };
         search_handle->on_not_found = [ this ] ( )
         {
