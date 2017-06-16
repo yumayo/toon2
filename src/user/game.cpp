@@ -10,11 +10,6 @@ CREATE_CPP( game, Json::Value root )
 {
     CREATE( game, root );
 }
-game::~game( )
-{
-    scene_manager::get_instans( )->get_dont_destroy_node( ).lock( )->remove_child_by_name( "udp_connection" );
-    scene_manager::get_instans( )->get_dont_destroy_node( ).lock( )->remove_child_by_name( "tcp_connection" );
-}
 bool game::init( Json::Value& root )
 {
     set_schedule_update( );
@@ -46,6 +41,11 @@ bool game::init( Json::Value& root )
     bac->on_ended = [ this ]
     {
         std::dynamic_pointer_cast<::audio::buffer_player> ( _back_button.lock( )->get_child_by_name( "sound" ) )->play( );
+
+        auto dont_destroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
+        dont_destroy_node.lock( )->remove_child_by_name( "udp_connection" );
+        dont_destroy_node.lock( )->remove_child_by_name( "tcp_connection" );
+
         scene_manager::get_instans( )->replace( title::create( ) );
     };
     add_child( bac );

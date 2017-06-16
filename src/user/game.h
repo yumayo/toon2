@@ -10,7 +10,6 @@ class game : public scene
 {
 public:
     CREATE_H( game, Json::Value root );
-    ~game( );
     bool init( Json::Value& root );
     void update( float delta ) override;
 private:
