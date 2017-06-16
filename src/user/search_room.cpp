@@ -50,6 +50,9 @@ bool search_room::init( )
                     _tcp_connection.lock( )->on_send_failed = nullptr;
                     _udp_connection.lock( )->on_received_json = nullptr;
 
+                    _tcp_connection.lock( )->set_schedule_update( false );
+                    _udp_connection.lock( )->set_schedule_update( false );
+
                     if ( on_founded ) on_founded( root );
                 }
             };
@@ -58,12 +61,16 @@ bool search_room::init( )
     tcp_connection->on_disconnected = [ this ]
     {
         scene_manager::get_instans( )->top( )->set_block_schedule_event( false );
+        _tcp_connection.lock( )->remove_from_parent( );
+        _udp_connection.lock( )->remove_from_parent( );
         if ( on_not_found ) on_not_found( );
         remove_from_parent( );
     };
     tcp_connection->on_send_failed = [ this ]
     {
         scene_manager::get_instans( )->top( )->set_block_schedule_event( false );
+        _tcp_connection.lock( )->remove_from_parent( );
+        _udp_connection.lock( )->remove_from_parent( );
         if ( on_not_found ) on_not_found( );
         remove_from_parent( );
     };

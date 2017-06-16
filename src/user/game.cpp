@@ -64,6 +64,10 @@ bool game::init( Json::Value& root )
     };
     add_child( bac );
 
+    auto udp_connection = dont_destroy_node.lock( )->get_child_by_name( "udp_connection" );
+    tcp_connection->set_schedule_update( );
+    udp_connection->set_schedule_update( );
+
     return true;
 }
 void game::update( float delta )
