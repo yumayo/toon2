@@ -1,6 +1,6 @@
 {
-   "complete" : false,
-   "feed" : 1892,
+   "complete" : true,
+   "feed" : 1832,
    "id" : 9,
    "max_size" : 20,
    "select_skin_name" : null,
@@ -10,7 +10,10 @@
       "udp_port" : 25565
    },
    "skin" : {
-      "miku" : false,
-      "monta" : true
+      "grass" : true,
+      "monta" : true,
+      "rainbow" : true,
+      "soil" : true,
+      "water" : true
    }
 }
