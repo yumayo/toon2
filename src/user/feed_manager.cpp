@@ -40,24 +40,20 @@ bool feed_manager::init( std::weak_ptr<node> player_manager, Json::Value const& 
 void feed_manager::update( float delta )
 {
     auto pla_manager = std::dynamic_pointer_cast<player_manager>( _player_manager.lock( ) );
-    std::vector<std::weak_ptr<player>> players;
-    players.emplace_back( pla_manager->get_player( ) );
-    for ( auto& c : pla_manager->get_clients( ) ) players.emplace_back( std::dynamic_pointer_cast<player>( c ) );
+    auto player = pla_manager->get_player( );
 
-    for ( auto p : players )
+    for ( auto& child : _player_manager.lock( )->get_children( ) )
     {
-        for ( auto& child : _player_manager.lock( )->get_children( ) )
+        for ( auto& f : _children )
         {
-            for ( auto& f : _children )
-            {
-                auto fee = std::dynamic_pointer_cast<feed>( f );
-                if ( fee->is_captureing( ) ) continue;
+            auto fee = std::dynamic_pointer_cast<feed>( f );
+            if ( fee->is_captureing( ) ) continue;
 
-                // 自分の半径の二倍分の距離から吸い取れます。
-                if ( distance( fee->get_position( ), p.lock( )->get_position( ) ) < fee->get_radius( ) * 2 + p.lock( )->get_radius( ) )
-                {
-                    fee->captured( p.lock( ) );
-                }
+            // 自分の半径の二倍分の距離から吸い取れます。
+            if ( distance( fee->get_position( ), player.lock( )->get_position( ) )
+                 < fee->get_radius( ) * 2 + player.lock( )->get_radius( ) )
+            {
+                fee->captured( player.lock( ) );
             }
         }
     }
