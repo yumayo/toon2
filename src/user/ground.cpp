@@ -1,17 +1,17 @@
 ﻿#include "ground.h"
 #include "player.h"
 #include "player_manager.h"
-#include "cinder/Rand.h"
+#include "user_default.h"
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( ground, std::weak_ptr<node> player_manager )
+CREATE_CPP( ground, std::weak_ptr<node> player_manager, int const& ground_size )
 {
-    CREATE( ground, player_manager );
+    CREATE( ground, player_manager, ground_size );
 }
-bool ground::init( std::weak_ptr<node> player_manager )
+bool ground::init( std::weak_ptr<node> player_manager, int const& ground_size )
 {
-    if ( !renderer::surface::init( vec2( 2048 ), ColorA( 0.1F, 0.1F, 0.1F ) ) ) return false;
+    if ( !renderer::surface::init( vec2( ground_size ), ColorA( 0.1F, 0.1F, 0.1F ) ) ) return false;
 
     gl::Texture::Format format;
     format.setMinFilter( GL_NEAREST );
@@ -26,8 +26,6 @@ bool ground::init( std::weak_ptr<node> player_manager )
 
     set_scale( vec2( 1.0F ) );
 
-    spawn_player( );
-
     return true;
 }
 void ground::update( float delta )
@@ -37,9 +35,9 @@ void ground::update( float delta )
     {
         player_paint_ground( player_mgr->get_player( ) );
 
-        for ( auto& client : player_mgr->get_clients( ) )
+        for ( auto& enemy : player_mgr->get_enemys( ) )
         {
-            player_paint_ground( client );
+            player_paint_ground( enemy );
         }
     }
 }
@@ -51,20 +49,11 @@ void ground::collide( std::weak_ptr<node> player )
     pos.y = clamp( pos.y, 0.0F, size.y );
     player.lock( )->set_position( pos );
 }
-void ground::spawn_player( )
+void ground::player_paint_ground( std::weak_ptr<player> player )
 {
-    auto pla_mgr = _player_manager.lock( );
-    auto pla = pla_mgr->get_child_by_name( "own" );
-    Rand rand( app::getElapsedSeconds( ) * 100 );
-    auto size = get_content_size( ) * get_scale( );
-    pla->set_position( { rand.nextFloat( 0.0F, size.x ), rand.nextFloat( 0.0F, size.y ) } );
-}
-void ground::player_paint_ground( std::weak_ptr<node> player_node )
-{
-    if ( !player_node.lock( ) )return;
-    auto player = std::dynamic_pointer_cast<user::player>( player_node.lock( ) );
-    float radius = player->get_radius( ) / get_scale( ).x;
-    paint_fill_circle( player->get_position( ) / get_scale( ).x, radius, player->get_color( ) );
+    if ( !player.lock( ) ) return;
+    float radius = player.lock( )->get_radius( ) / get_scale( ).x;
+    paint_fill_circle( player.lock( )->get_position( ) / get_scale( ).x, radius, player.lock( )->get_color( ) );
 }
 }
 

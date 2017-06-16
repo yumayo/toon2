@@ -11,13 +11,14 @@ public:
     bool init( Json::Value& root );
     virtual void update( float delta )override;
 public:
-    std::list<std::shared_ptr<node>>& get_clients( );
+    std::list<std::weak_ptr<player>>& get_enemys( );
     std::weak_ptr<player>& get_player( );
 protected:
-    std::weak_ptr<node> _clients;
+    std::list<std::weak_ptr<player>> _enemys;
     std::weak_ptr<player> _player;
     std::weak_ptr<network::udp_connection> _udp_connection;
     std::weak_ptr<network::tcp_client> _tcp_connection;
-    void create_client( Json::Value const& root_client );
+    void create_enemy( Json::Value const& data );
+    void create_player( Json::Value const& data );
 };
 }

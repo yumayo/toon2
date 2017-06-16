@@ -14,7 +14,7 @@ public:
     void update( float delta ) override;
 private:
     std::weak_ptr<field> _field;
-    std::weak_ptr<player> _own;
+    std::weak_ptr<player> _player;
     std::weak_ptr<ground> _ground;
     std::weak_ptr<controller> _controller;
     std::weak_ptr<node> _back_button;

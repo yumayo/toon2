@@ -40,7 +40,7 @@ bool player::init( std::string const& ip_address,
 }
 player::~player( )
 {
-    if ( get_name( ) == "own" )
+    if ( get_name( ) == "player" )
     {
         auto feed_num = user_default::get_instans( )->get_root( )["feed"].asInt( );
         user_default::get_instans( )->get_root( )["feed"] = feed_num + int( _radius - _setup_radius );
@@ -60,7 +60,7 @@ void player::on_captured( std::weak_ptr<node> other )
 {
     auto pla = std::dynamic_pointer_cast<user::player>( other.lock( ) );
     pla->capture( _radius );
-    if ( get_name( ) == "own" )
+    if ( get_name( ) == "player" )
     {
         scene_manager::get_instans( )->replace( title::create( ) );
     }

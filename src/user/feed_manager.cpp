@@ -27,8 +27,6 @@ bool feed_manager::init( std::weak_ptr<node> player_manager, Json::Value const& 
 
     _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "feed_captured", [ this ] ( Json::Value root )
     {
-        app::console( ) << "[tcp] feed_captured" << std::endl;
-        app::console( ) << root << std::endl;
         remove_child_by_tag( root["data"]["erase_tag"].asInt( ) );
         add_child( feed::create( root["data"]["tag"].asInt( ), cinder::vec2( root["data"]["position"][0].asInt( ), root["data"]["position"][1].asInt( ) ) ) );
     } ) );
@@ -41,20 +39,16 @@ void feed_manager::update( float delta )
 {
     auto pla_manager = std::dynamic_pointer_cast<player_manager>( _player_manager.lock( ) );
     auto player = pla_manager->get_player( );
-
-    for ( auto& child : _player_manager.lock( )->get_children( ) )
+    for ( auto& f : _children )
     {
-        for ( auto& f : _children )
-        {
-            auto fee = std::dynamic_pointer_cast<feed>( f );
-            if ( fee->is_captureing( ) ) continue;
+        auto fee = std::dynamic_pointer_cast<feed>( f );
+        if ( fee->is_captureing( ) ) continue;
 
-            // 自分の半径の二倍分の距離から吸い取れます。
-            if ( distance( fee->get_position( ), player.lock( )->get_position( ) )
-                 < fee->get_radius( ) * 2 + player.lock( )->get_radius( ) )
-            {
-                fee->captured( player.lock( ) );
-            }
+        // 自分の半径の二倍分の距離から吸い取れます。
+        if ( distance( fee->get_position( ), player.lock( )->get_position( ) )
+             < fee->get_radius( ) * 2 + player.lock( )->get_radius( ) )
+        {
+            fee->captured( player.lock( ) );
         }
     }
 }
