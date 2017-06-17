@@ -72,6 +72,20 @@ void ground::collide( std::weak_ptr<node> player )
     pos.y = clamp( pos.y, 0.0F, size.y );
     player.lock( )->set_position( pos );
 }
+void ground::close_player( cinder::ColorA const & color )
+{
+    for ( int y = 0; y < _surface.getHeight( ); ++y )
+    {
+        for ( int x = 0; x < _surface.getWidth( ); ++x )
+        {
+            if ( ColorA8u( color ) == _surface.getPixel( ivec2( x, y ) ) )
+            {
+                _surface.setPixel( ivec2( x, y ), ColorA( 0.1F, 0.1F, 0.1F ) );
+            }
+        }
+    }
+    _texture->update( _surface );
+}
 void ground::player_paint_ground( std::weak_ptr<player> player )
 {
     if ( !player.lock( ) ) return;

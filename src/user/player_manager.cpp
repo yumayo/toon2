@@ -4,6 +4,7 @@
 #include "action.hpp"
 #include "scene_manager.h"
 #include "network.hpp"
+#include "ground.h"
 using namespace cinder;
 namespace user
 {
@@ -35,6 +36,15 @@ bool player_manager::init( Json::Value& root )
     {
         // 削除ハンドルを作成。
         auto info = std::make_shared<network::network_object>( root["data"]["ip_address"].asString( ), root["data"]["udp_port"].asInt( ) );
+
+        auto target = std::find_if( _enemys.begin( ), _enemys.end( ), [ info ] ( std::weak_ptr<player>& n )
+        {
+            return **n.lock( )->get_handle( ) == *info;
+        } );
+
+        auto ground_mgr = std::dynamic_pointer_cast<ground>( _ground.lock( ) );
+        ground_mgr->close_player( ( *target ).lock( )->get_color( ) );
+
         // 保存リストの方の削除。
         {
             auto remove_itr = std::remove_if( _enemys.begin( ), _enemys.end( ), [ info ] ( std::weak_ptr<player>& n )
@@ -55,6 +65,7 @@ bool player_manager::init( Json::Value& root )
             } );
             _children.erase( remove_itr, _children.end( ) );
         }
+
         // 削除したとサーバーに通知。
         _udp_connection.lock( )->destroy_client( info );
     } ) );
@@ -155,6 +166,10 @@ std::list<std::weak_ptr<player>>& player_manager::get_enemys( )
 std::weak_ptr<player>& player_manager::get_player( )
 {
     return _player;
+}
+void player_manager::set_ground( std::weak_ptr<node> ground )
+{
+    _ground = ground;
 }
 void player_manager::create_enemy( Json::Value const & client )
 {

@@ -4,7 +4,7 @@
 #ifdef _DEBUG
 CINDER_APP( app_delegate, cinder::app::RendererGl, [ & ] ( cinder::app::App::Settings *settings )
 {
-    settings->setConsoleWindowEnabled( );
+    //settings->setConsoleWindowEnabled( );
     settings->setWindowSize( 1280, 720 );
     settings->setTitle( u8"toon2" );
     settings->setResizable( false );
@@ -12,7 +12,7 @@ CINDER_APP( app_delegate, cinder::app::RendererGl, [ & ] ( cinder::app::App::Set
 #else
 CINDER_APP( app_delegate, cinder::app::RendererGl, [ & ] ( cinder::app::App::Settings *settings )
 {
-    settings->setConsoleWindowEnabled( );
+    //settings->setConsoleWindowEnabled( );
     settings->setWindowSize( 1280, 720 );
     settings->setTitle( u8"toon2" );
     settings->setResizable( false );

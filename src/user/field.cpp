@@ -17,6 +17,7 @@ bool field::init( Json::Value& root )
 
     auto s_player_manager = player_manager::create( root );
     auto s_ground = ground::create( s_player_manager, root );
+    s_player_manager->set_ground( s_ground );
     auto s_feed_manager = feed_manager::create( s_player_manager, root["data"]["feeds"] );
 
     // 1
