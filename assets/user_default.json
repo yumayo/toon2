@@ -1,9 +1,9 @@
 {
    "complete" : true,
-   "feed" : 1832,
-   "id" : 9,
+   "feed" : 2188,
+   "id" : 1,
    "max_size" : 20,
-   "select_skin_name" : null,
+   "select_skin_name" : "grass",
    "server" : {
       "address" : "192.168.11.2",
       "tcp_port" : 25564,

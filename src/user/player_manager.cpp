@@ -124,15 +124,28 @@ void player_manager::update( float delta )
     if ( !_udp_connection.lock( ) ) return;
 
     // 最後に自分のポジションなどを相手に送ります。
-    Json::Value root;
-    root["name"] = "game_update";
-    root["data"]["position"][0] = _player.lock( )->get_position( ).x;
-    root["data"]["position"][1] = _player.lock( )->get_position( ).y;
-    root["data"]["radius"] = _player.lock( )->get_radius( );
-
-    for ( auto& enemy : _enemys )
     {
-        _udp_connection.lock( )->write( enemy.lock( )->get_handle( ), root );
+        Json::Value root;
+        root["name"] = "ground";
+        root["data"]["position"][0] = _player.lock( )->get_position( ).x;
+        root["data"]["position"][1] = _player.lock( )->get_position( ).y;
+        root["data"]["radius"] = _player.lock( )->get_radius( );
+
+        auto server_addr = user_default::get_instans( )->get_root( )["server"]["address"].asString( );
+        auto server_port = user_default::get_instans( )->get_root( )["server"]["udp_port"].asInt( );
+        _udp_connection.lock( )->write( std::make_shared<network::network_object>( server_addr, server_port ), root );
+    }
+    {
+        Json::Value root;
+        root["name"] = "game_update";
+        root["data"]["position"][0] = _player.lock( )->get_position( ).x;
+        root["data"]["position"][1] = _player.lock( )->get_position( ).y;
+        root["data"]["radius"] = _player.lock( )->get_radius( );
+
+        for ( auto& enemy : _enemys )
+        {
+            _udp_connection.lock( )->write( enemy.lock( )->get_handle( ), root );
+        }
     }
 }
 std::list<std::weak_ptr<player>>& player_manager::get_enemys( )
@@ -143,15 +156,15 @@ std::weak_ptr<player>& player_manager::get_player( )
 {
     return _player;
 }
-void player_manager::create_enemy( Json::Value const & data )
+void player_manager::create_enemy( Json::Value const & client )
 {
     app::console( ) << "create_enemy" << std::endl;
-    app::console( ) << data << std::endl;
+    app::console( ) << client << std::endl;
 
-    auto enemy = player::create( data["ip_address"].asString( ), data["udp_port"].asInt( ),
-                                 data["select_skin_name"].asString( ).empty( ) ? "" : "skin/" + data["select_skin_name"].asString( ) + ".png" );
+    auto enemy = player::create( client["ip_address"].asString( ), client["udp_port"].asInt( ),
+                                 client["select_skin_name"].asString( ).empty( ) ? "" : "skin/" + client["select_skin_name"].asString( ) + ".png" );
 
-    enemy->set_color( data["color"].asString( ) == "purple" ? ColorA { 0.6F, 0.2F, 0.8F } : ColorA { 0.2F, 0.8F, 0.6F } );
+    enemy->set_color( ColorA( client["color"][0].asFloat( ), client["color"][1].asFloat( ), client["color"][2].asFloat( ) ) );
     enemy->set_name( "enemy" );
 
     _enemys.emplace_back( enemy );
@@ -165,7 +178,7 @@ void player_manager::create_player( Json::Value const & data )
     auto pla = player::create( data["ip_address"].asString( ), data["udp_port"].asInt( ),
                                data["select_skin_name"].asString( ).empty( ) ? "" : "skin/" + data["select_skin_name"].asString( ) + ".png" );
 
-    pla->set_color( data["color"].asString( ) == "purple" ? ColorA { 0.6F, 0.2F, 0.8F } : ColorA { 0.2F, 0.8F, 0.6F } );
+    pla->set_color( ColorA( data["color"][0].asFloat( ), data["color"][1].asFloat( ), data["color"][2].asFloat( ) ) );
     pla->set_position( vec2( data["position"][0].asInt( ), data["position"][1].asInt( ) ) );
     pla->set_name( "player" );
 

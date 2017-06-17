@@ -4,6 +4,7 @@
 #include "scene_manager.h"
 #include "user_default.h"
 #include "utility.hpp"
+#include "action.hpp"
 using namespace cinder;
 namespace user
 {
@@ -27,9 +28,28 @@ bool feed_manager::init( std::weak_ptr<node> player_manager, Json::Value const& 
 
     _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "feed_captured", [ this ] ( Json::Value root )
     {
-        remove_child_by_tag( root["data"]["erase_tag"].asInt( ) );
-        add_child( feed::create( root["data"]["tag"].asInt( ), cinder::vec2( root["data"]["position"][0].asInt( ), root["data"]["position"][1].asInt( ) ) ) );
+        for ( auto& obj : root["data"] )
+        {
+            remove_child_by_tag( obj["erase_tag"].asInt( ) );
+            add_child( feed::create( obj["tag"].asInt( ), cinder::vec2( obj["position"][0].asInt( ), obj["position"][1].asInt( ) ) ) );
+        }
     } ) );
+
+    // エサは0.2秒ごとに同期を取ります。
+    // 短い時間でwriteするとどこかで情報をロスします。
+    // tcpでもそんなことあるんやな。
+    // 送信エラーとかにもならないし。
+    run_action( action::repeat_forever::create( action::sequence::create( action::delay::create( 0.2F ), action::call_func::create( [ this ] 
+    {
+        if ( _captured_feed_number != 0 )
+        {
+            _captured_feed_data["name"] = "feed_captured";
+            _tcp_connection.lock( )->write( Json::FastWriter( ).write( _captured_feed_data ) );
+
+            _captured_feed_number = 0;
+            _captured_feed_data.clear( );
+        }
+    } ) ) ) );
 
     set_schedule_update( );
 
@@ -56,10 +76,10 @@ void feed_manager::update( float delta )
         }
     }
 }
-void feed_manager::on_feed_captured( Json::Value const& root )
+void feed_manager::on_feed_captured( int tag )
 {
-    utility::log( "[%d]on_feed_captured", root["data"]["tag"].asInt( ) );
-    _tcp_connection.lock( )->write( Json::FastWriter( ).write( root ) );
+    utility::log( "[%d]on_feed_captured", tag );
+    _captured_feed_data["data"][_captured_feed_number++]["tag"] = tag;
 }
 }
 

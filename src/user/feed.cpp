@@ -61,10 +61,7 @@ void feed::on_captured( std::weak_ptr<node> other )
 
         if ( auto feed_mgr = std::dynamic_pointer_cast<feed_manager>( get_parent( ) ) )
         {
-            Json::Value root;
-            root["name"] = "feed_captured";
-            root["data"]["tag"] = get_tag( );
-            feed_mgr->on_feed_captured( root );
+            feed_mgr->on_feed_captured( get_tag( ) );
         }
     }
 }

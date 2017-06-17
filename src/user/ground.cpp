@@ -5,13 +5,36 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( ground, std::weak_ptr<node> player_manager, int const& ground_size )
+CREATE_CPP( ground, std::weak_ptr<node> player_manager, Json::Value const& root )
 {
-    CREATE( ground, player_manager, ground_size );
+    CREATE( ground, player_manager, root );
 }
-bool ground::init( std::weak_ptr<node> player_manager, int const& ground_size )
+bool ground::init( std::weak_ptr<node> player_manager, Json::Value const& root )
 {
-    if ( !renderer::surface::init( vec2( ground_size ), ColorA( 0.1F, 0.1F, 0.1F ) ) ) return false;
+    if ( !renderer::surface::init( vec2( root["data"]["ground_size"].asInt( ) ), ColorA( 0.1F, 0.1F, 0.1F ) ) ) return false;
+
+    std::map<int, ColorA> color_map;
+    color_map.insert( std::make_pair( 0, ColorA( 0.1F, 0.1F, 0.1F ) ) ); // ID 0 は黒色にします。
+    color_map.insert( std::make_pair( root["data"]["id"].asInt( ), ColorA( root["data"]["color"][0].asFloat( ),
+                                                                           root["data"]["color"][1].asFloat( ),
+                                                                           root["data"]["color"][2].asFloat( ) ) ) );
+    for ( auto& j : root["data"]["clients"] )
+    {
+        color_map.insert( std::make_pair( j["id"].asInt( ), ColorA( j["color"][0].asFloat( ),
+                                                                    j["color"][1].asFloat( ),
+                                                                    j["color"][2].asFloat( ) ) ) );
+    }
+
+    auto& ground_pixel = root["data"]["ground_pixel"];
+    for ( int y = 0; y < _surface.getHeight( ); ++y )
+    {
+        for ( int x = 0; x < _surface.getWidth( ); ++x )
+        {
+            auto id = ground_pixel[x][y].asInt( );
+            auto color = color_map[id];
+            _surface.setPixel( ivec2( x, y ), color );
+        }
+    }
 
     gl::Texture::Format format;
     format.setMinFilter( GL_NEAREST );
@@ -24,7 +47,7 @@ bool ground::init( std::weak_ptr<node> player_manager, int const& ground_size )
 
     set_schedule_update( );
 
-    set_scale( vec2( 1.0F ) );
+    set_scale( vec2( root["data"]["ground_scale"].asInt( ) ) );
 
     return true;
 }
