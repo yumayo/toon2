@@ -1,7 +1,6 @@
 #pragma once
 #include "node.h"
 #include "player.h"
-#include "network.hpp"
 namespace user
 {
 class player_manager : public node

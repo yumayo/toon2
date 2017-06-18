@@ -1,9 +1,8 @@
 #pragma once
 #include "captured_object.h"
 #include "renderer/circle.h"
-#include "toon_packet.h"
 #include "cinder/gl/Texture.h"
-#include "network/network_object.h"
+#include "network.hpp"
 namespace user
 {
 class player : public captured_object
@@ -29,5 +28,7 @@ protected:
     float _target_radius = 0.0F;
     float _setup_radius = 20.0F;
     std::shared_ptr<network::network_object> _handle;
+    std::weak_ptr<network::tcp_client> _tcp_connection;
+
 };
 }

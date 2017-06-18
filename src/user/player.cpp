@@ -2,7 +2,7 @@
 #include "action.hpp"
 #include "utility/string_utility.h"
 #include "skin.h"
-#include "title.h"
+#include "scene_manager.h"
 using namespace cinder;
 namespace user
 {
@@ -14,6 +14,9 @@ CREATE_CPP( player, std::string const& ip_address,
 bool player::init( std::string const& ip_address,
                    int port, std::string const& relative_path_skin )
 {
+    auto dont_destroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
+    _tcp_connection = std::dynamic_pointer_cast<network::tcp_client>( dont_destroy_node.lock( )->get_child_by_name( "tcp_connection" ) );
+
     _handle = std::make_shared<network::network_object>( ip_address, port );
 
     _setup_radius = 20.0F;
@@ -55,11 +58,13 @@ void player::set_radius( float value )
 }
 void player::on_captured( std::weak_ptr<node> other )
 {
-    auto pla = std::dynamic_pointer_cast<user::player>( other.lock( ) );
-    pla->capture( _radius );
     if ( get_name( ) == "player" )
     {
-        scene_manager::get_instans( )->replace( title::create( ) );
+        Json::Value root;
+        root["name"] = "player_on_captured";
+        root["data"]["score"] = _radius;
+        root["data"]["id"] = other.lock( )->get_tag( );
+        _tcp_connection.lock( )->write( Json::FastWriter( ).write( root ) );
     }
 }
 void player::capture( float score )

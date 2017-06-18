@@ -5,6 +5,7 @@
 #include "scene_manager.h"
 #include "network.hpp"
 #include "ground.h"
+#include "title.h"
 using namespace cinder;
 namespace user
 {
@@ -76,6 +77,18 @@ bool player_manager::init( Json::Value& root )
         // udpの方にクライアントの情報を渡してあげます。
         _udp_connection.lock( )->regist_client( root["data"]["ip_address"].asString( ), root["data"]["udp_port"].asInt( ) );
         create_enemy( root["data"] );
+    } ) );
+
+    // クライアントの捕食が発生したら呼ばれます。
+    _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "player_capture", [ this ] ( Json::Value root )
+    {
+        _player.lock( )->capture( root["data"]["score"].asFloat( ) );
+    } ) );
+
+    // サーバーから死んでくれと言われたらタイトルに戻ります。
+    _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "kill", [ this ] ( Json::Value root )
+    {
+        scene_manager::get_instans( )->replace( title::create( ) );
     } ) );
 
     // 他のオブジェクトからゲームの更新命令がされたら呼ばれます。
@@ -171,16 +184,17 @@ void player_manager::set_ground( std::weak_ptr<node> ground )
 {
     _ground = ground;
 }
-void player_manager::create_enemy( Json::Value const & client )
+void player_manager::create_enemy( Json::Value const & data )
 {
     app::console( ) << "create_enemy" << std::endl;
-    app::console( ) << client << std::endl;
+    app::console( ) << data << std::endl;
 
-    auto enemy = player::create( client["ip_address"].asString( ), client["udp_port"].asInt( ),
-                                 client["select_skin_name"].asString( ).empty( ) ? "" : "skin/" + client["select_skin_name"].asString( ) + ".png" );
+    auto enemy = player::create( data["ip_address"].asString( ), data["udp_port"].asInt( ),
+                                 data["select_skin_name"].asString( ).empty( ) ? "" : "skin/" + data["select_skin_name"].asString( ) + ".png" );
 
-    enemy->set_color( ColorA( client["color"][0].asFloat( ), client["color"][1].asFloat( ), client["color"][2].asFloat( ) ) );
+    enemy->set_color( ColorA( data["color"][0].asFloat( ), data["color"][1].asFloat( ), data["color"][2].asFloat( ) ) );
     enemy->set_name( "enemy" );
+    enemy->set_tag( data["id"].asInt( ) );
 
     _enemys.emplace_back( enemy );
     add_child( enemy );
@@ -196,6 +210,7 @@ void player_manager::create_player( Json::Value const & data )
     pla->set_color( ColorA( data["color"][0].asFloat( ), data["color"][1].asFloat( ), data["color"][2].asFloat( ) ) );
     pla->set_position( vec2( data["position"][0].asInt( ), data["position"][1].asInt( ) ) );
     pla->set_name( "player" );
+    pla->set_tag( data["id"].asInt( ) );
 
     _player = pla;
     add_child( pla );
