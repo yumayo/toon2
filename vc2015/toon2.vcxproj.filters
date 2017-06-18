@@ -260,6 +260,9 @@
     <ClCompile Include="..\src\user\score_board.cpp">
       <Filter>User Files\user</Filter>
     </ClCompile>
+    <ClCompile Include="..\cinder_cocoslike\renderer\sprite_cubic.cpp">
+      <Filter>cinder_cocoslike\renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -468,6 +471,9 @@
     </ClInclude>
     <ClInclude Include="..\src\user\score_board.h">
       <Filter>User Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cinder_cocoslike\renderer\sprite_cubic.h">
+      <Filter>cinder_cocoslike\renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

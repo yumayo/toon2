@@ -6,6 +6,7 @@
 #include "network.hpp"
 #include "ground.h"
 #include "title.h"
+#include "boost/lexical_cast.hpp"
 using namespace cinder;
 namespace user
 {
@@ -183,6 +184,27 @@ std::weak_ptr<player>& player_manager::get_player( )
 void player_manager::set_ground( std::weak_ptr<node> ground )
 {
     _ground = ground;
+}
+void player_manager::remove_all_crown( )
+{
+    _player.lock( )->remove_crown( );
+    for ( auto& enemy : _enemys )
+    {
+        enemy.lock( )->remove_crown( );
+    }
+}
+void player_manager::set_all_crown( std::vector<int> const& ids )
+{
+    for ( int i = 0; i < ids.size( ); ++i )
+    {
+        if ( auto player = get_child_by_tag( ids[i] ) )
+        {
+            auto p = std::dynamic_pointer_cast<user::player>( player );
+            auto s = renderer::sprite_cubic::create( "crown" + boost::lexical_cast<std::string>( i + 1 ) + ".png" );
+            s->set_scale( vec2( 2.0F ) );
+            p->set_crown( s );
+        }
+    }
 }
 void player_manager::create_enemy( Json::Value const & data )
 {

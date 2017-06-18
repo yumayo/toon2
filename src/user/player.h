@@ -20,6 +20,8 @@ public:
     void capture( float score );
     void move( cinder::vec2 axis );
     void set_color( cinder::ColorA value ) override;
+    void remove_crown( );
+    void set_crown( std::weak_ptr<node> crown );
     network::network_handle get_handle( );
 protected:
     std::weak_ptr<renderer::circle> _base;

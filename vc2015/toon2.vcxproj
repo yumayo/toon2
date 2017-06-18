@@ -155,6 +155,7 @@
     <ClCompile Include="..\cinder_cocoslike\renderer\rect_edge.cpp" />
     <ClCompile Include="..\cinder_cocoslike\renderer\sprite.cpp" />
     <ClCompile Include="..\cinder_cocoslike\renderer\sprite_animation.cpp" />
+    <ClCompile Include="..\cinder_cocoslike\renderer\sprite_cubic.cpp" />
     <ClCompile Include="..\cinder_cocoslike\renderer\surface.cpp" />
     <ClCompile Include="..\cinder_cocoslike\scene.cpp" />
     <ClCompile Include="..\cinder_cocoslike\scene_manager.cpp" />
@@ -239,6 +240,7 @@
     <ClInclude Include="..\cinder_cocoslike\renderer\rect_edge.h" />
     <ClInclude Include="..\cinder_cocoslike\renderer\sprite.h" />
     <ClInclude Include="..\cinder_cocoslike\renderer\sprite_animation.h" />
+    <ClInclude Include="..\cinder_cocoslike\renderer\sprite_cubic.h" />
     <ClInclude Include="..\cinder_cocoslike\renderer\surface.h" />
     <ClInclude Include="..\cinder_cocoslike\scene.h" />
     <ClInclude Include="..\cinder_cocoslike\scene_manager.h" />

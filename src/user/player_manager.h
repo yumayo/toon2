@@ -13,6 +13,8 @@ public:
     std::list<std::weak_ptr<player>>& get_enemys( );
     std::weak_ptr<player>& get_player( );
     void set_ground( std::weak_ptr<node> ground );
+    void remove_all_crown( );
+    void set_all_crown( std::vector<int> const& ids );
 protected:
     std::list<std::weak_ptr<player>> _enemys;
     std::weak_ptr<player> _player;

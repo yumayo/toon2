@@ -65,7 +65,7 @@ bool game::init( Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer, 
     };
     add_child( bac );
 
-    add_child( score_board::create( vec2( 300, 300 ) ) );
+    add_child( score_board::create( _field.lock( )->get_child_by_name( "player_manager" ), vec2( 300, 300 ) ) );
 
     auto udp_connection = dont_destroy_node.lock( )->get_child_by_name( "udp_connection" );
     tcp_connection->set_schedule_update( );

@@ -55,6 +55,11 @@ void player::set_radius( float value )
     _radius = value;
     _base.lock( )->set_radius( get_radius( ) );
     _mask.lock( )->set_radius( get_radius( ) );
+
+    if ( auto crown = _base.lock( )->get_child_by_name( "crown" ) )
+    {
+        crown->set_scale( vec2( _radius / ( crown->get_content_size( ).x / 2 ) ) );
+    }
 }
 void player::on_captured( std::weak_ptr<node> other )
 {
@@ -95,6 +100,23 @@ void user::player::set_color( cinder::ColorA value )
 {
     node::set_color( value );
     _mask.lock( )->set_color( value );
+}
+void player::remove_crown( )
+{
+    if ( auto crown = _base.lock( )->get_child_by_name( "crown" ) )
+    {
+        crown->remove_from_parent( );
+    }
+}
+void player::set_crown( std::weak_ptr<node> crown )
+{
+    crown.lock( )->set_name( "crown" );
+    _base.lock( )->add_child( crown.lock( ) );
+
+    if ( auto crown = _base.lock( )->get_child_by_name( "crown" ) )
+    {
+        crown->set_scale( vec2( _radius / ( crown->get_content_size( ).x / 2 ) ) );
+    }
 }
 network::network_handle user::player::get_handle( )
 {
