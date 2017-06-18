@@ -15,10 +15,10 @@ public:
     virtual ~player( );
 public:
     float get_radius( );
+    float get_startup_radius( );
     void set_radius( float value );
     void on_captured( std::weak_ptr<node> other ) override;
     void capture( float score );
-    void move( cinder::vec2 axis );
     void set_color( cinder::ColorA value ) override;
     void remove_crown( );
     void set_crown( std::weak_ptr<node> crown );

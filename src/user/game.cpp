@@ -76,7 +76,21 @@ bool game::init( Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer, 
 void game::update( float delta )
 {
     // カメラのアップデート
+
+    // 0~
+    auto radius = _player.lock( )->get_radius( ) - _player.lock( )->get_startup_radius( );
+
+    // ~300
+    radius = glm::clamp( radius, 0.0F, 300.0F );
+
+    // 0.0F ~ 1.0F;
+    float r = radius / 300.0F;
+
+    auto scale = 1.0F + 1.0F - easeOutCirc( r ) * 1.5F;
+
+    _field.lock( )->set_scale( vec2( scale ) );
+
     auto win_half = vec2( app::getWindowSize( ) ) * 0.5F;
-    if ( _player.lock( ) ) _field.lock( )->set_position( win_half - _player.lock( )->get_position( ) );
+    if ( _player.lock( ) ) _field.lock( )->set_position( win_half - _player.lock( )->get_position( ) * _field.lock( )->get_scale( ).x );
 }
 }

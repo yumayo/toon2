@@ -13,7 +13,7 @@ CREATE_CPP( score_board, std::shared_ptr<node> player_manager, cinder::vec2 size
 }
 bool score_board::init( std::shared_ptr<node> player_manager, cinder::vec2 size )
 {
-    set_name( "score_board" );
+    set_name( "paint_score" );
 
     _player_manager = player_manager;
 
@@ -26,12 +26,12 @@ bool score_board::init( std::shared_ptr<node> player_manager, cinder::vec2 size 
     auto l = renderer::label::create( get_name( ), "misaki_gothic.ttf", 48 );
     l->set_color( ColorA( 0, 0, 0 ) );
     l->set_anchor_point( vec2( 0.5F, 0 ) );
-    l->set_position( vec2( get_content_size( ).x / 2, 0 ) );
+    l->set_position( vec2( get_content_size( ).x / 2, 6 ) );
     add_child( l );
 
-    auto scores = rect::create( vec2( size.x - 10 * 2, size.y - 48 - 10 ) );
+    auto scores = rect::create( vec2( size.x - 10 * 2, size.y - 42 - 10 ) );
     scores->set_color( ColorA( 1, 1, 1, 0.5F ) );
-    scores->set_position( vec2( 10, 48 ) );
+    scores->set_position( vec2( 10, 42 ) );
     scores->set_anchor_point( vec2( 0 ) );
     scores->set_pivot( vec2( 0 ) );
     scores->set_name( "scores" );

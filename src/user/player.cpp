@@ -50,6 +50,10 @@ float player::get_radius( )
 {
     return _radius;
 }
+float player::get_startup_radius( )
+{
+    return _setup_radius;
+}
 void player::set_radius( float value )
 {
     _radius = value;
@@ -81,20 +85,14 @@ void player::capture( float score )
 
     // アクションは終了済み。
     auto sub = _target_radius - _radius;
-    sub = clamp( sub, 0.0F, 2.0F );
-    auto act = action::ease<EaseOutSine>::create( action::float_to::create( sub, _radius, _target_radius, [ this ] ( float value )
+    auto t = 0.2F + easeOutCubic( clamp( sub, 0.0F, 50.0F ) / 50.0F ) * 4.8F;
+    auto act = action::ease<EaseOutSine>::create( action::float_to::create( t, _radius, _target_radius, [ this ] ( float value )
     {
         set_radius( value );
     }
     ) );
     act->set_name( "capture_animation" );
     run_action( act );
-}
-void player::move( cinder::vec2 axis )
-{
-    cinder::vec2 speed = axis * 300.0F; // 一秒間あたりの速さ。
-    speed = speed * ( 1.0F - easeInOutSine( cinder::clamp( ( _radius - _setup_radius ) / 200.0F, 0.0F, 0.8F ) ) );
-    set_position( get_position( ) + speed );
 }
 void user::player::set_color( cinder::ColorA value )
 {
