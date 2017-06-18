@@ -7,9 +7,9 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( game, Json::Value root )
+CREATE_CPP( game, Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer, std::vector<std::vector<unsigned char>>& ground_buffer )
 {
-    CREATE( game, root );
+    CREATE( game, root, feeds_buffer, ground_buffer );
 }
 game::~game( )
 {
@@ -17,7 +17,7 @@ game::~game( )
     dont_destroy_node.lock( )->remove_child_by_name( "udp_connection" );
     dont_destroy_node.lock( )->remove_child_by_name( "tcp_connection" );
 }
-bool game::init( Json::Value& root )
+bool game::init( Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer, std::vector<std::vector<unsigned char>>& ground_buffer )
 {
     set_schedule_update( );
 
@@ -34,7 +34,7 @@ bool game::init( Json::Value& root )
         scene_manager::get_instans( )->replace( title::create( ) );
     };
 
-    if ( auto field = field::create( root ) )
+    if ( auto field = field::create( root, feeds_buffer, ground_buffer ) )
     {
         _field = field;
         add_child( field );

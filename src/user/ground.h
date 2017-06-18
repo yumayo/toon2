@@ -7,8 +7,8 @@ namespace user
 class ground : public renderer::surface
 {
 public:
-    CREATE_H( ground, std::weak_ptr<node> player_manager, Json::Value const& root );
-    bool init( std::weak_ptr<node> player_manager, Json::Value const& root );
+    CREATE_H( ground, std::weak_ptr<node> player_manager, Json::Value const& root, std::vector<std::vector<unsigned char>>& ground_buffer );
+    bool init( std::weak_ptr<node> player_manager, Json::Value const& root, std::vector<std::vector<unsigned char>>& ground_buffer );
     void update( float delta ) override;
 public:
     // ControllerÇÃÇ›Ç™àµÇ¢Ç‹Ç∑ÅB

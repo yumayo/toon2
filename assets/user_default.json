@@ -1,11 +1,11 @@
 {
    "complete" : true,
-   "feed" : 3358,
-   "id" : 67,
+   "feed" : 3667,
+   "id" : 3,
    "max_size" : 20,
    "select_skin_name" : "grass",
    "server" : {
-      "address" : "127.0.0.1",
+      "address" : "192.168.11.2",
       "tcp_port" : 25564,
       "udp_port" : 25565
    },

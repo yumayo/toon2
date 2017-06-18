@@ -8,11 +8,11 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( feed_manager, std::weak_ptr<node> player_manager, Json::Value const& feed_root )
+CREATE_CPP( feed_manager, std::weak_ptr<node> player_manager, std::map<int, cinder::ivec2>& feeds_buffer )
 {
-    CREATE( feed_manager, player_manager, feed_root );
+    CREATE( feed_manager, player_manager, feeds_buffer );
 }
-bool feed_manager::init( std::weak_ptr<node> player_manager, Json::Value const& feed_root )
+bool feed_manager::init( std::weak_ptr<node> player_manager, std::map<int, cinder::ivec2>& feeds_buffer )
 {
     set_name( "feed_manager" );
 
@@ -21,9 +21,9 @@ bool feed_manager::init( std::weak_ptr<node> player_manager, Json::Value const& 
     auto dont_destroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
     _tcp_connection = std::dynamic_pointer_cast<network::tcp_client>( dont_destroy_node.lock( )->get_child_by_name( "tcp_connection" ) );
 
-    for ( auto& f : feed_root )
+    for ( auto& f : feeds_buffer )
     {
-        add_child( feed::create( f["tag"].asInt( ), cinder::vec2( f["position"][0].asInt( ), f["position"][1].asInt( ) ) ) );
+        add_child( feed::create( f.first, cinder::vec2( f.second ) ) );
     }
 
     _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "feed_captured", [ this ] ( Json::Value root )
@@ -39,7 +39,7 @@ bool feed_manager::init( std::weak_ptr<node> player_manager, Json::Value const& 
     // 短い時間でwriteするとどこかで情報をロスします。
     // tcpでもそんなことあるんやな。
     // 送信エラーとかにもならないし。
-    run_action( action::repeat_forever::create( action::sequence::create( action::delay::create( 0.2F ), action::call_func::create( [ this ] 
+    run_action( action::repeat_forever::create( action::sequence::create( action::delay::create( 0.2F ), action::call_func::create( [ this ]
     {
         if ( _captured_feed_number != 0 )
         {

@@ -67,11 +67,11 @@ bool title::init( )
         std::dynamic_pointer_cast<::audio::buffer_player> ( _start_button.lock( )->get_child_by_name( "sound" ) )->play( );
         set_block_schedule_event( );
         auto search_handle = search_room::create( );
-        search_handle->on_founded = [ this ] ( Json::Value& root )
+        search_handle->on_founded = [ this ] ( Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer, std::vector<std::vector<unsigned char>>& ground_buffer )
         {
-            change_action( [ root ] 
+            change_action( [ &root, &feeds_buffer, &ground_buffer ]
             {
-                scene_manager::get_instans( )->replace( game::create( root ) );
+                scene_manager::get_instans( )->replace( game::create( root, feeds_buffer, ground_buffer ) );
             } );
         };
         search_handle->on_not_found = [ this ] ( )

@@ -5,11 +5,11 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( ground, std::weak_ptr<node> player_manager, Json::Value const& root )
+CREATE_CPP( ground, std::weak_ptr<node> player_manager, Json::Value const& root, std::vector<std::vector<unsigned char>>& ground_buffer )
 {
-    CREATE( ground, player_manager, root );
+    CREATE( ground, player_manager, root, ground_buffer );
 }
-bool ground::init( std::weak_ptr<node> player_manager, Json::Value const& root )
+bool ground::init( std::weak_ptr<node> player_manager, Json::Value const& root, std::vector<std::vector<unsigned char>>& ground_buffer )
 {
     if ( !renderer::surface::init( vec2( root["data"]["ground_size"].asInt( ) ), ColorA( 0.1F, 0.1F, 0.1F ) ) ) return false;
 
@@ -25,12 +25,11 @@ bool ground::init( std::weak_ptr<node> player_manager, Json::Value const& root )
                                                                     j["color"][2].asFloat( ) ) ) );
     }
 
-    auto& ground_pixel = root["data"]["ground_pixel"];
     for ( int y = 0; y < _surface.getHeight( ); ++y )
     {
         for ( int x = 0; x < _surface.getWidth( ); ++x )
         {
-            auto id = ground_pixel[x][y].asInt( );
+            auto id = ground_buffer[x][y];
             auto color = color_map[id];
             _surface.setPixel( ivec2( x, y ), color );
         }

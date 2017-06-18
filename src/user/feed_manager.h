@@ -7,8 +7,8 @@ namespace user
 class feed_manager : public node
 {
 public:
-    CREATE_H( feed_manager, std::weak_ptr<node> player_manager, Json::Value const& feed_root );
-    bool init( std::weak_ptr<node> player_manager, Json::Value const& feed_root );
+    CREATE_H( feed_manager, std::weak_ptr<node> player_manager, std::map<int, cinder::ivec2>& feeds_buffer );
+    bool init( std::weak_ptr<node> player_manager, std::map<int, cinder::ivec2>& feeds_buffer );
     void update( float delta ) final override;
     void on_feed_captured( int tag );
 protected:

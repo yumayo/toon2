@@ -41,19 +41,81 @@ bool search_room::init( )
                 {
                     if ( root["name"].asString( ) == "founded" )
                     {
-                        _tcp_connection.lock( )->on_connect_failed = nullptr;
-                        _tcp_connection.lock( )->on_received_json = nullptr;
-                        _tcp_connection.lock( )->on_send_failed = nullptr;
-                        _tcp_connection.lock( )->on_disconnected = nullptr;
-                        _tcp_connection.lock( )->on_connection = nullptr;
-                        _tcp_connection.lock( )->set_schedule_update( false );
-
-                        _udp_connection.lock( )->on_received_json = nullptr;
-                        _udp_connection.lock( )->set_schedule_update( false );
-
-                        if ( on_founded ) on_founded( root );
+                        _is_founded = true;
+                        _root_buffer = root;
                     }
                 };
+            }
+        };
+        _tcp_connection.lock( )->on_readed = [ this ] ( char const* data, size_t byte )
+        {
+            if ( !_is_founded ) return;
+
+            int index = 0;
+
+            struct header
+            {
+                char name[16];
+                int byte;
+            };
+            struct feed_data
+            {
+                int tag;
+                int x;
+                int y;
+            };
+
+            char* wriable_data = const_cast<char*>( data );
+
+            // エサの情報を読み込む。
+            {
+                header* h = new( wriable_data + index ) header;
+                std::string name( h->name );
+                index += sizeof( header );
+
+                if ( name == "feed_data" )
+                {
+                    int const feed_number = _root_buffer["data"]["feed_number"].asInt( );
+                    for ( int i = 0; i < feed_number; ++i )
+                    {
+                        feed_data* f = new( wriable_data + index ) feed_data;
+                        _feeds_buffer[f->tag] = cinder::ivec2( f->x, f->y );
+                        index += sizeof( feed_data );
+                    }
+                }
+            }
+
+            // グラウンドの情報を読み込む。
+            {
+                header* h = new( wriable_data + index ) header;
+                std::string name( h->name );
+                index += sizeof( header );
+
+                if ( name == "ground_data" )
+                {
+                    int const ground_size = _root_buffer["data"]["ground_size"].asInt( );
+                    _ground_buffer = std::vector<std::vector<unsigned char>>( ground_size, std::vector<unsigned char>( ground_size ) );
+                    for ( int y = 0; y < ground_size; ++y )
+                    {
+                        for ( int x = 0; x < ground_size; ++x )
+                        {
+                            _ground_buffer[x][y] = data[index];
+                            index += sizeof( unsigned char );
+                        }
+                    }
+
+                    _tcp_connection.lock( )->on_connect_failed = nullptr;
+                    _tcp_connection.lock( )->on_received_json = nullptr;
+                    _tcp_connection.lock( )->on_send_failed = nullptr;
+                    _tcp_connection.lock( )->on_disconnected = nullptr;
+                    _tcp_connection.lock( )->on_connection = nullptr;
+                    _tcp_connection.lock( )->set_schedule_update( false );
+
+                    _udp_connection.lock( )->on_received_json = nullptr;
+                    _udp_connection.lock( )->set_schedule_update( false );
+
+                    if ( on_founded ) on_founded( _root_buffer, _feeds_buffer, _ground_buffer );
+                }
             }
         };
     };
