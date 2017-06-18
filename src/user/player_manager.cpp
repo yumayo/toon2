@@ -193,6 +193,7 @@ void player_manager::create_enemy( Json::Value const & data )
                                  data["select_skin_name"].asString( ).empty( ) ? "" : "skin/" + data["select_skin_name"].asString( ) + ".png" );
 
     enemy->set_color( ColorA( data["color"][0].asFloat( ), data["color"][1].asFloat( ), data["color"][2].asFloat( ) ) );
+    enemy->set_position( vec2( data["position"][0].asInt( ), data["position"][1].asInt( ) ) );
     enemy->set_name( "enemy" );
     enemy->set_tag( data["id"].asInt( ) );
 
