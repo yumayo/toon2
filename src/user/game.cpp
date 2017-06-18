@@ -4,6 +4,7 @@
 #include "scene_manager.h"
 #include "title.h"
 #include "network.hpp"
+#include "score_board.h"
 using namespace cinder;
 namespace user
 {
@@ -24,8 +25,8 @@ bool game::init( Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer, 
     auto dont_destroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
 
     auto tcp_connection = std::dynamic_pointer_cast<network::tcp_client>( dont_destroy_node.lock( )->get_child_by_name( "tcp_connection" ) );
-    
-    tcp_connection->on_errored = [ this ] (asio::error_code const& e )
+
+    tcp_connection->on_errored = [ this ] ( asio::error_code const& e )
     {
         scene_manager::get_instans( )->replace( title::create( ) );
     };
@@ -63,6 +64,8 @@ bool game::init( Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer, 
         scene_manager::get_instans( )->replace( title::create( ) );
     };
     add_child( bac );
+
+    add_child( score_board::create( vec2( 300, 300 ) ) );
 
     auto udp_connection = dont_destroy_node.lock( )->get_child_by_name( "udp_connection" );
     tcp_connection->set_schedule_update( );

@@ -257,6 +257,9 @@
     <ClCompile Include="..\cinder_cocoslike\audio\file_player.cpp">
       <Filter>cinder_cocoslike\audio</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\user\score_board.cpp">
+      <Filter>User Files\user</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -462,6 +465,9 @@
     </ClInclude>
     <ClInclude Include="..\cinder_cocoslike\audio\base_player.h">
       <Filter>cinder_cocoslike\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\score_board.h">
+      <Filter>User Files\user</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
