@@ -22,6 +22,7 @@ public:
     void set_color( cinder::ColorA value ) override;
     void remove_crown( );
     void set_crown( std::weak_ptr<node> crown );
+    bool is_crowner( );
     network::network_handle get_handle( );
 protected:
     std::weak_ptr<renderer::circle> _base;

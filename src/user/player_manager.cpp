@@ -43,6 +43,7 @@ bool player_manager::init( Json::Value& root )
         {
             return **n.lock( )->get_handle( ) == *info;
         } );
+        if ( target == _enemys.end( ) ) return;
 
         auto ground_mgr = std::dynamic_pointer_cast<ground>( _ground.lock( ) );
         ground_mgr->close_player( ( *target ).lock( )->get_color( ) );
@@ -200,6 +201,8 @@ void player_manager::set_all_crown( std::vector<int> const& ids )
         if ( auto player = get_child_by_tag( ids[i] ) )
         {
             auto p = std::dynamic_pointer_cast<user::player>( player );
+            if ( p->is_crowner( ) ) continue;
+
             auto s = renderer::sprite_cubic::create( "crown" + boost::lexical_cast<std::string>( i + 1 ) + ".png" );
             s->set_scale( vec2( 2.0F ) );
             p->set_crown( s );

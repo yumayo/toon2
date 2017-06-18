@@ -116,6 +116,10 @@ void player::set_crown( std::weak_ptr<node> crown )
         crown->set_scale( vec2( _radius / ( crown->get_content_size( ).x / 2 ) ) );
     }
 }
+bool player::is_crowner( )
+{
+    return _base.lock( )->get_child_by_name( "crown" ) != nullptr;
+}
 network::network_handle user::player::get_handle( )
 {
     return _handle;
