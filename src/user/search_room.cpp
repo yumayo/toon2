@@ -30,13 +30,11 @@ bool search_room::init( )
         {
             if ( root["name"].asString( ) == "id_received" )
             {
-                user_default::get_instans( )->get_root( )["id"] = root["data"]["id"].asInt( );
-
-                Json::Value root;
-                root["name"] = "find_room";
-                root["data"]["id"] = user_default::get_instans( )->get_root( )["id"].asInt( );
-                root["data"]["select_skin_name"] = user_default::get_instans( )->get_root( )["select_skin_name"].asString( );
-                _tcp_connection.lock( )->write( Json::FastWriter( ).write( root ) );
+                Json::Value r;
+                r["name"] = "find_room";
+                r["data"]["id"] = root["data"]["id"].asInt( );
+                r["data"]["select_skin_name"] = user_default::get_instans( )->get_root( )["select_skin_name"].asString( );
+                _tcp_connection.lock( )->write( Json::FastWriter( ).write( r ) );
                 _tcp_connection.lock( )->on_received_json = [ this ] ( Json::Value root )
                 {
                     if ( root["name"].asString( ) == "founded" )
