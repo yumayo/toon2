@@ -18,9 +18,6 @@ bool player::init( std::string const& ip_address,
 
     _setup_radius = 20.0F;
 
-    set_scale( vec2( 0 ) );
-    run_action( action::ease<EaseOutSine>::create( action::scale_to::create( 1.0F, vec2( 1 ) ) ) );
-
     _radius = _setup_radius;
     if ( auto base = renderer::circle::create( _radius ) )
     {
