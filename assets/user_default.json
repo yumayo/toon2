@@ -1,9 +1,9 @@
 {
    "complete" : true,
-   "feed" : 6444,
+   "feed" : 6537,
    "id" : 1,
    "max_size" : 20,
-   "select_skin_name" : "water",
+   "select_skin_name" : "soil",
    "server" : {
       "address" : "192.168.11.2",
       "tcp_port" : 25564,

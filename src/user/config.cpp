@@ -35,8 +35,12 @@ bool config::init( )
             _skin_names.emplace_back( name );
         }
     }
+
+    std::string user_select_skin_name = user_default::get_instans( )->get_root( )["select_skin_name"].asString( );
+    int select_index = 0;
     for ( int i = 0; i < _skin_names.size( ); ++i )
     {
+        if ( _skin_names[i] == user_select_skin_name ) select_index = i;
         auto tex = renderer::sprite::create( "skin/" + _skin_names[i] + ".png" );
         tex->set_anchor_point( vec2( 0.5F ) );
         tex->set_content_size( vec2( _skin_width ) );
@@ -44,6 +48,8 @@ bool config::init( )
         slider->add_child( tex );
     }
     _slider = slider;
+    _object_select_position = vec2( select_index * -1 * _skin_width, 0 ); // スライド方向がマイナスなので * -1 しています。
+    _slider.lock( )->set_position( _object_select_position );
     slide_manager->add_child( slider );
 
     auto edge = create_dot( "edge.png", _skin_width );
