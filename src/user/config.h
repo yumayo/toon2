@@ -22,6 +22,7 @@ private:
     cinder::vec2 _tap_start_slide_object_position;
     cinder::vec2 _object_select_position;
     std::vector<std::string> _skin_names;
+    bool _is_switched = true;
     float _skin_width = 200.0F;
 private:
     std::weak_ptr<node> _bac;

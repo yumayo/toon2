@@ -17,5 +17,6 @@ private:
     std::weak_ptr<renderer::label> _fla;
     void change_action( std::function<void( )> end_fn );
     std::string get_new_skin_name( );
+    bool _is_animation_end = false;
 };
 }

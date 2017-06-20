@@ -4,6 +4,7 @@
 #include "player.h"
 #include "title.h"
 #include "scene_manager.h"
+#include "se.h"
 using namespace cinder;
 using namespace action;
 namespace user
@@ -48,7 +49,8 @@ bool config::init( )
         slider->add_child( tex );
     }
     _slider = slider;
-    _object_select_position = vec2( select_index * -1 * _skin_width, 0 ); // スライド方向がマイナスなので * -1 しています。
+    // スライド方向がマイナスなので * -1 しています。
+    _object_select_position = vec2( select_index * -1 * _skin_width, 0 );
     _slider.lock( )->set_position( _object_select_position );
     slide_manager->add_child( slider );
 
@@ -57,18 +59,13 @@ bool config::init( )
     slide_manager->add_child( edge );
 
     auto bac = create_dot_button( "back.png", 150.0F );
-    {
-        auto sound = ::audio::buffer_player::create( "sound/back.wav" );
-        sound->set_name( "sound" );
-        bac->add_child( sound );
-    }
     _bac = bac;
     bac->set_position( vec2( app::getWindowSize( ) ) * vec2( 0, 1 ) + vec2( 100, -100 ) );
     add_child( bac );
 
     bac->on_ended = [ this ]
     {
-        std::dynamic_pointer_cast<::audio::buffer_player> ( _bac.lock( )->get_child_by_name( "sound" ) )->play( );
+        play_se( "sound/back.wav" );
         set_block_schedule_event( );
         change_action( [ ] { scene_manager::get_instans( )->replace( title::create( ) ); } );
     };
@@ -84,9 +81,15 @@ void config::update( float delta )
     posx = glm::clamp( posx, ( _skin_names.size( ) - 1 ) * -_skin_width, 0.0F );
     auto index = int( ( posx - 35.0F ) / _skin_width ); // 200毎区切りにする。
     auto single_select_skin_posx = abs( fmodf( posx, _skin_width ) );
-    if ( single_select_skin_posx < 35.0F || _skin_width - 35.0F < single_select_skin_posx )
+    bool prev_is_switched = _is_switched;
+    _is_switched = single_select_skin_posx < 35.0F || _skin_width - 35.0F < single_select_skin_posx;
+    if ( _is_switched )
     {
         posx = index * _skin_width;
+    }
+    if ( !prev_is_switched && _is_switched )
+    {
+        play_se( "sound/slide.wav" );
     }
     _slider.lock( )->set_position( calc_select_position );
 

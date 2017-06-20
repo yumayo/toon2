@@ -7,6 +7,7 @@
 #include "boost/lexical_cast.hpp"
 #include "player.h"
 #include "cinder/Rand.h"
+#include "se.h"
 using namespace cinder;
 namespace user
 {
@@ -39,11 +40,6 @@ bool gacha::init( )
     }
 
     auto bac = create_dot_button( "back.png", 150 );
-    {
-        auto sound = ::audio::buffer_player::create( "sound/back.wav" );
-        sound->set_name( "sound" );
-        bac->add_child( sound );
-    }
     _bac = bac;
     bac->set_position( vec2( app::getWindowSize( ) ) * vec2( 0, 1 ) + vec2( 100, -100 ) );
     add_child( bac );
@@ -73,6 +69,7 @@ bool gacha::init( )
         auto& root = user_default::get_instans( )->get_root( );
         if ( root["feed"].asInt( ) < 10 ) return;
 
+        play_se( "sound/garagara.wav" );
         set_block_schedule_event( );
         auto spawn = call_func::create( [ this, start_pos, end_pos, &root ]
         {
@@ -86,13 +83,14 @@ bool gacha::init( )
         } );
         auto new_skin = call_func::create( [ this, &root, mas_pos ]
         {
+            play_se( "sound/view.wav" );
             auto eff = renderer::sprite_animation::create( "new_skin_effect.png" );
             eff->set_name( "effect" );
             eff->set_cut( { 8, 7 } );
             eff->set_cut_size( vec2( 128 ) );
             eff->set_position( mas_pos + vec2( 0, 200 ) );
             eff->run_action( ease<EaseOutExpo>::create( scale_to::create( 0.5F, vec2( 7 ) ) ) );
-            eff->run_action( ease<EaseOutExpo>::create( move_to::create( 0.75F, vec2( app::getWindowSize( ) ) * vec2( 0.5F ) ) ) );
+            eff->run_action( sequence::create( ease<EaseOutExpo>::create( move_to::create( 0.75F, vec2( app::getWindowSize( ) ) * vec2( 0.5F ) ) ), call_func::create( [ this ] { _is_animation_end = true; } ) ) );
             add_child( eff );
 
             auto pla = player::create( "", 0, "skin/" + get_new_skin_name( ) + ".png" );
@@ -101,11 +99,11 @@ bool gacha::init( )
 
             if ( root["complete"].asBool( ) ) remove_child( _gar.lock( ) );
         } );
-        run_action( sequence::create( repeat_times::create( sequence::create( spawn, delay::create( 0.05F ) ), 10 ), new_skin ) );
+        run_action( sequence::create( repeat_times::create( sequence::create( spawn, delay::create( 0.05F ) ), 10 ), delay::create( 1.0F ), new_skin ) );
     };
     bac->on_ended = [ this ]
     {
-        std::dynamic_pointer_cast<::audio::buffer_player> ( _bac.lock( )->get_child_by_name( "sound" ) )->play( );
+        play_se( "sound/back.wav" );
         set_block_schedule_event( );
         change_action( [ ] { scene_manager::get_instans( )->replace( title::create( ) ); } );
     };
@@ -114,8 +112,10 @@ bool gacha::init( )
 }
 bool gacha::mouse_began( cinder::app::MouseEvent event )
 {
+    if ( !_is_animation_end ) return false;
     if ( auto eff = get_child_by_name( "effect" ) )
     {
+        _is_animation_end = false;
         eff->run_action( action::sequence::create( action::ease<EaseOutBounce>::create( action::scale_to::create( 0.3F, vec2( 0 ) ) ),
                                                    action::remove_self::create( ) ) );
         set_block_schedule_event( false );
@@ -124,8 +124,10 @@ bool gacha::mouse_began( cinder::app::MouseEvent event )
 }
 bool gacha::touch_began( cinder::app::TouchEvent::Touch event )
 {
+    if ( !_is_animation_end ) return false;
     if ( auto eff = get_child_by_name( "effect" ) )
     {
+        _is_animation_end = false;
         eff->run_action( action::sequence::create( action::ease<EaseOutBounce>::create( action::scale_to::create( 0.3F, vec2( 0 ) ) ),
                                                    action::remove_self::create( ) ) );
         set_block_schedule_event( false );

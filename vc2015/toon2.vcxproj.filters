@@ -263,6 +263,9 @@
     <ClCompile Include="..\cinder_cocoslike\renderer\sprite_cubic.cpp">
       <Filter>cinder_cocoslike\renderer</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\user\se.cpp">
+      <Filter>User Files\user</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -474,6 +477,9 @@
     </ClInclude>
     <ClInclude Include="..\cinder_cocoslike\renderer\sprite_cubic.h">
       <Filter>cinder_cocoslike\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\se.h">
+      <Filter>User Files\user</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

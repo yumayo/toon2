@@ -1,6 +1,6 @@
 {
-   "complete" : true,
-   "feed" : 6537,
+   "complete" : false,
+   "feed" : 6742,
    "id" : 1,
    "max_size" : 20,
    "select_skin_name" : "soil",
@@ -14,6 +14,6 @@
       "monta" : true,
       "rainbow" : true,
       "soil" : true,
-      "water" : true
+      "water" : false
    }
 }

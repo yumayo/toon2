@@ -6,6 +6,7 @@
 #include "config.h"
 #include "search_room.h"
 #include "audio.hpp"
+#include "se.h"
 using namespace cinder;
 namespace user
 {
@@ -15,17 +16,24 @@ CREATE_CPP( title )
 }
 bool title::init( )
 {
-    auto dont_deatroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
-    if ( !dont_deatroy_node.lock( )->get_child_by_name( "bgm" ) )
+    if ( !scene_manager::get_instans( )->get_dont_destroy_node( ).lock( )->get_child_by_name( "bgm" ) )
     {
         auto bgm = ::audio::buffer_player::create( "sound/bgm.wav" );
         bgm->set_loop_begin_second( 0.0F );
-        bgm->set_loop_end_second( 67.227F );
+        bgm->set_loop_end_second( 67.170F );
         bgm->set_name( "bgm" );
         bgm->set_loop( true );
         bgm->play( );
-        dont_deatroy_node.lock( )->add_child( bgm );
+        scene_manager::get_instans( )->get_dont_destroy_node( ).lock( )->add_child( bgm );
     }
+    add_se( "sound/start.wav" );
+    add_se( "sound/gacha.wav" );
+    add_se( "sound/config.wav" );
+    add_se( "sound/back.wav" ); 
+    add_se( "sound/captured.wav", 0.5F );
+    add_se( "sound/slide.wav" );
+    add_se( "sound/view.wav" );
+    add_se( "sound/garagara.wav" );
 
     auto tit = create_dot( "title.png", app::getWindowWidth( ) * 0.9F );
     _title_logo = tit;
@@ -33,38 +41,23 @@ bool title::init( )
     tit->set_position( vec2( app::getWindowSize( ) ) * vec2( 0.5F, 0.35F ) );
 
     auto sta = create_dot_button( "start.png", 200 );
-    {
-        auto sound = ::audio::buffer_player::create( "sound/start.wav" );
-        sound->set_name( "sound" );
-        sta->add_child( sound );
-    }
     _start_button = sta;
     add_child( sta );
     sta->set_position( vec2( app::getWindowSize( ) ) * vec2( 0.5F, 0.75F ) );
 
     auto gac = create_dot_button( "gacha.png", 100 );
-    {
-        auto sound = ::audio::buffer_player::create( "sound/gacha.wav" );
-        sound->set_name( "sound" );
-        gac->add_child( sound );
-    }
     _gacha_button = gac;
     add_child( gac );
     gac->set_position( vec2( app::getWindowSize( ) ) * vec2( 1.0F, 0.75F ) + vec2( -150, -60 ) );
 
     auto con = create_dot_button( "config.png", 100 );
-    {
-        auto sound = ::audio::buffer_player::create( "sound/config.wav" );
-        sound->set_name( "sound" );
-        con->add_child( sound );
-    }
     _config_button = con;
     add_child( con );
     con->set_position( vec2( app::getWindowSize( ) ) * vec2( 1.0F, 0.75F ) + vec2( -150, 60 ) );
 
     sta->on_ended = [ this ]
     {
-        std::dynamic_pointer_cast<::audio::buffer_player> ( _start_button.lock( )->get_child_by_name( "sound" ) )->play( );
+        play_se( "sound/start.wav" );
         set_block_schedule_event( );
         auto search_handle = search_room::create( );
         search_handle->on_founded = [ this ] ( Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer, std::vector<std::vector<unsigned char>>& ground_buffer )
@@ -82,13 +75,13 @@ bool title::init( )
     };
     gac->on_ended = [ this ]
     {
-        std::dynamic_pointer_cast<::audio::buffer_player> ( _gacha_button.lock( )->get_child_by_name( "sound" ) )->play( );
+        play_se( "sound/gacha.wav" );
         set_block_schedule_event( );
         change_action( [ ] { scene_manager::get_instans( )->replace( gacha::create( ) ); } );
     };
     con->on_ended = [ this ]
     {
-        std::dynamic_pointer_cast<::audio::buffer_player> ( _config_button.lock( )->get_child_by_name( "sound" ) )->play( );
+        play_se( "sound/config.wav" );
         set_block_schedule_event( );
         change_action( [ ] { scene_manager::get_instans( )->replace( config::create( ) ); } );
     };

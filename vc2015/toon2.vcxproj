@@ -182,6 +182,7 @@
     <ClCompile Include="..\src\user\player.cpp" />
     <ClCompile Include="..\src\user\player_manager.cpp" />
     <ClCompile Include="..\src\user\score_board.cpp" />
+    <ClCompile Include="..\src\user\se.cpp" />
     <ClCompile Include="..\src\user\search_room.cpp" />
     <ClCompile Include="..\src\user\skin.cpp" />
     <ClCompile Include="..\src\user\dot_sprite.cpp" />
@@ -271,6 +272,7 @@
     <ClInclude Include="..\src\user\player.h" />
     <ClInclude Include="..\src\user\player_manager.h" />
     <ClInclude Include="..\src\user\score_board.h" />
+    <ClInclude Include="..\src\user\se.h" />
     <ClInclude Include="..\src\user\search_room.h" />
     <ClInclude Include="..\src\user\skin.h" />
     <ClInclude Include="..\src\user\dot_sprite.h" />

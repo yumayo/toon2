@@ -5,6 +5,7 @@
 #include "user_default.h"
 #include "utility.hpp"
 #include "action.hpp"
+#include "se.h"
 using namespace cinder;
 namespace user
 {
@@ -43,6 +44,8 @@ bool feed_manager::init( std::weak_ptr<node> player_manager, std::map<int, cinde
     {
         if ( _captured_feed_number != 0 )
         {
+            play_se( "sound/captured.wav" );
+
             _captured_feed_data["name"] = "feed_captured";
             _tcp_connection.lock( )->write( Json::FastWriter( ).write( _captured_feed_data ) );
 
