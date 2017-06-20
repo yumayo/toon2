@@ -54,6 +54,7 @@ bool score_board::init( std::shared_ptr<node> player_manager, cinder::vec2 size 
             std::vector<int> ids( 3 );
             for ( auto& rank : root["data"] )
             {
+                if ( i > 8 ) return;
                 if ( i - 1 < ids.size( ) ) ids[i - 1] = rank["id"].asInt( );
 
                 int rank_number = i;
