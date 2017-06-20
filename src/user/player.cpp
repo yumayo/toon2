@@ -85,7 +85,7 @@ void player::capture( float score )
 
     // アクションは終了済み。
     auto sub = _target_radius - _radius;
-    auto t = 0.2F + easeOutCubic( clamp( sub, 0.0F, 50.0F ) / 50.0F ) * 4.8F;
+    auto t = 2.0F + easeOutCubic( clamp( sub, 0.0F, 50.0F ) / 50.0F ) * 4.0F;
     auto act = action::ease<EaseOutSine>::create( action::float_to::create( t, _radius, _target_radius, [ this ] ( float value )
     {
         set_radius( value );
