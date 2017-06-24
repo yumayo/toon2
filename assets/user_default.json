@@ -1,9 +1,8 @@
 {
    "complete" : false,
-   "feed" : 6742,
-   "id" : 1,
+   "feed" : 39,
    "max_size" : 20,
-   "select_skin_name" : "soil",
+   "select_skin_name" : "grass",
    "server" : {
       "address" : "192.168.11.2",
       "tcp_port" : 25564,
@@ -11,9 +10,9 @@
    },
    "skin" : {
       "grass" : true,
-      "monta" : true,
-      "rainbow" : true,
-      "soil" : true,
+      "monta" : false,
+      "rainbow" : false,
+      "soil" : false,
       "water" : false
    }
 }

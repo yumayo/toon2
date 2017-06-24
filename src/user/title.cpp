@@ -16,6 +16,8 @@ CREATE_CPP( title )
 }
 bool title::init( )
 {
+    set_schedule_mouse_event( );
+
     if ( !scene_manager::get_instans( )->get_dont_destroy_node( ).lock( )->get_child_by_name( "bgm" ) )
     {
         auto bgm = ::audio::buffer_player::create( "sound/bgm.wav" );
@@ -29,7 +31,7 @@ bool title::init( )
     add_se( "sound/start.wav" );
     add_se( "sound/gacha.wav" );
     add_se( "sound/config.wav" );
-    add_se( "sound/back.wav" ); 
+    add_se( "sound/back.wav" );
     add_se( "sound/captured.wav", 0.5F );
     add_se( "sound/slide.wav" );
     add_se( "sound/view.wav" );
@@ -62,9 +64,10 @@ bool title::init( )
         auto search_handle = search_room::create( );
         search_handle->on_founded = [ this ] ( Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer, std::vector<std::vector<unsigned char>>& ground_buffer )
         {
+            scene_manager::get_instans( )->push_back( game::create( root, feeds_buffer, ground_buffer ) );
             change_action( [ &root, &feeds_buffer, &ground_buffer ]
             {
-                scene_manager::get_instans( )->replace( game::create( root, feeds_buffer, ground_buffer ) );
+                scene_manager::get_instans( )->pop_front( );
             } );
         };
         search_handle->on_not_found = [ this ] ( )

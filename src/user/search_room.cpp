@@ -107,10 +107,8 @@ bool search_room::init( )
                     _tcp_connection.lock( )->on_send_failed = nullptr;
                     _tcp_connection.lock( )->on_disconnected = nullptr;
                     _tcp_connection.lock( )->on_connection = nullptr;
-                    _tcp_connection.lock( )->set_schedule_update( false );
 
                     _udp_connection.lock( )->on_received_json = nullptr;
-                    _udp_connection.lock( )->set_schedule_update( false );
 
                     if ( on_founded ) on_founded( _root_buffer, _feeds_buffer, _ground_buffer );
                 }
