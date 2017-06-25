@@ -1,4 +1,4 @@
-﻿#include "player_manager.h"
+﻿#include "cell_manager.h"
 #include "player.h"
 #include "user_default.h"
 #include "action.hpp"
@@ -10,15 +10,15 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( player_manager, Json::Value& root )
+CREATE_CPP( cell_manager, Json::Value& root )
 {
-    CREATE( player_manager, root );
+    CREATE( cell_manager, root );
 }
-bool player_manager::init( Json::Value& root )
+bool cell_manager::init( Json::Value& root )
 {
     app::console( ) << root << std::endl;
 
-    set_name( "player_manager" );
+    set_name( "cell_manager" );
 
     set_schedule_update( );
 
@@ -111,7 +111,7 @@ bool player_manager::init( Json::Value& root )
 
     return true;
 }
-void player_manager::update( float delta )
+void cell_manager::update( float delta )
 {
     if ( !_player.lock( ) || _player.expired( ) ) return;
 
@@ -174,19 +174,19 @@ void player_manager::update( float delta )
         }
     }
 }
-std::list<std::weak_ptr<enemy>>& player_manager::get_enemys( )
+std::list<std::weak_ptr<enemy>>& cell_manager::get_enemys( )
 {
     return _enemys;
 }
-std::weak_ptr<player>& player_manager::get_player( )
+std::weak_ptr<player>& cell_manager::get_player( )
 {
     return _player;
 }
-void player_manager::set_ground( std::weak_ptr<node> ground )
+void cell_manager::set_ground( std::weak_ptr<node> ground )
 {
     _ground = ground;
 }
-void player_manager::remove_all_crown( )
+void cell_manager::remove_all_crown( )
 {
     _player.lock( )->remove_crown( );
     for ( auto& enemy : _enemys )
@@ -194,7 +194,7 @@ void player_manager::remove_all_crown( )
         enemy.lock( )->remove_crown( );
     }
 }
-void player_manager::set_all_crown( std::vector<int> const& ids )
+void cell_manager::set_all_crown( std::vector<int> const& ids )
 {
     for ( int i = 0; i < ids.size( ); ++i )
     {
@@ -209,7 +209,7 @@ void player_manager::set_all_crown( std::vector<int> const& ids )
         }
     }
 }
-void player_manager::create_enemy( Json::Value const & data )
+void cell_manager::create_enemy( Json::Value const & data )
 {
     app::console( ) << "create_enemy" << std::endl;
     app::console( ) << data << std::endl;
@@ -224,7 +224,7 @@ void player_manager::create_enemy( Json::Value const & data )
     _enemys.emplace_back( enemy );
     add_child( enemy );
 }
-void player_manager::create_player( Json::Value const & data )
+void cell_manager::create_player( Json::Value const & data )
 {
     app::console( ) << "create_player" << std::endl;
     app::console( ) << data << std::endl;

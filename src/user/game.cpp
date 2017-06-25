@@ -1,5 +1,5 @@
 ﻿#include "game.h"
-#include "player_manager.h"
+#include "cell_manager.h"
 #include "create_dot_obeject.h"
 #include "scene_manager.h"
 #include "title.h"
@@ -42,7 +42,7 @@ bool game::init( Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer, 
         add_child( field );
     }
 
-    _player = std::dynamic_pointer_cast<player_manager>( _field.lock( )->get_child_by_name( "player_manager" ) )->get_player( );
+    _player = std::dynamic_pointer_cast<cell_manager>( _field.lock( )->get_child_by_name( "cell_manager" ) )->get_player( );
     _ground = std::dynamic_pointer_cast<ground>( _field.lock( )->get_child_by_name( "ground" ) );
     if ( auto controller = controller::create( _player, _ground ) )
     {
@@ -60,7 +60,7 @@ bool game::init( Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer, 
     };
     add_child( bac );
 
-    add_child( score_board::create( _field.lock( )->get_child_by_name( "player_manager" ), vec2( 300, 300 ) ) );
+    add_child( score_board::create( _field.lock( )->get_child_by_name( "cell_manager" ), vec2( 300, 300 ) ) );
 
     return true;
 }

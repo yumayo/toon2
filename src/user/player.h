@@ -10,6 +10,7 @@ public:
     bool init( std::string const& ip_address,
                int port, std::string const& relative_path_skin );
     ~player( );
+    void key_down( cinder::app::KeyEvent e );
 public:
     void on_captured( std::weak_ptr<node> other ) override;
     void capture( float score );

@@ -1,15 +1,15 @@
 ﻿#include "ground.h"
 #include "player.h"
-#include "player_manager.h"
+#include "cell_manager.h"
 #include "user_default.h"
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( ground, std::weak_ptr<node> player_manager, Json::Value const& root, std::vector<std::vector<unsigned char>>& ground_buffer )
+CREATE_CPP( ground, std::weak_ptr<node> cell_manager, Json::Value const& root, std::vector<std::vector<unsigned char>>& ground_buffer )
 {
-    CREATE( ground, player_manager, root, ground_buffer );
+    CREATE( ground, cell_manager, root, ground_buffer );
 }
-bool ground::init( std::weak_ptr<node> player_manager, Json::Value const& root, std::vector<std::vector<unsigned char>>& ground_buffer )
+bool ground::init( std::weak_ptr<node> cell_manager, Json::Value const& root, std::vector<std::vector<unsigned char>>& ground_buffer )
 {
     if ( !renderer::surface::init( vec2( root["data"]["ground_size"].asInt( ) ), ColorA( 0.1F, 0.1F, 0.1F ) ) ) return false;
 
@@ -42,7 +42,7 @@ bool ground::init( std::weak_ptr<node> player_manager, Json::Value const& root, 
 
     set_name( "ground" );
 
-    _player_manager = player_manager;
+    _cell_manager = cell_manager;
 
     set_schedule_update( );
 
@@ -53,11 +53,11 @@ bool ground::init( std::weak_ptr<node> player_manager, Json::Value const& root, 
 void ground::update( float delta )
 {
     // プレイヤーマネージャからプレイヤーを抽出し、グラウンドに色を塗る。
-    if ( auto& player_mgr = std::dynamic_pointer_cast<player_manager>( _player_manager.lock( ) ) )
+    if ( auto& cell_manager = std::dynamic_pointer_cast<user::cell_manager>( _cell_manager.lock( ) ) )
     {
-        cell_paint_ground( player_mgr->get_player( ) );
+        cell_paint_ground( cell_manager->get_player( ) );
 
-        for ( auto& enemy : player_mgr->get_enemys( ) )
+        for ( auto& enemy : cell_manager->get_enemys( ) )
         {
             cell_paint_ground( enemy );
         }

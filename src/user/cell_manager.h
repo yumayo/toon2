@@ -4,10 +4,10 @@
 #include "enemy.h"
 namespace user
 {
-class player_manager : public node
+class cell_manager : public node
 {
 public:
-    CREATE_H( player_manager, Json::Value& root );
+    CREATE_H( cell_manager, Json::Value& root );
     bool init( Json::Value& root );
     virtual void update( float delta )override;
 public:

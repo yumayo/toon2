@@ -1,6 +1,6 @@
 ﻿#include "feed_manager.h"
 #include "feed.h"
-#include "player_manager.h"
+#include "cell_manager.h"
 #include "scene_manager.h"
 #include "user_default.h"
 #include "utility.hpp"
@@ -9,15 +9,15 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( feed_manager, std::weak_ptr<node> player_manager, std::map<int, cinder::ivec2>& feeds_buffer )
+CREATE_CPP( feed_manager, std::weak_ptr<node> cell_manager, std::map<int, cinder::ivec2>& feeds_buffer )
 {
-    CREATE( feed_manager, player_manager, feeds_buffer );
+    CREATE( feed_manager, cell_manager, feeds_buffer );
 }
-bool feed_manager::init( std::weak_ptr<node> player_manager, std::map<int, cinder::ivec2>& feeds_buffer )
+bool feed_manager::init( std::weak_ptr<node> cell_manager, std::map<int, cinder::ivec2>& feeds_buffer )
 {
     set_name( "feed_manager" );
 
-    _player_manager = player_manager;
+    _cell_manager = cell_manager;
 
     auto dont_destroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
     _tcp_connection = std::dynamic_pointer_cast<network::tcp_client>( dont_destroy_node.lock( )->get_child_by_name( "tcp_connection" ) );
@@ -60,7 +60,7 @@ bool feed_manager::init( std::weak_ptr<node> player_manager, std::map<int, cinde
 }
 void feed_manager::update( float delta )
 {
-    for ( auto child : _player_manager.lock( )->get_children( ) )
+    for ( auto child : _cell_manager.lock( )->get_children( ) )
     {
         if ( auto pla = std::dynamic_pointer_cast<cell>( child ) )
         {

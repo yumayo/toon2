@@ -3,19 +3,19 @@
 #include "renderer/label.h"
 #include "utility.hpp"
 #include "action.hpp"
-#include "player_manager.h"
+#include "cell_manager.h"
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( score_board, std::shared_ptr<node> player_manager, cinder::vec2 size )
+CREATE_CPP( score_board, std::shared_ptr<node> cell_manager, cinder::vec2 size )
 {
-    CREATE( score_board, player_manager, size );
+    CREATE( score_board, cell_manager, size );
 }
-bool score_board::init( std::shared_ptr<node> player_manager, cinder::vec2 size )
+bool score_board::init( std::shared_ptr<node> cell_manager, cinder::vec2 size )
 {
     set_name( "paint_score" );
 
-    _player_manager = player_manager;
+    _cell_manager = cell_manager;
 
     set_anchor_point( vec2( 1, 0 ) );
     set_position( vec2( app::getWindowWidth( ), 0 ) );
@@ -44,8 +44,8 @@ bool score_board::init( std::shared_ptr<node> player_manager, cinder::vec2 size 
     {
         auto scores = get_child_by_name( "scores" );
         scores->remove_all_children( );
-        auto player_mgr = std::dynamic_pointer_cast<user::player_manager>( _player_manager.lock( ) );
-        player_mgr->remove_all_crown( );
+        auto cell_manager = std::dynamic_pointer_cast<user::cell_manager>( _cell_manager.lock( ) );
+        cell_manager->remove_all_crown( );
 
         run_action( action::call_func::create( [ this, root ]
         {
@@ -73,8 +73,8 @@ bool score_board::init( std::shared_ptr<node> player_manager, cinder::vec2 size 
                 i++;
             }
 
-            auto player_mgr = std::dynamic_pointer_cast<user::player_manager>( _player_manager.lock( ) );
-            player_mgr->set_all_crown( ids );
+            auto cell_manager = std::dynamic_pointer_cast<user::cell_manager>( _cell_manager.lock( ) );
+            cell_manager->set_all_crown( ids );
         } ) );
     } ) );
 

@@ -185,7 +185,7 @@
     <ClCompile Include="..\src\user\game.cpp" />
     <ClCompile Include="..\src\user\ground.cpp" />
     <ClCompile Include="..\src\user\player.cpp" />
-    <ClCompile Include="..\src\user\player_manager.cpp" />
+    <ClCompile Include="..\src\user\cell_manager.cpp" />
     <ClCompile Include="..\src\user\score_board.cpp" />
     <ClCompile Include="..\src\user\se.cpp" />
     <ClCompile Include="..\src\user\search_room.cpp" />
@@ -280,7 +280,7 @@
     <ClInclude Include="..\src\user\game.h" />
     <ClInclude Include="..\src\user\ground.h" />
     <ClInclude Include="..\src\user\player.h" />
-    <ClInclude Include="..\src\user\player_manager.h" />
+    <ClInclude Include="..\src\user\cell_manager.h" />
     <ClInclude Include="..\src\user\score_board.h" />
     <ClInclude Include="..\src\user\se.h" />
     <ClInclude Include="..\src\user\search_room.h" />
