@@ -269,6 +269,12 @@
     <ClCompile Include="..\cinder_cocoslike\utility\file_system.cpp">
       <Filter>cinder_cocoslike\utility</Filter>
     </ClCompile>
+    <ClCompile Include="..\cinder_cocoslike\network\tcp_client_member.cpp">
+      <Filter>cinder_cocoslike\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cinder_cocoslike\network\tcp_server_member.cpp">
+      <Filter>cinder_cocoslike\network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -486,6 +492,12 @@
     </ClInclude>
     <ClInclude Include="..\cinder_cocoslike\utility\file_system.h">
       <Filter>cinder_cocoslike\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cinder_cocoslike\network\tcp_client_member.h">
+      <Filter>cinder_cocoslike\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cinder_cocoslike\network\tcp_server_member.h">
+      <Filter>cinder_cocoslike\network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

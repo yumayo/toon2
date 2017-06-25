@@ -141,7 +141,9 @@
     <ClCompile Include="..\cinder_cocoslike\network\network_factory.cpp" />
     <ClCompile Include="..\cinder_cocoslike\network\network_object.cpp" />
     <ClCompile Include="..\cinder_cocoslike\network\tcp_client.cpp" />
+    <ClCompile Include="..\cinder_cocoslike\network\tcp_client_member.cpp" />
     <ClCompile Include="..\cinder_cocoslike\network\tcp_server.cpp" />
+    <ClCompile Include="..\cinder_cocoslike\network\tcp_server_member.cpp" />
     <ClCompile Include="..\cinder_cocoslike\network\udp_connection.cpp" />
     <ClCompile Include="..\cinder_cocoslike\network\udp_connection_member.cpp" />
     <ClCompile Include="..\cinder_cocoslike\network\use_destroy_object.cpp" />
@@ -227,7 +229,9 @@
     <ClInclude Include="..\cinder_cocoslike\network\network_factory.h" />
     <ClInclude Include="..\cinder_cocoslike\network\network_object.h" />
     <ClInclude Include="..\cinder_cocoslike\network\tcp_client.h" />
+    <ClInclude Include="..\cinder_cocoslike\network\tcp_client_member.h" />
     <ClInclude Include="..\cinder_cocoslike\network\tcp_server.h" />
+    <ClInclude Include="..\cinder_cocoslike\network\tcp_server_member.h" />
     <ClInclude Include="..\cinder_cocoslike\network\udp_connection.h" />
     <ClInclude Include="..\cinder_cocoslike\network\udp_connection_member.h" />
     <ClInclude Include="..\cinder_cocoslike\network\use_destroy_object.h" />
