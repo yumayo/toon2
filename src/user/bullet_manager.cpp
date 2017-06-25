@@ -37,6 +37,13 @@ bool bullet_manager::init( std::weak_ptr<node> cell_manager )
         }
     } ) );
 
+    _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "blowout", [ this ] ( Json::Value root )
+    {
+        auto cell_manager = std::dynamic_pointer_cast<user::cell_manager>( _cell_manager.lock( ) );
+        auto player = cell_manager->get_player( );
+        player.lock( )->blowout( );
+    } ) );
+
     return true;
 }
 void bullet_manager::update( float delta )
@@ -51,7 +58,11 @@ void bullet_manager::update( float delta )
             if ( distance( player.lock( )->get_position( ), bullet->get_position( ) ) 
                  < player.lock( )->get_radius( ) + bullet->get_radius( ) )
             {
-                player.lock( )->blowout( );
+                bullet->remove_from_parent( );
+                Json::Value root;
+                root["name"] = "blowout";
+                root["data"]["id"] = bullet->get_tag( );
+                _tcp_connection.lock( )->write( Json::FastWriter().write( root ) );
             }
         }
     }
