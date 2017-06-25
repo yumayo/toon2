@@ -43,4 +43,12 @@ float bullet::get_radius( )
 {
     return _radius;
 }
+bool bullet::is_hit( )
+{
+    return _is_hit;
+}
+void bullet::hit( )
+{
+    _is_hit = true;
+}
 }

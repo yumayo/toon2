@@ -20,6 +20,7 @@ bool field::init( Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer,
     auto bullet_manager = bullet_manager::create( cell_manager );
     auto ground = ground::create( cell_manager, bullet_manager, root, ground_buffer );
     cell_manager->set_ground( ground );
+    cell_manager->set_bullet_manager( bullet_manager );
     auto feed_manager = feed_manager::create( cell_manager, feeds_buffer );
 
     // 1

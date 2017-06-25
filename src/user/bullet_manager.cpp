@@ -37,11 +37,9 @@ bool bullet_manager::init( std::weak_ptr<node> cell_manager )
         }
     } ) );
 
-    _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "blowout", [ this ] ( Json::Value root )
+    _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "erase_bullet", [ this ] ( Json::Value root )
     {
-        auto cell_manager = std::dynamic_pointer_cast<user::cell_manager>( _cell_manager.lock( ) );
-        auto player = cell_manager->get_player( );
-        player.lock( )->blowout( );
+        remove_child_by_tag( root["data"]["id"].asInt( ) );
     } ) );
 
     return true;
@@ -55,14 +53,15 @@ void bullet_manager::update( float delta )
         if ( c->get_color( ) == player.lock( )->get_color( ) ) continue;
         if ( auto const& bullet = std::dynamic_pointer_cast<user::bullet>( c ) )
         {
-            if ( distance( player.lock( )->get_position( ), bullet->get_position( ) ) 
+            if ( bullet->is_hit( ) ) continue;
+            if ( distance( player.lock( )->get_position( ), bullet->get_position( ) )
                  < player.lock( )->get_radius( ) + bullet->get_radius( ) )
             {
-                bullet->remove_from_parent( );
                 Json::Value root;
                 root["name"] = "blowout";
                 root["data"]["id"] = bullet->get_tag( );
-                _tcp_connection.lock( )->write( Json::FastWriter().write( root ) );
+                player.lock( )->blowout( );
+                _tcp_connection.lock( )->write( Json::FastWriter( ).write( root ) );
             }
         }
     }
