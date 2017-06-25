@@ -170,6 +170,8 @@
     <ClCompile Include="..\cinder_cocoslike\utility\utf8.cpp" />
     <ClCompile Include="..\cinder_cocoslike\utility\write_file_on_destroyed.cpp" />
     <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\user\bullet.cpp" />
+    <ClCompile Include="..\src\user\bullet_manager.cpp" />
     <ClCompile Include="..\src\user\captured_object.cpp" />
     <ClCompile Include="..\src\user\cell.cpp" />
     <ClCompile Include="..\src\user\config.cpp" />
@@ -265,6 +267,8 @@
     <ClInclude Include="..\cinder_cocoslike\utility\write_file_on_destroyed.h" />
     <ClInclude Include="..\include\Resources.h" />
     <ClInclude Include="..\src\main.h" />
+    <ClInclude Include="..\src\user\bullet.h" />
+    <ClInclude Include="..\src\user\bullet_manager.h" />
     <ClInclude Include="..\src\user\captured_object.h" />
     <ClInclude Include="..\src\user\cell.h" />
     <ClInclude Include="..\src\user\config.h" />

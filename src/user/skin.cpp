@@ -5,20 +5,17 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( skin, float radius, std::string const& relative_path )
+CREATE_CPP( skin, float radius, float segments, std::string const& relative_path )
 {
-    CREATE( skin, radius, relative_path );
+    CREATE( skin, radius, segments, relative_path );
 }
-bool skin::init( float radius, std::string const& relative_path )
+bool skin::init( float radius, float segments, std::string const& relative_path )
 {
-    if ( !renderer::circle::init( radius ) ) return false;
+    if ( !renderer::circle::init( radius, segments ) ) return false;
 
     assert_log( !app::getAssetPath( relative_path ).empty( ), "ファイルが見つかりません。", return false );
 
     _texture = gl::Texture::create( loadImage( app::loadAsset( relative_path ) ) );
-
-    // 円依存なので
-    // _content_size = _texture->getSize( );
 
     _glsl = gl::getStockShader( gl::ShaderDef( ).texture( ).lambert( ) );
 
@@ -32,7 +29,7 @@ void skin::render( )
     // どう考えても重い。
     geom::Circle object;
     object.radius( _radius );
-    object.subdivisions( _radius );
+    object.subdivisions( _segments );
 
     _texture->bind( );
     gl::Batch::create( object, _glsl )->draw( );

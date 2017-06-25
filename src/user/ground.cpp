@@ -1,15 +1,16 @@
 ﻿#include "ground.h"
 #include "player.h"
 #include "cell_manager.h"
+#include "bullet_manager.h"
 #include "user_default.h"
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( ground, std::weak_ptr<node> cell_manager, Json::Value const& root, std::vector<std::vector<unsigned char>>& ground_buffer )
+CREATE_CPP( ground, std::weak_ptr<node> cell_manager, std::weak_ptr<node> bullet_manager, Json::Value const& root, std::vector<std::vector<unsigned char>>& ground_buffer )
 {
-    CREATE( ground, cell_manager, root, ground_buffer );
+    CREATE( ground, cell_manager, bullet_manager, root, ground_buffer );
 }
-bool ground::init( std::weak_ptr<node> cell_manager, Json::Value const& root, std::vector<std::vector<unsigned char>>& ground_buffer )
+bool ground::init( std::weak_ptr<node> cell_manager, std::weak_ptr<node> bullet_manager, Json::Value const& root, std::vector<std::vector<unsigned char>>& ground_buffer )
 {
     if ( !renderer::surface::init( vec2( root["data"]["ground_size"].asInt( ) ), ColorA( 0.1F, 0.1F, 0.1F ) ) ) return false;
 
@@ -42,6 +43,7 @@ bool ground::init( std::weak_ptr<node> cell_manager, Json::Value const& root, st
 
     set_name( "ground" );
 
+    _bullet_manager = bullet_manager;
     _cell_manager = cell_manager;
 
     set_schedule_update( );
@@ -52,14 +54,19 @@ bool ground::init( std::weak_ptr<node> cell_manager, Json::Value const& root, st
 }
 void ground::update( float delta )
 {
-    // プレイヤーマネージャからプレイヤーを抽出し、グラウンドに色を塗る。
     if ( auto& cell_manager = std::dynamic_pointer_cast<user::cell_manager>( _cell_manager.lock( ) ) )
     {
-        cell_paint_ground( cell_manager->get_player( ) );
-
-        for ( auto& enemy : cell_manager->get_enemys( ) )
+        for ( auto const& c : cell_manager->get_children( ) )
         {
-            cell_paint_ground( enemy );
+            paint_ground_cell( std::dynamic_pointer_cast<cell>( c ) );
+        }
+    }
+
+    if ( auto& bullet_manager = std::dynamic_pointer_cast<user::bullet_manager>( _bullet_manager.lock( ) ) )
+    {
+        for ( auto const& c : bullet_manager->get_children( ) )
+        {
+            paint_ground_bullet( std::dynamic_pointer_cast<bullet>( c ) );
         }
     }
 }
@@ -85,11 +92,17 @@ void ground::close_player( cinder::ColorA const & color )
     }
     _texture->update( _surface );
 }
-void ground::cell_paint_ground( std::weak_ptr<cell> cell )
+void ground::paint_ground_cell( std::weak_ptr<cell> cell )
 {
     if ( !cell.lock( ) ) return;
     float radius = cell.lock( )->get_radius( ) / get_scale( ).x;
     paint_fill_circle( cell.lock( )->get_position( ) / get_scale( ).x, radius, cell.lock( )->get_color( ) );
+}
+void ground::paint_ground_bullet( std::weak_ptr<bullet> bullet )
+{
+    if ( !bullet.lock( ) ) return;
+    float radius = bullet.lock( )->get_radius( ) / get_scale( ).x;
+    paint_fill_circle( bullet.lock( )->get_position( ) / get_scale( ).x, radius, bullet.lock( )->get_color( ) );
 }
 }
 

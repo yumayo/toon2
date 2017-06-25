@@ -8,23 +8,23 @@ using namespace cinder;
 namespace user
 {
 bool cell::init( std::string const& ip_address,
-                   int port, std::string const& relative_path_skin )
+                   int port, std::string const& skin_relative_path )
 {
     auto dont_destroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
     _tcp_connection = std::dynamic_pointer_cast<network::tcp_client>( dont_destroy_node.lock( )->get_child_by_name( "tcp_connection" ) );
 
     _handle = std::make_shared<network::network_object>( ip_address, port );
 
-    _setup_radius = 20.0F;
+    _skin_relative_path = skin_relative_path;
 
-    _radius = _setup_radius;
+    _radius = setup_radius;
     if ( auto base = renderer::circle::create( _radius ) )
     {
         _base = base;
         add_child( base );
 
-        if ( auto mask = relative_path_skin.empty( ) ?
-             renderer::circle::create( _radius ) : skin::create( _radius, relative_path_skin ) )
+        if ( auto mask = _skin_relative_path.empty( ) ?
+             renderer::circle::create( _radius ) : skin::create( _radius, _radius, _skin_relative_path ) )
         {
             _mask = mask;
             mask->set_scale( vec2( 0.9F ) );
@@ -37,13 +37,17 @@ bool cell::init( std::string const& ip_address,
 cell::~cell( )
 {
 }
+std::string const & cell::get_skin_relative_path( ) const
+{
+    return _skin_relative_path;
+}
 float cell::get_radius( )
 {
     return _radius;
 }
 float cell::get_startup_radius( )
 {
-    return _setup_radius;
+    return setup_radius;
 }
 void cell::set_radius( float value )
 {

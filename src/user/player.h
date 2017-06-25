@@ -16,6 +16,7 @@ public:
     void capture( float score );
     void scale_action( float score );
     void blowout( );
+    void create_bullet( cinder::vec2 direction );
 protected:
     float _target_radius = 0.0F;
 };

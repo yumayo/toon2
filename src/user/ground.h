@@ -2,13 +2,14 @@
 #include "renderer/surface.h"
 #include "player.h"
 #include "jsoncpp/json.h"
+#include "bullet.h"
 namespace user
 {
 class ground : public renderer::surface
 {
 public:
-    CREATE_H( ground, std::weak_ptr<node> cell_manager, Json::Value const& root, std::vector<std::vector<unsigned char>>& ground_buffer );
-    bool init( std::weak_ptr<node> cell_manager, Json::Value const& root, std::vector<std::vector<unsigned char>>& ground_buffer );
+    CREATE_H( ground, std::weak_ptr<node> cell_manager, std::weak_ptr<node> bullet_manager, Json::Value const& root, std::vector<std::vector<unsigned char>>& ground_buffer );
+    bool init( std::weak_ptr<node> cell_manager, std::weak_ptr<node> bullet_manager, Json::Value const& root, std::vector<std::vector<unsigned char>>& ground_buffer );
     void update( float delta ) override;
 public:
     // ControllerÇÃÇ›Ç™àµÇ¢Ç‹Ç∑ÅB
@@ -16,8 +17,10 @@ public:
     void collide( std::weak_ptr<node> player );
     void close_player( cinder::ColorA const& color );
 private:
-    void cell_paint_ground( std::weak_ptr<cell> cell );
+    void paint_ground_cell( std::weak_ptr<cell> cell );
+    void paint_ground_bullet( std::weak_ptr<bullet> bullet );
 private:
+    std::weak_ptr<node> _bullet_manager;
     std::weak_ptr<node> _cell_manager;
 };
 }

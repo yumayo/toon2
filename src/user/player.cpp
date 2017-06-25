@@ -22,7 +22,7 @@ bool player::init( std::string const& ip_address,
 player::~player( )
 {
     auto feed_num = user_default::get_instans( )->get_root( )["feed"].asInt( );
-    user_default::get_instans( )->get_root( )["feed"] = feed_num + int( _radius - _setup_radius );
+    user_default::get_instans( )->get_root( )["feed"] = feed_num + int( _radius - setup_radius );
     auto max_radius = user_default::get_instans( )->get_root( )["max_radius"].asFloat( );
     user_default::get_instans( )->get_root( )["max_radius"] = std::max( max_radius, _radius );
 }
@@ -49,7 +49,9 @@ void player::scale_action( float score )
 {
     remove_action_by_name( "scale_action" );
 
-    _target_radius = std::max( 10.0F, _target_radius + score );
+    _target_radius = glm::clamp( _target_radius + score, 
+                                 user_default::get_instans( )->get_root( )["system"]["player_raidus"]["min"].asFloat( ), 
+                                 user_default::get_instans( )->get_root( )["system"]["player_raidus"]["max"].asFloat( ) );
 
     auto sub = _target_radius - _radius;
     auto t = 2.0F + easeOutCubic( clamp( sub, 0.0F, 50.0F ) / 50.0F ) * 4.0F;
@@ -66,5 +68,17 @@ void player::blowout( )
     // TODO: フィールドに自分と同じ色のエサを撒き散らす。
 
     scale_action( -20.0F );
+}
+void player::create_bullet( cinder::vec2 direction )
+{
+    scale_action( -10.0F );
+    Json::Value root;
+    root["name"] = "create_bullet";
+    root["data"]["id"] = get_tag( );
+    root["data"]["position"][0] = get_position( ).x + get_radius( ) *  direction.x;
+    root["data"]["position"][1] = get_position( ).y + get_radius( ) *  direction.y;
+    root["data"]["direction"][0] = direction.x;
+    root["data"]["direction"][1] = direction.y;
+    _tcp_connection.lock( )->write( Json::FastWriter( ).write( root ) );
 }
 }

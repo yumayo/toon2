@@ -1,6 +1,6 @@
 {
-   "feed" : 199,
-   "max_radius" : 238.69764709472656,
+   "feed" : 1113,
+   "max_radius" : 381.61865234375,
    "select_skin_name" : "grass",
    "server" : {
       "address" : "192.168.11.2",
@@ -14,5 +14,11 @@
       "rainbow" : null,
       "soil" : null,
       "water" : null
+   },
+   "system" : {
+      "player_raidus" : {
+         "max" : 400,
+         "min" : 10
+      }
    }
 }

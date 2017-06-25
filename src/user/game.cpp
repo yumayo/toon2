@@ -71,11 +71,10 @@ void game::update( float delta )
     // 0~
     auto radius = _player.lock( )->get_radius( ) - _player.lock( )->get_startup_radius( );
 
-    // ~300
-    radius = glm::clamp( radius, 0.0F, 300.0F );
+    radius = glm::clamp( radius, 0.0F, user_default::get_instans( )->get_root( )["system"]["player_raidus"]["max"].asFloat( ) );
 
     // 0.0F ~ 1.0F;
-    float r = radius / 300.0F;
+    float r = radius / user_default::get_instans( )->get_root( )["system"]["player_raidus"]["max"].asFloat( );
 
     auto scale = 1.0F + 1.0F - easeOutCirc( r ) * 1.5F;
 
