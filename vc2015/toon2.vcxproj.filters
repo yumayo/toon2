@@ -266,6 +266,9 @@
     <ClCompile Include="..\src\user\se.cpp">
       <Filter>User Files\user</Filter>
     </ClCompile>
+    <ClCompile Include="..\cinder_cocoslike\utility\file_system.cpp">
+      <Filter>cinder_cocoslike\utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -480,6 +483,9 @@
     </ClInclude>
     <ClInclude Include="..\src\user\se.h">
       <Filter>User Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cinder_cocoslike\utility\file_system.h">
+      <Filter>cinder_cocoslike\utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

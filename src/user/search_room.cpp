@@ -33,7 +33,16 @@ bool search_room::init( )
                 Json::Value r;
                 r["name"] = "find_room";
                 r["data"]["id"] = root["data"]["id"].asInt( );
-                r["data"]["select_skin_name"] = user_default::get_instans( )->get_root( )["select_skin_name"].asString( );
+
+                // 選択しているスキンがきちんとガチャで手に入ったものなのかを判別します。
+                // Jsonのskin項目でtrueになっているか判定しているだけですけど。
+                auto select_skin_name = user_default::get_instans( )->get_root( )["select_skin_name"].asString( );
+                if ( user_default::get_instans( )->get_root( )["skin"].isMember( select_skin_name ) &&
+                     user_default::get_instans( )->get_root( )["skin"][select_skin_name].asBool( ) )
+                    r["data"]["select_skin_name"] = select_skin_name;
+                else
+                    r["data"]["select_skin_name"] = "";
+
                 _tcp_connection.lock( )->write( Json::FastWriter( ).write( r ) );
                 _tcp_connection.lock( )->on_received_json = [ this ] ( Json::Value root )
                 {

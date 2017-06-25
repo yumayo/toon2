@@ -8,6 +8,7 @@
 #include "player.h"
 #include "cinder/Rand.h"
 #include "se.h"
+#include "utility/file_system.h"
 using namespace cinder;
 namespace user
 {
@@ -17,38 +18,43 @@ CREATE_CPP( gacha )
 }
 bool gacha::init( )
 {
+    utility::file_system system;
+    system.search( app::getAssetPath( "skin/" ).string( ) );
+    _skin_items = system.get_names( );
+    // 拡張子を取り除く。
+    for ( auto& i : _skin_items ) i = i.substr( 0, i.rfind( '.' ) );
+    auto& root = user_default::get_instans( )->get_root( );
+    for ( auto const& i : _skin_items )
+    {
+        root["skin"][i];
+    }
+
     set_schedule_mouse_event( );
     set_schedule_touch_event( );
 
     auto mas = create_dot( "gacha_maschine.png", 600 );
-    _mas = mas;
+    _maschine = mas;
     mas->set_position( vec2( app::getWindowSize( ) ) * 0.5F );
     add_child( mas );
 
-    auto& root = user_default::get_instans( )->get_root( );
-
     auto gar = create_dot_button( "garagara.png", 200 );
-    _gar = gar;
+    _garagara = gar;
     gar->set_position( vec2( app::getWindowSize( ) ) * 0.5F + vec2( 0, -100 ) );
     using namespace action;
     gar->run_action( repeat_forever::create( sequence::create( ease<EaseInOutSine>::create( move_by::create( 1.0F, vec2( 0, -20 ) ) ),
                                                                ease<EaseInOutSine>::create( move_by::create( 1.0F, vec2( 0, 20 ) ) ) ) ) );
-
-    if ( !root["complete"].asBool( ) )
-    {
-        add_child( gar );
-    }
+    // コンプしてなかったらガチャマークを登録します。
+    if ( !is_complete( ) )  add_child( gar );
 
     auto bac = create_dot_button( "back.png", 150 );
-    _bac = bac;
+    _back_button = bac;
     bac->set_position( vec2( app::getWindowSize( ) ) * vec2( 0, 1 ) + vec2( 100, -100 ) );
     add_child( bac );
 
-
-    auto feed_num = root["feed"].asInt( );
+    auto feed_num = user_default::get_instans( )->get_root( )["feed"].asInt( );
 
     auto fla = renderer::label::create( "x" + boost::lexical_cast<std::string>( feed_num ), "misaki_gothic.ttf", 86 );
-    _fla = fla;
+    _feed_number_label = fla;
     fla->set_position( vec2( app::getWindowSize( ) ) * vec2( 1, 1 ) + vec2( -50, -50 ) );
     fla->set_anchor_point( vec2( 1, 1 ) );
     fla->set_pivot( vec2( 0, 0.6 ) );
@@ -75,7 +81,7 @@ bool gacha::init( )
         {
             auto feed_num = root["feed"].asInt( ) - 1;
             root["feed"] = feed_num;
-            _fla.lock( )->set_text( "x " + boost::lexical_cast<std::string>( feed_num ) );
+            _feed_number_label.lock( )->set_text( "x " + boost::lexical_cast<std::string>( feed_num ) );
             auto f = feed::create( node::INVALID_TAG, vec2( 0 ) );
             f->set_position( start_pos );
             f->run_action( sequence::create( ease<EaseInOutCirc>::create( move_to::create( 1.0F, end_pos ) ), remove_self::create( ) ) );
@@ -97,7 +103,7 @@ bool gacha::init( )
             pla->run_action( repeat_forever::create( rotate_by::create( 10.0F, M_PI * 2 ) ) );
             eff->add_child( pla );
 
-            if ( root["complete"].asBool( ) ) remove_child( _gar.lock( ) );
+            if ( is_complete( ) ) remove_child( _garagara.lock( ) );
         } );
         run_action( sequence::create( repeat_times::create( sequence::create( spawn, delay::create( 0.05F ) ), 10 ), delay::create( 1.0F ), new_skin ) );
     };
@@ -137,8 +143,8 @@ bool gacha::touch_began( cinder::app::TouchEvent::Touch event )
 void gacha::change_action( std::function<void( )> end_fn )
 {
     float i = 0;
-    size_t size = _mas.lock( )->get_children( ).size( );
-    for ( auto& c : _mas.lock( )->get_children( ) )
+    size_t size = _maschine.lock( )->get_children( ).size( );
+    for ( auto& c : _maschine.lock( )->get_children( ) )
     {
         c->remove_all_actions( );
         c->run_action( action::sequence::create(
@@ -146,11 +152,11 @@ void gacha::change_action( std::function<void( )> end_fn )
             action::ease<EaseOutBounce>::create( action::scale_to::create( 0.2F, vec2( 0 ) ) ) ) );
         i += 1.0F / size;
     }
-    if ( _gar.lock( ) )
+    if ( _garagara.lock( ) )
     {
         i = 0;
-        size = _gar.lock( )->get_children( ).size( );
-        for ( auto& c : _gar.lock( )->get_children( ) )
+        size = _garagara.lock( )->get_children( ).size( );
+        for ( auto& c : _garagara.lock( )->get_children( ) )
         {
             c->remove_all_actions( );
             c->run_action( action::sequence::create(
@@ -160,9 +166,9 @@ void gacha::change_action( std::function<void( )> end_fn )
         }
     }
     i = 0;
-    size = _bac.lock( )->get_children( ).size( );
-    auto itr = _bac.lock( )->get_children( ).begin( );
-    for ( ; itr != --_bac.lock( )->get_children( ).end( ); ++itr )
+    size = _back_button.lock( )->get_children( ).size( );
+    auto itr = _back_button.lock( )->get_children( ).begin( );
+    for ( ; itr != --_back_button.lock( )->get_children( ).end( ); ++itr )
     {
         ( *itr )->remove_all_actions( );
         ( *itr )->run_action( action::sequence::create(
@@ -194,9 +200,17 @@ std::string user::gacha::get_new_skin_name( )
 
     skin[new_skin_name] = true;
 
-    if ( no_get_skins.size( ) == 1 ) root["complete"] = true;
-
     return new_skin_name;
+}
+bool gacha::is_complete( )
+{
+    auto& root = user_default::get_instans( )->get_root( );
+    auto& skin = root["skin"];
+    for ( auto const& i : _skin_items )
+    {
+        if ( !skin[i].asBool( ) ) return false;
+    }
+    return true;
 }
 }
 

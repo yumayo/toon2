@@ -1,7 +1,6 @@
 {
-   "complete" : false,
-   "feed" : 39,
-   "max_size" : 20,
+   "feed" : 117,
+   "max_radius" : 20,
    "select_skin_name" : "grass",
    "server" : {
       "address" : "192.168.11.2",
@@ -10,9 +9,10 @@
    },
    "skin" : {
       "grass" : true,
-      "monta" : false,
-      "rainbow" : false,
-      "soil" : false,
-      "water" : false
+      "monta" : null,
+      "null" : null,
+      "rainbow" : null,
+      "soil" : null,
+      "water" : null
    }
 }

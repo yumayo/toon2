@@ -44,6 +44,7 @@ player::~player( )
     {
         auto feed_num = user_default::get_instans( )->get_root( )["feed"].asInt( );
         user_default::get_instans( )->get_root( )["feed"] = feed_num + int( _radius - _setup_radius );
+        user_default::get_instans( )->get_root( )["max_radius"] = _radius;
     }
 }
 float player::get_radius( )
