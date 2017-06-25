@@ -14,6 +14,7 @@ public:
     std::list<std::weak_ptr<enemy>>& get_enemys( );
     std::weak_ptr<player>& get_player( );
     void set_ground( std::weak_ptr<node> ground );
+    void set_bullet_manager( std::weak_ptr<node> bullet_manager );
     void remove_all_crown( );
     void set_all_crown( std::vector<int> const& ids );
 protected:
@@ -22,6 +23,7 @@ protected:
     std::weak_ptr<network::udp_connection> _udp_connection;
     std::weak_ptr<network::tcp_client> _tcp_connection;
     std::weak_ptr<node> _ground;
+    std::weak_ptr<node> _bullet_manager;
     void create_player( Json::Value const& data );
     void create_enemy( Json::Value const& data );
 };

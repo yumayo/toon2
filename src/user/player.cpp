@@ -68,9 +68,13 @@ void player::blowout( )
     // TODO: フィールドに自分と同じ色のエサを撒き散らす。
 
     scale_action( -20.0F );
+
 }
 void player::create_bullet( cinder::vec2 direction )
 {
+    // 小さい場合は打てない。
+    if ( _radius < 30.0F ) return;
+
     scale_action( -10.0F );
     Json::Value root;
     root["name"] = "create_bullet";

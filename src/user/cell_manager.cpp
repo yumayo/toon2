@@ -6,6 +6,7 @@
 #include "network.hpp"
 #include "ground.h"
 #include "title.h"
+#include "bullet_manager.h"
 #include "boost/lexical_cast.hpp"
 using namespace cinder;
 namespace user
@@ -47,6 +48,9 @@ bool cell_manager::init( Json::Value& root )
 
         auto ground_mgr = std::dynamic_pointer_cast<ground>( _ground.lock( ) );
         ground_mgr->close_player( ( *target ).lock( )->get_color( ) );
+
+        auto bullet_manager = std::dynamic_pointer_cast<user::bullet_manager>( _bullet_manager.lock( ) );
+        bullet_manager->close_player( ( *target ).lock( )->get_color( ) );
 
         // 保存リストの方の削除。
         {
@@ -185,6 +189,10 @@ std::weak_ptr<player>& cell_manager::get_player( )
 void cell_manager::set_ground( std::weak_ptr<node> ground )
 {
     _ground = ground;
+}
+void cell_manager::set_bullet_manager( std::weak_ptr<node> bullet_manager )
+{
+    _bullet_manager = bullet_manager;
 }
 void cell_manager::remove_all_crown( )
 {

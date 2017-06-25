@@ -22,10 +22,10 @@ bool bullet::init( int tag, cinder::vec2 position, cinder::vec2 direction, std::
 
     auto cell = std::dynamic_pointer_cast<user::cell> ( node_cell.lock( ) );
 
-    _base = add_child( renderer::circle::create( _radius, 3 ) );
+    _base = add_child( user::spike::create( _radius, _radius, 10.0F ) );
     _mask = _base.lock( )->add_child( cell->get_skin_relative_path( ).empty( ) ?
                                       renderer::circle::create( _radius ) :
-                                      skin::create( _radius, 3, cell->get_skin_relative_path( ) ) );
+                                      skin::create( _radius, _radius, cell->get_skin_relative_path( ) ) );
     _mask.lock( )->set_scale( vec2( 0.9F ) );
 
     _direction = direction;

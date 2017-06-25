@@ -12,8 +12,9 @@ CREATE_CPP( bullet_manager, std::weak_ptr<node> cell_manager )
 }
 bool bullet_manager::init( std::weak_ptr<node> cell_manager )
 {
-    set_name( "bullet_manager" );
     set_schedule_update( );
+
+    set_name( "bullet_manager" );
 
     _cell_manager = cell_manager;
 
@@ -40,6 +41,30 @@ bool bullet_manager::init( std::weak_ptr<node> cell_manager )
 }
 void bullet_manager::update( float delta )
 {
+    auto cell_manager = std::dynamic_pointer_cast<user::cell_manager>( _cell_manager.lock( ) );
+    auto player = cell_manager->get_player( );
+    for ( auto const& c : get_children( ) )
+    {
+        if ( c->get_color( ) == player.lock( )->get_color( ) ) continue;
+        if ( auto const& bullet = std::dynamic_pointer_cast<user::bullet>( c ) )
+        {
+            if ( distance( player.lock( )->get_position( ), bullet->get_position( ) ) 
+                 < player.lock( )->get_radius( ) + bullet->get_radius( ) )
+            {
+                player.lock( )->blowout( );
+            }
+        }
+    }
+}
+void bullet_manager::close_player( cinder::ColorA const& color )
+{
+    for ( auto const& c : get_children( ) )
+    {
+        if ( c->get_color( ) == color )
+        {
+            c->remove_from_parent( );
+        }
+    }
 }
 }
 

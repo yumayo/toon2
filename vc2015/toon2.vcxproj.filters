@@ -287,6 +287,9 @@
     <ClCompile Include="..\src\user\bullet.cpp">
       <Filter>User Files\user</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\user\spike.cpp">
+      <Filter>User Files\user</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -524,6 +527,9 @@
       <Filter>User Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\bullet.h">
+      <Filter>User Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\spike.h">
       <Filter>User Files\user</Filter>
     </ClInclude>
   </ItemGroup>

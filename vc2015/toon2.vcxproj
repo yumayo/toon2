@@ -193,6 +193,7 @@
     <ClCompile Include="..\src\user\search_room.cpp" />
     <ClCompile Include="..\src\user\skin.cpp" />
     <ClCompile Include="..\src\user\dot_sprite.cpp" />
+    <ClCompile Include="..\src\user\spike.cpp" />
     <ClCompile Include="..\src\user\title.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -290,6 +291,7 @@
     <ClInclude Include="..\src\user\search_room.h" />
     <ClInclude Include="..\src\user\skin.h" />
     <ClInclude Include="..\src\user\dot_sprite.h" />
+    <ClInclude Include="..\src\user\spike.h" />
     <ClInclude Include="..\src\user\title.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

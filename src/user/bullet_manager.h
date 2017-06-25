@@ -9,6 +9,7 @@ public:
     CREATE_H( bullet_manager, std::weak_ptr<node> cell_manager );
     bool init( std::weak_ptr<node> cell_manager );
     void update( float delta ) final override;
+    void close_player( cinder::ColorA const& color );
 protected:
     std::weak_ptr<node> _cell_manager;
     std::weak_ptr<network::tcp_client> _tcp_connection;
