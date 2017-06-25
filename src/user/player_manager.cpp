@@ -39,7 +39,7 @@ bool player_manager::init( Json::Value& root )
         // 削除ハンドルを作成。
         auto info = std::make_shared<network::network_object>( root["data"]["ip_address"].asString( ), root["data"]["udp_port"].asInt( ) );
 
-        auto target = std::find_if( _enemys.begin( ), _enemys.end( ), [ info ] ( std::weak_ptr<player>& n )
+        auto target = std::find_if( _enemys.begin( ), _enemys.end( ), [ info ] ( std::weak_ptr<enemy>& n )
         {
             return **n.lock( )->get_handle( ) == *info;
         } );
@@ -50,7 +50,7 @@ bool player_manager::init( Json::Value& root )
 
         // 保存リストの方の削除。
         {
-            auto remove_itr = std::remove_if( _enemys.begin( ), _enemys.end( ), [ info ] ( std::weak_ptr<player>& n )
+            auto remove_itr = std::remove_if( _enemys.begin( ), _enemys.end( ), [ info ] ( std::weak_ptr<enemy>& n )
             {
                 return **n.lock( )->get_handle( ) == *info;
             } );
@@ -60,9 +60,9 @@ bool player_manager::init( Json::Value& root )
         {
             auto remove_itr = std::remove_if( _children.begin( ), _children.end( ), [ info ] ( std::shared_ptr<node>& n )
             {
-                if ( auto pla = std::dynamic_pointer_cast<player>( n ) )
+                if ( auto cell = std::dynamic_pointer_cast<user::cell>( n ) )
                 {
-                    return **pla->get_handle( ) == *info;
+                    return **cell->get_handle( ) == *info;
                 }
                 return false;
             } );
@@ -118,8 +118,8 @@ void player_manager::update( float delta )
     // 大きさで、描画順を変更。
     get_children( ).sort( [ ] ( std::shared_ptr<node>& a, std::shared_ptr<node>& b )
     {
-        std::weak_ptr<player> p_a = std::dynamic_pointer_cast<player>( a );
-        std::weak_ptr<player> p_b = std::dynamic_pointer_cast<player>( b );
+        std::weak_ptr<cell> p_a = std::dynamic_pointer_cast<cell>( a );
+        std::weak_ptr<cell> p_b = std::dynamic_pointer_cast<cell>( b );
         if ( p_a.lock( ) && p_b.lock( ) )
         {
             return p_a.lock( )->get_radius( ) < p_b.lock( )->get_radius( );
@@ -134,8 +134,8 @@ void player_manager::update( float delta )
         if ( distance( _player.lock( )->get_position( ), enemy.lock( )->get_position( ) )
              < _player.lock( )->get_radius( ) * 0 + enemy.lock( )->get_radius( ) )
         {
-            std::weak_ptr<player> small = _player;
-            std::weak_ptr<player> large = enemy;
+            std::weak_ptr<cell> small = _player;
+            std::weak_ptr<cell> large = enemy;
             if ( large.lock( )->get_radius( ) < small.lock( )->get_radius( ) ) swap( small, large );
             if ( small.lock( )->get_radius( ) < large.lock( )->get_radius( ) / 2 )
             {
@@ -174,7 +174,7 @@ void player_manager::update( float delta )
         }
     }
 }
-std::list<std::weak_ptr<player>>& player_manager::get_enemys( )
+std::list<std::weak_ptr<enemy>>& player_manager::get_enemys( )
 {
     return _enemys;
 }
@@ -198,9 +198,9 @@ void player_manager::set_all_crown( std::vector<int> const& ids )
 {
     for ( int i = 0; i < ids.size( ); ++i )
     {
-        if ( auto player = get_child_by_tag( ids[i] ) )
+        if ( auto cell = get_child_by_tag( ids[i] ) )
         {
-            auto p = std::dynamic_pointer_cast<user::player>( player );
+            auto p = std::dynamic_pointer_cast<user::cell>( cell );
             if ( p->is_crowner( ) ) continue;
 
             auto s = renderer::sprite_cubic::create( "crown" + boost::lexical_cast<std::string>( i + 1 ) + ".png" );
@@ -214,12 +214,11 @@ void player_manager::create_enemy( Json::Value const & data )
     app::console( ) << "create_enemy" << std::endl;
     app::console( ) << data << std::endl;
 
-    auto enemy = player::create( data["ip_address"].asString( ), data["udp_port"].asInt( ),
-                                 data["select_skin_name"].asString( ).empty( ) ? "" : "skin/" + data["select_skin_name"].asString( ) + ".png" );
+    auto enemy = enemy::create( data["ip_address"].asString( ), data["udp_port"].asInt( ),
+                                data["select_skin_name"].asString( ).empty( ) ? "" : "skin/" + data["select_skin_name"].asString( ) + ".png" );
 
     enemy->set_color( ColorA( data["color"][0].asFloat( ), data["color"][1].asFloat( ), data["color"][2].asFloat( ) ) );
     enemy->set_position( vec2( data["position"][0].asInt( ), data["position"][1].asInt( ) ) );
-    enemy->set_name( "enemy" );
     enemy->set_tag( data["id"].asInt( ) );
 
     _enemys.emplace_back( enemy );
@@ -235,7 +234,6 @@ void player_manager::create_player( Json::Value const & data )
 
     pla->set_color( ColorA( data["color"][0].asFloat( ), data["color"][1].asFloat( ), data["color"][2].asFloat( ) ) );
     pla->set_position( vec2( data["position"][0].asInt( ), data["position"][1].asInt( ) ) );
-    pla->set_name( "player" );
     pla->set_tag( data["id"].asInt( ) );
 
     _player = pla;

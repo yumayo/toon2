@@ -99,9 +99,9 @@ bool gacha::init( )
             eff->run_action( sequence::create( ease<EaseOutExpo>::create( move_to::create( 0.75F, vec2( app::getWindowSize( ) ) * vec2( 0.5F ) ) ), call_func::create( [ this ] { _is_animation_end = true; } ) ) );
             add_child( eff );
 
-            auto pla = player::create( "", 0, "skin/" + get_new_skin_name( ) + ".png" );
-            pla->run_action( repeat_forever::create( rotate_by::create( 10.0F, M_PI * 2 ) ) );
-            eff->add_child( pla );
+            auto player = player::create( "", 0, "skin/" + get_new_skin_name( ) + ".png" );
+            player->run_action( repeat_forever::create( rotate_by::create( 10.0F, M_PI * 2 ) ) );
+            eff->add_child( player );
 
             if ( is_complete( ) ) remove_child( _garagara.lock( ) );
         } );

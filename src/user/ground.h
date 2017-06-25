@@ -16,7 +16,7 @@ public:
     void collide( std::weak_ptr<node> player );
     void close_player( cinder::ColorA const& color );
 private:
-    void player_paint_ground( std::weak_ptr<player> player );
+    void cell_paint_ground( std::weak_ptr<cell> cell );
 private:
     std::weak_ptr<node> _player_manager;
 };

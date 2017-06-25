@@ -55,11 +55,11 @@ void ground::update( float delta )
     // プレイヤーマネージャからプレイヤーを抽出し、グラウンドに色を塗る。
     if ( auto& player_mgr = std::dynamic_pointer_cast<player_manager>( _player_manager.lock( ) ) )
     {
-        player_paint_ground( player_mgr->get_player( ) );
+        cell_paint_ground( player_mgr->get_player( ) );
 
         for ( auto& enemy : player_mgr->get_enemys( ) )
         {
-            player_paint_ground( enemy );
+            cell_paint_ground( enemy );
         }
     }
 }
@@ -85,11 +85,11 @@ void ground::close_player( cinder::ColorA const & color )
     }
     _texture->update( _surface );
 }
-void ground::player_paint_ground( std::weak_ptr<player> player )
+void ground::cell_paint_ground( std::weak_ptr<cell> cell )
 {
-    if ( !player.lock( ) ) return;
-    float radius = player.lock( )->get_radius( ) / get_scale( ).x;
-    paint_fill_circle( player.lock( )->get_position( ) / get_scale( ).x, radius, player.lock( )->get_color( ) );
+    if ( !cell.lock( ) ) return;
+    float radius = cell.lock( )->get_radius( ) / get_scale( ).x;
+    paint_fill_circle( cell.lock( )->get_position( ) / get_scale( ).x, radius, cell.lock( )->get_color( ) );
 }
 }
 

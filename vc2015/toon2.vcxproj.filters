@@ -275,6 +275,12 @@
     <ClCompile Include="..\cinder_cocoslike\network\tcp_server_member.cpp">
       <Filter>cinder_cocoslike\network</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\user\enemy.cpp">
+      <Filter>User Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\cell.cpp">
+      <Filter>User Files\user</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -498,6 +504,12 @@
     </ClInclude>
     <ClInclude Include="..\cinder_cocoslike\network\tcp_server_member.h">
       <Filter>cinder_cocoslike\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\enemy.h">
+      <Filter>User Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\cell.h">
+      <Filter>User Files\user</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

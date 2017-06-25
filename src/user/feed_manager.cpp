@@ -62,7 +62,7 @@ void feed_manager::update( float delta )
 {
     for ( auto child : _player_manager.lock( )->get_children( ) )
     {
-        if ( auto pla = std::dynamic_pointer_cast<player>( child ) )
+        if ( auto pla = std::dynamic_pointer_cast<cell>( child ) )
         {
             for ( auto& f : _children )
             {
