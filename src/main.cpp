@@ -5,7 +5,7 @@
 CINDER_APP( app_delegate, cinder::app::RendererGl, [ & ] ( cinder::app::App::Settings *settings )
 {
     //settings->setConsoleWindowEnabled( );
-    settings->setWindowPos( -1600, 180 );
+    //settings->setWindowPos( -1600, 180 );
     settings->setWindowSize( 1280, 720 );
     settings->setTitle( u8"toon2" );
     settings->setResizable( false );
@@ -14,7 +14,7 @@ CINDER_APP( app_delegate, cinder::app::RendererGl, [ & ] ( cinder::app::App::Set
 CINDER_APP( app_delegate, cinder::app::RendererGl, [ & ] ( cinder::app::App::Settings *settings )
 {
     //settings->setConsoleWindowEnabled( );
-    settings->setWindowPos( -1600, 180 );
+    //settings->setWindowPos( -1600, 180 );
     settings->setWindowSize( 1280, 720 );
     settings->setTitle( u8"toon2" );
     settings->setResizable( false );

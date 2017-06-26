@@ -1,20 +1,13 @@
 {
-   "feed" : 1694,
-   "max_radius" : 381.61865234375,
+   "feed" : 82,
+   "max_radius" : 102.28079223632813,
    "select_skin_name" : "grass",
    "server" : {
-      "address" : "192.168.11.2",
+      "address" : "127.0.0.1",
       "tcp_port" : 25564,
       "udp_port" : 25565
    },
-   "skin" : {
-      "grass" : true,
-      "monta" : null,
-      "null" : null,
-      "rainbow" : null,
-      "soil" : null,
-      "water" : null
-   },
+   "skin" : {},
    "system" : {
       "player_raidus" : {
          "max" : 400,

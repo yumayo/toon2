@@ -26,6 +26,10 @@ bool bullet::init( int tag, cinder::vec2 position, cinder::vec2 direction, std::
     _mask = _base.lock( )->add_child( cell->get_skin_relative_path( ).empty( ) ?
                                       renderer::circle::create( _radius ) :
                                       skin::create( _radius, _radius, cell->get_skin_relative_path( ) ) );
+    if ( cell->get_skin_relative_path( ).empty( ) )
+    {
+        _mask.lock( )->set_color( node_cell.lock( )->get_color( ) );
+    }
     _mask.lock( )->set_scale( vec2( 0.9F ) );
 
     _direction = direction;
