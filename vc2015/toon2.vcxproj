@@ -178,6 +178,8 @@
     <ClCompile Include="..\src\user\controller.cpp" />
     <ClCompile Include="..\src\user\button_scale.cpp" />
     <ClCompile Include="..\src\user\create_dot_obeject.cpp" />
+    <ClCompile Include="..\src\user\division_cell.cpp" />
+    <ClCompile Include="..\src\user\division_cell_manager.cpp" />
     <ClCompile Include="..\src\user\dot_label.cpp" />
     <ClCompile Include="..\src\user\enemy.cpp" />
     <ClCompile Include="..\src\user\gacha.cpp" />
@@ -276,6 +278,8 @@
     <ClInclude Include="..\src\user\controller.h" />
     <ClInclude Include="..\src\user\button_scale.h" />
     <ClInclude Include="..\src\user\create_dot_obeject.h" />
+    <ClInclude Include="..\src\user\division_cell.h" />
+    <ClInclude Include="..\src\user\division_cell_manager.h" />
     <ClInclude Include="..\src\user\dot_label.h" />
     <ClInclude Include="..\src\user\enemy.h" />
     <ClInclude Include="..\src\user\gacha.h" />

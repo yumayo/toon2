@@ -290,6 +290,12 @@
     <ClCompile Include="..\src\user\spike.cpp">
       <Filter>User Files\user</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\user\division_cell.cpp">
+      <Filter>User Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\division_cell_manager.cpp">
+      <Filter>User Files\user</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -530,6 +536,12 @@
       <Filter>User Files\user</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\spike.h">
+      <Filter>User Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\division_cell.h">
+      <Filter>User Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\division_cell_manager.h">
       <Filter>User Files\user</Filter>
     </ClInclude>
   </ItemGroup>
