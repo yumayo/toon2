@@ -86,12 +86,6 @@
     <ClInclude Include="..\src\user\config.h">
       <Filter>User Files\user</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\user\dot_label.h">
-      <Filter>User Files\user</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\user\dot_sprite.h">
-      <Filter>User Files\user</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\user\search_room.h">
       <Filter>User Files\user</Filter>
     </ClInclude>
@@ -288,12 +282,6 @@
       <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\spike.cpp">
-      <Filter>User Files\user</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\user\division_cell.cpp">
-      <Filter>User Files\user</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\user\division_cell_manager.cpp">
       <Filter>User Files\user</Filter>
     </ClCompile>
   </ItemGroup>
@@ -538,12 +526,6 @@
     <ClInclude Include="..\src\user\spike.h">
       <Filter>User Files\user</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\user\division_cell.h">
-      <Filter>User Files\user</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\user\division_cell_manager.h">
-      <Filter>User Files\user</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources.rc">
@@ -591,12 +573,6 @@
       <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\config.cpp">
-      <Filter>User Files\user</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\user\dot_label.cpp">
-      <Filter>User Files\user</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\user\dot_sprite.cpp">
       <Filter>User Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\search_room.cpp">

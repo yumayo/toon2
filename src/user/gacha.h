@@ -1,6 +1,5 @@
 #pragma once
 #include "cocoslike.hpp"
-#include "dot_label.h"
 namespace user
 {
 class gacha : public scene

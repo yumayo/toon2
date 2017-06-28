@@ -1,6 +1,6 @@
 {
-   "feed" : 82,
-   "max_radius" : 102.28079223632813,
+   "feed" : 564,
+   "max_radius" : 158.8365478515625,
    "select_skin_name" : "grass",
    "server" : {
       "address" : "127.0.0.1",

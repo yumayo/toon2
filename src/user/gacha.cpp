@@ -3,7 +3,6 @@
 #include "scene_manager.h"
 #include "title.h"
 #include "feed.h"
-#include "dot_label.h"
 #include "boost/lexical_cast.hpp"
 #include "player.h"
 #include "cinder/Rand.h"
