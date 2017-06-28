@@ -37,6 +37,9 @@ bool cell_manager::init( Json::Value& root )
     // 他のクライアントが接続を切ったら呼ばれます。
     _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "close_client", [ this ] ( Json::Value root )
     {
+        app::console( ) << "close_client" << std::endl;
+        app::console( ) << root;
+
         // 削除ハンドルを作成。
         auto info = std::make_shared<network::network_object>( root["data"]["ip_address"].asString( ), root["data"]["udp_port"].asInt( ) );
 

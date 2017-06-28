@@ -154,6 +154,14 @@ bool search_room::init( )
         if ( on_not_found ) on_not_found( );
         remove_from_parent( );
     };
+    tcp_connection->on_errored = [ this ] ( asio::error_code const& e )
+    {
+        scene_manager::get_instans( )->top( )->set_block_schedule_event( false );
+        _tcp_connection.lock( )->remove_from_parent( );
+        _udp_connection.lock( )->remove_from_parent( );
+        if ( on_not_found ) on_not_found( );
+        remove_from_parent( );
+    };
 
     return true;
 }

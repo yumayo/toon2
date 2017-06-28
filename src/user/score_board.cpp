@@ -42,6 +42,9 @@ bool score_board::init( std::shared_ptr<node> cell_manager, cinder::vec2 size )
 
     _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "ranking", [ this ] ( Json::Value root )
     {
+        app::console( ) << "ranking" << std::endl;
+        app::console( ) << root;
+
         auto scores = get_child_by_name( "scores" );
         scores->remove_all_children( );
         auto cell_manager = std::dynamic_pointer_cast<user::cell_manager>( _cell_manager.lock( ) );
