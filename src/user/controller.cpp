@@ -93,7 +93,8 @@ void controller::update( float delta )
     if ( _player.lock( ) )
     {
         cinder::vec2 speed = get_axis( ) * 300.0F * delta;
-        speed *= ( 1.0F - easeOutSine( cinder::clamp( ( _player.lock( )->get_radius( ) - _player.lock( )->get_startup_radius( ) ) / 400.0F, 0.0F, 0.6F ) ) );
+        auto radius_clamped = cinder::clamp( ( _player.lock( )->get_radius( ) - _player.lock( )->get_startup_radius( ) ) / 400.0F, 0.0F, 0.4F );
+        speed *= ( 1.0F - easeOutSine( radius_clamped ) );
         _player.lock( )->set_position( _player.lock( )->get_position( ) + speed );
         _ground.lock( )->collide( _player );
     }

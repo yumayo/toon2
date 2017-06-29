@@ -35,7 +35,7 @@ bool bullet::init( int tag, cinder::vec2 position, cinder::vec2 direction, std::
     _direction = direction;
 
     using namespace action;
-    run_action( sequence::create( delay::create( 3.0F ), remove_self::create( ) ) );
+    run_action( sequence::create( delay::create( 2.0F ), remove_self::create( ) ) );
 
     return true;
 }

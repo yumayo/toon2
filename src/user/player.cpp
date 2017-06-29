@@ -67,15 +67,22 @@ void player::blowout( )
 {
     // TODO: フィールドに自分と同じ色のエサを撒き散らす。
 
-    scale_action( -20.0F );
+    scale_action( -6.0F );
 
+    if ( _radius < 15.0F )
+    {
+        Json::Value root;
+        root["name"] = "kill";
+        root["data"]["id"] = get_tag( );
+        _tcp_connection.lock( )->write( Json::FastWriter( ).write( root ) );
+    }
 }
 void player::create_bullet( cinder::vec2 direction )
 {
     // 小さい場合は打てない。
-    if ( _radius < 30.0F ) return;
+    if ( _radius < 40.0F ) return;
 
-    scale_action( -10.0F );
+    scale_action( -4.0F );
     Json::Value root;
     root["name"] = "create_bullet";
     root["data"]["id"] = get_tag( );
