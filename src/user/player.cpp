@@ -50,11 +50,11 @@ void player::scale_action( float score )
     remove_action_by_name( "scale_action" );
 
     _target_radius = glm::clamp( _target_radius + score, 
-                                 user_default::get_instans( )->get_root( )["system"]["player_raidus"]["min"].asFloat( ), 
-                                 user_default::get_instans( )->get_root( )["system"]["player_raidus"]["max"].asFloat( ) );
+                                 user_default::get_instans( )->get_root( )["system"]["min_radius"].asFloat( ), 
+                                 user_default::get_instans( )->get_root( )["system"]["max_radius"].asFloat( ) );
 
     auto sub = _target_radius - _radius;
-    auto t = 2.0F + easeOutCubic( clamp( sub, 0.0F, 50.0F ) / 50.0F ) * 4.0F;
+    auto t = 1.5F + easeOutCubic( clamp( sub, 0.0F, 50.0F ) / 50.0F ) * 1.5F;
     auto act = action::ease<EaseOutSine>::create( action::float_to::create( t, _radius, _target_radius, [ this ] ( float value )
     {
         set_radius( value );
@@ -80,7 +80,7 @@ void player::blowout( )
 void player::create_bullet( cinder::vec2 direction )
 {
     // 小さい場合は打てない。
-    if ( _radius < 40.0F ) return;
+    if ( _target_radius < 40.0F ) return;
 
     scale_action( -4.0F );
     Json::Value root;

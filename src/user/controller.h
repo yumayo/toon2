@@ -20,7 +20,7 @@ public:
     void update( float delta ) override;
 public:
     // ³‹K‰»‚³‚ê‚½²‚ğ•Ô‚µ‚Ü‚·B
-    cinder::vec2 get_axis( );
+    cinder::vec2 get_normalized_axis( );
 private:
     void began( cinder::vec2 pos );
     void moved( cinder::vec2 pos );

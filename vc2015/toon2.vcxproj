@@ -179,6 +179,7 @@
     <ClCompile Include="..\src\user\controller.cpp" />
     <ClCompile Include="..\src\user\button_scale.cpp" />
     <ClCompile Include="..\src\user\create_dot_obeject.cpp" />
+    <ClCompile Include="..\src\user\cube.cpp" />
     <ClCompile Include="..\src\user\enemy.cpp" />
     <ClCompile Include="..\src\user\gacha.cpp" />
     <ClCompile Include="..\src\user\feed.cpp" />
@@ -276,6 +277,7 @@
     <ClInclude Include="..\src\user\controller.h" />
     <ClInclude Include="..\src\user\button_scale.h" />
     <ClInclude Include="..\src\user\create_dot_obeject.h" />
+    <ClInclude Include="..\src\user\cube.h" />
     <ClInclude Include="..\src\user\enemy.h" />
     <ClInclude Include="..\src\user\gacha.h" />
     <ClInclude Include="..\src\user\feed.h" />

@@ -92,14 +92,15 @@ void controller::update( float delta )
 {
     if ( _player.lock( ) )
     {
-        cinder::vec2 speed = get_axis( ) * 300.0F * delta;
-        auto radius_clamped = cinder::clamp( ( _player.lock( )->get_radius( ) - _player.lock( )->get_startup_radius( ) ) / 400.0F, 0.0F, 0.4F );
-        speed *= ( 1.0F - easeOutSine( radius_clamped ) );
+        auto system_speed = user_default::get_instans( )->get_root( )["system"]["speed"].asFloat( );
+        cinder::vec2 speed = get_normalized_axis( ) * (float)system_speed * delta;
+        auto system_max_radius = user_default::get_instans( )->get_root( )["system"]["max_radius"].asFloat( );
+        speed *= ( 1.0F - easeOutSine( _player.lock( )->get_radius( ) / system_max_radius ) * 0.5F );
         _player.lock( )->set_position( _player.lock( )->get_position( ) + speed );
         _ground.lock( )->collide( _player );
     }
 }
-cinder::vec2 controller::get_axis( )
+cinder::vec2 controller::get_normalized_axis( )
 {
     float len = _base_node.lock( )->get_content_size( ).x * 0.5F;
     return _axis / len;

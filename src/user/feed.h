@@ -1,5 +1,4 @@
 #pragma once
-#include "renderer/circle.h"
 #include "captured_object.h"
 namespace user
 {
@@ -12,7 +11,7 @@ public:
     float get_radius( );
     void on_captured( std::weak_ptr<node> other ) final override;
 protected:
-    std::weak_ptr<renderer::circle> _circle;
     float _score = 0.0F;
+    float _radius = 0.0F;
 };
 }

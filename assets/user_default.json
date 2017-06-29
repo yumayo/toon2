@@ -1,17 +1,16 @@
 {
-   "feed" : 4229,
+   "feed" : 6712,
    "max_radius" : 400,
    "select_skin_name" : "grass",
    "server" : {
-      "address" : "10.25.30.220",
+      "address" : "192.168.11.2",
       "tcp_port" : 25564,
       "udp_port" : 25565
    },
    "skin" : {},
    "system" : {
-      "player_raidus" : {
-         "max" : 400,
-         "min" : 10
-      }
+      "max_radius" : 400,
+      "min_radius" : 10,
+      "speed" : 300
    }
 }

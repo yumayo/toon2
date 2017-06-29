@@ -12,8 +12,8 @@ public:
     CREATE_H( game, Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer, std::vector<std::vector<unsigned char>>& ground_buffer );
     ~game( );
     bool init( Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer, std::vector<std::vector<unsigned char>>& ground_buffer );
-    
     void update( float delta ) override;
+    void render( ) override;
 private:
     std::weak_ptr<field> _field;
     std::weak_ptr<player> _player;

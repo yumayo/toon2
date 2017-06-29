@@ -66,21 +66,25 @@ bool game::init( Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer, 
 }
 void game::update( float delta )
 {
-    // カメラのアップデート
+    //// カメラのアップデート
 
-    // 0~
-    auto radius = _player.lock( )->get_radius( ) - _player.lock( )->get_startup_radius( );
+    //// 0~
+    //auto radius = _player.lock( )->get_radius( ) - _player.lock( )->get_startup_radius( );
 
-    radius = glm::clamp( radius, 0.0F, user_default::get_instans( )->get_root( )["system"]["player_raidus"]["max"].asFloat( ) );
+    //radius = glm::clamp( radius, 0.0F, user_default::get_instans( )->get_root( )["system"]["max_radius"].asFloat( ) );
 
-    // 0.0F ~ 1.0F;
-    float r = radius / user_default::get_instans( )->get_root( )["system"]["player_raidus"]["max"].asFloat( );
+    //// 0.0F ~ 1.0F;
+    //float r = radius / user_default::get_instans( )->get_root( )["system"]["max_radius"].asFloat( );
 
-    auto scale = 1.0F + 1.0F - easeOutCirc( r ) * 1.5F;
+    //auto scale = 1.0F + 1.0F - easeOutCirc( r ) * 1.5F;
 
-    _field.lock( )->set_scale( vec2( scale ) );
+    //_field.lock( )->set_scale( vec2( scale ) );
 
-    auto win_half = vec2( app::getWindowSize( ) ) * 0.5F;
-    if ( _player.lock( ) ) _field.lock( )->set_position( win_half - _player.lock( )->get_position( ) * _field.lock( )->get_scale( ).x );
+    //auto win_half = vec2( app::getWindowSize( ) ) * 0.5F;
+    //if ( _player.lock( ) ) _field.lock( )->set_position( win_half - _player.lock( )->get_position( ) * _field.lock( )->get_scale( ).x );
+}
+void game::render( )
+{
+    gl::setMatricesWindow( app::getWindowSize( ) );
 }
 }

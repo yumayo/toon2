@@ -287,6 +287,9 @@
     <ClCompile Include="..\cinder_cocoslike\utility\base64.cpp">
       <Filter>cinder_cocoslike\utility</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\user\cube.cpp">
+      <Filter>User Files\user</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -531,6 +534,9 @@
     </ClInclude>
     <ClInclude Include="..\cinder_cocoslike\utility\base64.h">
       <Filter>cinder_cocoslike\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\cube.h">
+      <Filter>User Files\user</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
