@@ -73,7 +73,13 @@ bool bullet_manager::init( std::weak_ptr<node> cell_manager, Json::Value bullet_
 
     _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "erase_bullet", [ this ] ( Json::Value root )
     {
-        remove_child_by_tag( root["data"]["id"].asInt( ) );
+        for ( auto& folder : get_children( ) )
+        {
+            for ( auto& bullet_node : folder->get_children( ) )
+            {
+                if ( bullet_node->get_tag( ) == root["data"]["id"].asInt( ) ) bullet_node->remove_from_parent( );
+            }
+        }
     } ) );
 
     auto cell_mgr = std::dynamic_pointer_cast<user::cell_manager>( _cell_manager.lock( ) );
@@ -113,20 +119,24 @@ void bullet_manager::update( float delta )
 {
     auto cell_manager = std::dynamic_pointer_cast<user::cell_manager>( _cell_manager.lock( ) );
     auto player = cell_manager->get_player( );
-    for ( auto const& c : get_children( ) )
+    for ( auto const& folder : get_children( ) )
     {
-        if ( c->get_color( ) == player.lock( )->get_color( ) ) continue;
-        if ( auto const& bullet = std::dynamic_pointer_cast<user::bullet>( c ) )
+        for ( auto const& bullet_node : folder->get_children( ) )
         {
-            if ( bullet->is_hit( ) ) continue;
-            if ( distance( player.lock( )->get_position( ), bullet->get_position( ) )
-                 < player.lock( )->get_radius( ) + bullet->get_radius( ) )
+            if ( folder->get_tag( ) == player.lock( )->get_tag( ) ) continue;
+            if ( auto const& bullet = std::dynamic_pointer_cast<user::bullet>( bullet_node ) )
             {
-                Json::Value root;
-                root["name"] = "blowout";
-                root["data"]["id"] = bullet->get_tag( );
-                player.lock( )->blowout( );
-                _tcp_connection.lock( )->write( Json::FastWriter( ).write( root ) );
+                if ( bullet->is_hit( ) ) continue;
+                if ( distance( player.lock( )->get_position( ), bullet->get_position( ) )
+                     < player.lock( )->get_radius( ) + bullet->get_radius( ) )
+                {
+                    bullet->hit( );
+                    Json::Value root;
+                    root["name"] = "blowout";
+                    root["data"]["id"] = bullet->get_tag( );
+                    player.lock( )->blowout( );
+                    _tcp_connection.lock( )->write( Json::FastWriter( ).write( root ) );
+                }
             }
         }
     }
