@@ -8,6 +8,7 @@
 #include "cinder/Rand.h"
 #include "se.h"
 #include "utility/file_system.h"
+#include "enemy.h"
 using namespace cinder;
 namespace user
 {
@@ -98,9 +99,9 @@ bool gacha::init( )
             eff->run_action( sequence::create( ease<EaseOutExpo>::create( move_to::create( 0.75F, vec2( app::getWindowSize( ) ) * vec2( 0.5F ) ) ), call_func::create( [ this ] { _is_animation_end = true; } ) ) );
             add_child( eff );
 
-            auto player = player::create( "", 0, "skin/" + get_new_skin_name( ) + ".png" );
-            player->run_action( repeat_forever::create( rotate_by::create( 10.0F, M_PI * 2 ) ) );
-            eff->add_child( player );
+            auto enemy = enemy::create( "", 0, "skin/" + get_new_skin_name( ) + ".png" );
+            enemy->run_action( repeat_forever::create( rotate_by::create( 10.0F, M_PI * 2 ) ) );
+            eff->add_child( enemy );
 
             if ( is_complete( ) ) remove_child( _garagara.lock( ) );
         } );

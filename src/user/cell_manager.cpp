@@ -49,11 +49,11 @@ bool cell_manager::init( Json::Value& root )
         } );
         if ( target == _enemys.end( ) ) return;
 
-        auto ground_mgr = std::dynamic_pointer_cast<ground>( _ground.lock( ) );
-        ground_mgr->close_player( ( *target ).lock( )->get_color( ) );
-
         auto bullet_manager = std::dynamic_pointer_cast<user::bullet_manager>( _bullet_manager.lock( ) );
         bullet_manager->close_player( ( *target ).lock( )->get_color( ) );
+
+        auto ground_mgr = std::dynamic_pointer_cast<ground>( _ground.lock( ) );
+        ground_mgr->close_player( ( *target ).lock( )->get_color( ) );
 
         // 保存リストの方の削除。
         {
@@ -240,7 +240,7 @@ void cell_manager::create_player( Json::Value const & data )
     app::console( ) << "create_player" << std::endl;
     app::console( ) << data << std::endl;
 
-    auto pla = player::create( data["ip_address"].asString( ), data["udp_port"].asInt( ),
+    auto pla = player::create( shared_from_this( ), data["ip_address"].asString( ), data["udp_port"].asInt( ),
                                data["select_skin_name"].asString( ).empty( ) ? "" : "skin/" + data["select_skin_name"].asString( ) + ".png" );
 
     pla->set_color( ColorA( data["color"][0].asFloat( ), data["color"][1].asFloat( ), data["color"][2].asFloat( ) ) );

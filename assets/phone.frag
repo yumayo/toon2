@@ -11,5 +11,6 @@ out vec4 Color;
 void main( void )
 {
 	float d = dot(vNormal, uEyeDirection);
-	Color = vec4(vColor.rgb * clamp(d, 0.5, 1.0), 1.0);
+	Color.rgb = vColor.rgb * clamp(d, 0.25, 1.0) * 2.0;
+	Color.a = 1.0;
 }

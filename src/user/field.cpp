@@ -10,11 +10,18 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( field, Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer, std::vector<std::vector<unsigned char>>& ground_buffer )
+CREATE_CPP( field, 
+            Json::Value& root,
+            std::vector<feed_data> feed_buffet,
+            std::vector<bullet_data>& bullet_buffer,
+            std::vector<std::vector<ground_data>>& ground_buffer )
 {
-    CREATE( field, root, feeds_buffer, ground_buffer );
+    CREATE( field, root, feed_buffet, bullet_buffer, ground_buffer );
 }
-bool field::init( Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer, std::vector<std::vector<unsigned char>>& ground_buffer )
+bool field::init( Json::Value& root,
+                  std::vector<feed_data> feed_buffet,
+                  std::vector<bullet_data>& bullet_buffer,
+                  std::vector<std::vector<ground_data>>& ground_buffer )
 {
     set_name( "field" );
 
@@ -23,7 +30,7 @@ bool field::init( Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer,
     auto ground = ground::create( cell_manager, bullet_manager, root, ground_buffer );
     cell_manager->set_ground( ground );
     cell_manager->set_bullet_manager( bullet_manager );
-    auto feed_manager = feed_manager::create( cell_manager, feeds_buffer );
+    auto feed_manager = feed_manager::create( cell_manager, feed_buffet );
 
     // 1
     add_child( ground );
@@ -35,6 +42,7 @@ bool field::init( Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer,
     add_child( cell_manager );
 
     _player = cell_manager->get_player( );
+    _bullet_manager = bullet_manager;
 
     return true;
 }
@@ -58,6 +66,10 @@ void field::render( )
     camera.lookAt( vec3( player->get_position( ), -1000 * easeOutCirc( r ) ), vec3( player->get_position( ), 0 ) );
     camera.setWorldUp( vec3( 0, -1, 0 ) );
     gl::setMatrices( camera );
+}
+std::weak_ptr<node> field::get_bullet_manager( )
+{
+    return _bullet_manager;
 }
 }
 

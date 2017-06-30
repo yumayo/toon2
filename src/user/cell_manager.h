@@ -2,6 +2,7 @@
 #include "node.h"
 #include "player.h"
 #include "enemy.h"
+#include "jsoncpp/json.h"
 namespace user
 {
 class cell_manager : public node

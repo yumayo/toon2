@@ -5,9 +5,9 @@ namespace user
 class player : public cell
 {
 public:
-    CREATE_H( player, std::string const& ip_address,
+    CREATE_H( player, std::weak_ptr<node> cell_manager, std::string const& ip_address,
               int port, std::string const& relative_path_skin = "" );
-    bool init( std::string const& ip_address,
+    bool init( std::weak_ptr<node> cell_manager, std::string const& ip_address,
                int port, std::string const& relative_path_skin );
     ~player( );
     void key_down( cinder::app::KeyEvent e );
@@ -16,8 +16,9 @@ public:
     void capture( float score );
     void scale_action( float score );
     void blowout( );
-    void create_bullet( cinder::vec2 direction );
+    bool parse_bullet_data( Json::Value* root, cinder::vec2 direction );
 protected:
     float _target_radius = 0.0F;
+    std::weak_ptr<node> _cell_manager;
 };
 }

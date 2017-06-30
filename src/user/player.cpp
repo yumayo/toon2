@@ -3,20 +3,23 @@
 #include "utility/string_utility.h"
 #include "skin.h"
 #include "scene_manager.h"
+#include "bullet_manager.h"
+#include "cell_manager.h"
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( player, std::string const& ip_address,
+CREATE_CPP( player, std::weak_ptr<node> cell_manager, std::string const& ip_address,
             int port, std::string const& relative_path_skin )
 {
-    CREATE( player, ip_address, port, relative_path_skin );
+    CREATE( player, cell_manager, ip_address, port, relative_path_skin );
 }
-bool player::init( std::string const& ip_address,
+bool player::init( std::weak_ptr<node> cell_manager, std::string const& ip_address,
                    int port, std::string const& relative_path_skin )
 {
     if ( !cell::init( ip_address, port, relative_path_skin ) ) return false;
     set_schedule_key_event( );
     _target_radius = _radius;
+    _cell_manager = cell_manager;
     return true;
 }
 player::~player( )
@@ -49,8 +52,8 @@ void player::scale_action( float score )
 {
     remove_action_by_name( "scale_action" );
 
-    _target_radius = glm::clamp( _target_radius + score, 
-                                 user_default::get_instans( )->get_root( )["system"]["min_radius"].asFloat( ), 
+    _target_radius = glm::clamp( _target_radius + score,
+                                 user_default::get_instans( )->get_root( )["system"]["min_radius"].asFloat( ),
                                  user_default::get_instans( )->get_root( )["system"]["max_radius"].asFloat( ) );
 
     auto sub = _target_radius - _radius;
@@ -65,8 +68,6 @@ void player::scale_action( float score )
 }
 void player::blowout( )
 {
-    // TODO: フィールドに自分と同じ色のエサを撒き散らす。
-
     scale_action( -6.0F );
 
     if ( _radius < 15.0F )
@@ -77,19 +78,19 @@ void player::blowout( )
         _tcp_connection.lock( )->write( Json::FastWriter( ).write( root ) );
     }
 }
-void player::create_bullet( cinder::vec2 direction )
+bool player::parse_bullet_data( Json::Value * root, cinder::vec2 direction )
 {
     // 小さい場合は打てない。
-    if ( _target_radius < 40.0F ) return;
+    if ( _target_radius < 40.0F ) return false;
 
     scale_action( -4.0F );
-    Json::Value root;
-    root["name"] = "create_bullet";
-    root["data"]["id"] = get_tag( );
-    root["data"]["position"][0] = get_position( ).x + get_radius( ) *  direction.x;
-    root["data"]["position"][1] = get_position( ).y + get_radius( ) *  direction.y;
-    root["data"]["direction"][0] = direction.x;
-    root["data"]["direction"][1] = direction.y;
-    _tcp_connection.lock( )->write( Json::FastWriter( ).write( root ) );
+    Json::Value& data = *root;
+    data["user_id"] = get_tag( );
+    data["position"][0] = get_position( ).x + get_radius( ) * direction.x;
+    data["position"][1] = get_position( ).y + get_radius( ) * direction.y;
+    data["direction"][0] = direction.x;
+    data["direction"][1] = direction.y;
+
+    return true;
 }
 }

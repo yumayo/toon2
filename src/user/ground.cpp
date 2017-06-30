@@ -6,13 +6,13 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( ground, std::weak_ptr<node> cell_manager, std::weak_ptr<node> bullet_manager, Json::Value const& root, std::vector<std::vector<unsigned char>>& ground_buffer )
+CREATE_CPP( ground, std::weak_ptr<node> cell_manager, std::weak_ptr<node> bullet_manager, Json::Value const& root, std::vector<std::vector<ground_data>>& ground_buffer )
 {
     CREATE( ground, cell_manager, bullet_manager, root, ground_buffer );
 }
-bool ground::init( std::weak_ptr<node> cell_manager, std::weak_ptr<node> bullet_manager, Json::Value const& root, std::vector<std::vector<unsigned char>>& ground_buffer )
+bool ground::init( std::weak_ptr<node> cell_manager, std::weak_ptr<node> bullet_manager, Json::Value const& root, std::vector<std::vector<ground_data>>& ground_buffer )
 {
-    if ( !renderer::surface::init( vec2( root["data"]["ground_size"].asInt( ) ), ColorA( 0.1F, 0.1F, 0.1F ) ) ) return false;
+    if ( !renderer::surface_cubic::init( vec2( root["data"]["ground_size"].asInt( ) ), ColorA( 0.1F, 0.1F, 0.1F ) ) ) return false;
 
     std::map<int, ColorA> color_map;
     color_map.insert( std::make_pair( 0, ColorA( 0.1F, 0.1F, 0.1F ) ) ); // ID 0 は黒色にします。
@@ -30,16 +30,13 @@ bool ground::init( std::weak_ptr<node> cell_manager, std::weak_ptr<node> bullet_
     {
         for ( int x = 0; x < _surface.getWidth( ); ++x )
         {
-            auto id = ground_buffer[x][y];
+            auto id = ground_buffer[x][y].id;
             auto color = color_map[id];
             _surface.setPixel( ivec2( x, y ), color );
         }
     }
 
-    gl::Texture::Format format;
-    format.setMinFilter( GL_NEAREST );
-    format.setMagFilter( GL_NEAREST );
-    _texture = gl::Texture::create( _surface, format );
+    _texture->update( _surface );
 
     set_name( "ground" );
 
@@ -64,9 +61,12 @@ void ground::update( float delta )
 
     if ( auto& bullet_manager = std::dynamic_pointer_cast<user::bullet_manager>( _bullet_manager.lock( ) ) )
     {
-        for ( auto const& c : bullet_manager->get_children( ) )
+        for ( auto const& folder : bullet_manager->get_children( ) )
         {
-            paint_ground_bullet( std::dynamic_pointer_cast<bullet>( c ) );
+            for ( auto const& bullet_node : folder->get_children( ) )
+            {
+                paint_ground_bullet( std::dynamic_pointer_cast<bullet>( bullet_node ) );
+            }
         }
     }
 }

@@ -6,11 +6,7 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( bullet, int tag, cinder::vec2 position, cinder::vec2 direction, std::weak_ptr<node> node_cell )
-{
-    CREATE( bullet, tag, position, direction, node_cell );
-}
-bool bullet::init( int tag, cinder::vec2 position, cinder::vec2 direction, std::weak_ptr<node> node_cell )
+bool bullet::init( int tag, float time_offset, cinder::vec2 position, cinder::vec2 direction, std::weak_ptr<node> node_cell )
 {
     utility::log( "bullet[%d]", tag );
 
@@ -34,8 +30,9 @@ bool bullet::init( int tag, cinder::vec2 position, cinder::vec2 direction, std::
 
     _direction = direction;
 
+    _position += _direction * 400.0F * time_offset;
     using namespace action;
-    run_action( sequence::create( delay::create( 2.0F ), remove_self::create( ) ) );
+    run_action( sequence::create( delay::create( 2.0F + time_offset ), remove_self::create( ) ) );
 
     return true;
 }

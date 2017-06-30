@@ -9,9 +9,13 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( game, Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer, std::vector<std::vector<unsigned char>>& ground_buffer )
+CREATE_CPP( game,
+            Json::Value& root,
+            std::vector<feed_data> feed_buffet,
+            std::vector<bullet_data>& bullet_buffer,
+            std::vector<std::vector<ground_data>>& ground_buffer )
 {
-    CREATE( game, root, feeds_buffer, ground_buffer );
+    CREATE( game, root, feed_buffet, bullet_buffer, ground_buffer );
 }
 game::~game( )
 {
@@ -19,7 +23,10 @@ game::~game( )
     dont_destroy_node.lock( )->remove_child_by_name( "udp_connection" );
     dont_destroy_node.lock( )->remove_child_by_name( "tcp_connection" );
 }
-bool game::init( Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer, std::vector<std::vector<unsigned char>>& ground_buffer )
+bool game::init( Json::Value& root,
+                 std::vector<feed_data> feed_buffet,
+                 std::vector<bullet_data>& bullet_buffer,
+                 std::vector<std::vector<ground_data>>& ground_buffer )
 {
     set_schedule_update( );
 
@@ -36,7 +43,7 @@ bool game::init( Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer, 
         scene_manager::get_instans( )->replace( title::create( ) );
     };
 
-    if ( auto field = field::create( root, feeds_buffer, ground_buffer ) )
+    if ( auto field = field::create( root, feed_buffet, bullet_buffer, ground_buffer ) )
     {
         _field = field;
         add_child( field );
@@ -44,7 +51,7 @@ bool game::init( Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer, 
 
     _player = std::dynamic_pointer_cast<cell_manager>( _field.lock( )->get_child_by_name( "cell_manager" ) )->get_player( );
     _ground = std::dynamic_pointer_cast<ground>( _field.lock( )->get_child_by_name( "ground" ) );
-    if ( auto controller = controller::create( _player, _ground ) )
+    if ( auto controller = controller::create( _player, _ground, std::dynamic_pointer_cast<bullet_manager>( _field.lock( )->get_bullet_manager( ).lock( ) ) ) )
     {
         _controller = controller;
         add_child( controller );

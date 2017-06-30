@@ -7,16 +7,17 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( controller, std::weak_ptr<player> player, std::weak_ptr<ground> ground )
+CREATE_CPP( controller, std::weak_ptr<player> player, std::weak_ptr<ground> ground, std::weak_ptr<bullet_manager> bullet_manager )
 {
-    CREATE( controller, player, ground );
+    CREATE( controller, player, ground, bullet_manager );
 }
-bool controller::init( std::weak_ptr<player> player, std::weak_ptr<ground> ground )
+bool controller::init( std::weak_ptr<player> player, std::weak_ptr<ground> ground, std::weak_ptr<bullet_manager> bullet_manager )
 {
     _last_normaized_axis = normalize( vec2( 1 ) );
 
     _player = player;
     _ground = ground;
+    _bullet_manager = bullet_manager;
 
     set_schedule_mouse_event( );
     set_schedule_touch_event( );
@@ -41,7 +42,11 @@ bool controller::init( std::weak_ptr<player> player, std::weak_ptr<ground> groun
 
     on_key_event( app::KeyEvent::KEY_SPACE, [ this ] ( cinder::app::KeyEvent e )
     {
-        _player.lock( )->create_bullet( _last_normaized_axis );
+        Json::Value data;
+        if ( _player.lock( )->parse_bullet_data( &data, _last_normaized_axis ) )
+        {
+            _bullet_manager.lock( )->create_bullet( data );
+        }
     } );
     on_key_event( app::KeyEvent::KEY_UP, [ this ] ( cinder::app::KeyEvent e )
     {
