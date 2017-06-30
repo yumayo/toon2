@@ -5,6 +5,7 @@
 #include "scene_manager.h"
 #include "bullet_manager.h"
 #include "cell_manager.h"
+#include "user_default.h"
 using namespace cinder;
 namespace user
 {
@@ -68,22 +69,21 @@ void player::scale_action( float score )
 }
 void player::blowout( )
 {
-    scale_action( -6.0F );
+    scale_action( -8.0F );
 
-    if ( _radius < 15.0F )
+    if ( _radius < user_default::get_instans( )->get_root( )["system"]["min_radius"].asFloat( ) )
     {
         Json::Value root;
         root["name"] = "kill";
-        root["data"]["id"] = get_tag( );
         _tcp_connection.lock( )->write( Json::FastWriter( ).write( root ) );
     }
 }
 bool player::parse_bullet_data( Json::Value * root, cinder::vec2 direction )
 {
     // 小さい場合は打てない。
-    if ( _target_radius < 40.0F ) return false;
+    if ( _target_radius < user_default::get_instans( )->get_root( )["system"]["min_radius"].asFloat( ) + 4.0F ) return false;
 
-    //scale_action( -4.0F );
+    scale_action( -4.0F );
     Json::Value& data = *root;
     data["user_id"] = get_tag( );
     data["position"][0] = get_position( ).x + get_radius( ) * direction.x;

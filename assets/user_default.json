@@ -1,5 +1,5 @@
 {
-   "feed" : 12332,
+   "feed" : 13060,
    "max_radius" : 400,
    "select_skin_name" : "grass",
    "server" : {
@@ -10,7 +10,7 @@
    "skin" : {},
    "system" : {
       "max_radius" : 400,
-      "min_radius" : 10,
+      "min_radius" : 30,
       "speed" : 300
    }
 }
