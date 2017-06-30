@@ -1,15 +1,16 @@
 #pragma once
-#include "renderer/surface.h"
+#include "renderer/surface_cubic.h"
 #include "player.h"
 #include "jsoncpp/json.h"
 #include "bullet.h"
+#include "synchronization_objects.h"
 namespace user
 {
-class ground : public renderer::surface
+class ground : public renderer::surface_cubic
 {
 public:
-    CREATE_H( ground, std::weak_ptr<node> cell_manager, std::weak_ptr<node> bullet_manager, Json::Value const& root, std::vector<std::vector<unsigned char>>& ground_buffer );
-    bool init( std::weak_ptr<node> cell_manager, std::weak_ptr<node> bullet_manager, Json::Value const& root, std::vector<std::vector<unsigned char>>& ground_buffer );
+    CREATE_H( ground, std::weak_ptr<node> cell_manager, std::weak_ptr<node> bullet_manager, Json::Value const& root, std::vector<std::vector<ground_data>>& ground_buffer );
+    bool init( std::weak_ptr<node> cell_manager, std::weak_ptr<node> bullet_manager, Json::Value const& root, std::vector<std::vector<ground_data>>& ground_buffer );
     void update( float delta ) override;
 public:
     // ControllerÇÃÇ›Ç™àµÇ¢Ç‹Ç∑ÅB

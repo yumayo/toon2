@@ -3,13 +3,14 @@
 #include "renderer/circle.h"
 #include "player.h"
 #include "ground.h"
+#include "bullet_manager.h"
 namespace user
 {
 class controller : public node
 {
 public:
-    CREATE_H( controller, std::weak_ptr<player> player, std::weak_ptr<ground> ground );
-    bool init( std::weak_ptr<player> player, std::weak_ptr<ground> ground );
+    CREATE_H( controller, std::weak_ptr<player> player, std::weak_ptr<ground> ground, std::weak_ptr<bullet_manager> bullet_manager );
+    bool init( std::weak_ptr<player> player, std::weak_ptr<ground> ground, std::weak_ptr<bullet_manager> bullet_manager );
     bool mouse_began( cinder::app::MouseEvent event ) override;
     void mouse_moved( cinder::app::MouseEvent event ) override;
     void mouse_ended( cinder::app::MouseEvent event ) override;
@@ -35,5 +36,6 @@ private:
     std::weak_ptr<renderer::circle> _axis_node;
     std::weak_ptr<player> _player;
     std::weak_ptr<ground> _ground;
+    std::weak_ptr<bullet_manager> _bullet_manager;
 };
 }

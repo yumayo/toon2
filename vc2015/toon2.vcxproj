@@ -158,7 +158,9 @@
     <ClCompile Include="..\cinder_cocoslike\renderer\sprite.cpp" />
     <ClCompile Include="..\cinder_cocoslike\renderer\sprite_animation.cpp" />
     <ClCompile Include="..\cinder_cocoslike\renderer\sprite_cubic.cpp" />
+    <ClCompile Include="..\cinder_cocoslike\renderer\sprite_cubic_animation.cpp" />
     <ClCompile Include="..\cinder_cocoslike\renderer\surface.cpp" />
+    <ClCompile Include="..\cinder_cocoslike\renderer\surface_cubic.cpp" />
     <ClCompile Include="..\cinder_cocoslike\scene.cpp" />
     <ClCompile Include="..\cinder_cocoslike\scene_manager.cpp" />
     <ClCompile Include="..\cinder_cocoslike\user_default.cpp" />
@@ -252,7 +254,9 @@
     <ClInclude Include="..\cinder_cocoslike\renderer\sprite.h" />
     <ClInclude Include="..\cinder_cocoslike\renderer\sprite_animation.h" />
     <ClInclude Include="..\cinder_cocoslike\renderer\sprite_cubic.h" />
+    <ClInclude Include="..\cinder_cocoslike\renderer\sprite_cubic_animation.h" />
     <ClInclude Include="..\cinder_cocoslike\renderer\surface.h" />
+    <ClInclude Include="..\cinder_cocoslike\renderer\surface_cubic.h" />
     <ClInclude Include="..\cinder_cocoslike\scene.h" />
     <ClInclude Include="..\cinder_cocoslike\scene_manager.h" />
     <ClInclude Include="..\cinder_cocoslike\user_default.h" />
@@ -292,6 +296,7 @@
     <ClInclude Include="..\src\user\search_room.h" />
     <ClInclude Include="..\src\user\skin.h" />
     <ClInclude Include="..\src\user\spike.h" />
+    <ClInclude Include="..\src\user\synchronization_objects.h" />
     <ClInclude Include="..\src\user\title.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

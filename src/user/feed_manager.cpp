@@ -9,11 +9,11 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( feed_manager, std::weak_ptr<node> cell_manager, std::map<int, cinder::ivec2>& feeds_buffer )
+CREATE_CPP( feed_manager, std::weak_ptr<node> cell_manager, std::vector<feed_data>& feed_buffer )
 {
-    CREATE( feed_manager, cell_manager, feeds_buffer );
+    CREATE( feed_manager, cell_manager, feed_buffer );
 }
-bool feed_manager::init( std::weak_ptr<node> cell_manager, std::map<int, cinder::ivec2>& feeds_buffer )
+bool feed_manager::init( std::weak_ptr<node> cell_manager, std::vector<feed_data>& feed_buffer )
 {
     set_name( "feed_manager" );
 
@@ -22,9 +22,9 @@ bool feed_manager::init( std::weak_ptr<node> cell_manager, std::map<int, cinder:
     auto dont_destroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
     _tcp_connection = std::dynamic_pointer_cast<network::tcp_client>( dont_destroy_node.lock( )->get_child_by_name( "tcp_connection" ) );
 
-    for ( auto& f : feeds_buffer )
+    for ( auto& f : feed_buffer )
     {
-        add_child( feed::create( f.first, cinder::vec2( f.second ) ) );
+        add_child( feed::create( f.id, f.position ) );
     }
 
     _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "feed_captured", [ this ] ( Json::Value root )

@@ -6,36 +6,31 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( bullet, int tag, cinder::vec2 position, cinder::vec2 direction, std::weak_ptr<node> node_cell )
+bool bullet::init( int bullet_id, float time_offset, cinder::vec2 position, cinder::vec2 direction, cinder::Color color, std::string const& skin_relative_path )
 {
-    CREATE( bullet, tag, position, direction, node_cell );
-}
-bool bullet::init( int tag, cinder::vec2 position, cinder::vec2 direction, std::weak_ptr<node> node_cell )
-{
-    utility::log( "bullet[%d]", tag );
+    utility::log( "bullet[%d]", bullet_id );
 
     set_schedule_update( );
 
-    set_tag( tag );
+    set_tag( bullet_id );
     set_position( position );
-    set_color( node_cell.lock( )->get_color( ) );
-
-    auto cell = std::dynamic_pointer_cast<user::cell> ( node_cell.lock( ) );
+    set_color( color );
 
     _base = add_child( user::spike::create( _radius, _radius, 10.0F ) );
-    _mask = _base.lock( )->add_child( cell->get_skin_relative_path( ).empty( ) ?
+    _mask = _base.lock( )->add_child( skin_relative_path.empty( ) ?
                                       renderer::circle::create( _radius ) :
-                                      skin::create( _radius, _radius, cell->get_skin_relative_path( ) ) );
-    if ( cell->get_skin_relative_path( ).empty( ) )
+                                      skin::create( _radius, _radius, skin_relative_path ) );
+    if ( skin_relative_path.empty( ) )
     {
-        _mask.lock( )->set_color( node_cell.lock( )->get_color( ) );
+        _mask.lock( )->set_color( color );
     }
     _mask.lock( )->set_scale( vec2( 0.9F ) );
 
     _direction = direction;
 
+    _position += _direction * 400.0F * time_offset;
     using namespace action;
-    run_action( sequence::create( delay::create( 2.0F ), remove_self::create( ) ) );
+    run_action( sequence::create( delay::create( 2.0F + time_offset ), remove_self::create( ) ) );
 
     return true;
 }

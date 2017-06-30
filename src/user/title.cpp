@@ -62,10 +62,13 @@ bool title::init( )
         play_se( "sound/start.wav" );
         set_block_schedule_event( );
         auto search_handle = search_room::create( );
-        search_handle->on_founded = [ this ] ( Json::Value& root, std::map<int, cinder::ivec2>& feeds_buffer, std::vector<std::vector<unsigned char>>& ground_buffer )
+        search_handle->on_founded = [ this ]( Json::Value& root, 
+                                              std::vector<feed_data> feed_buffet,
+                                              Json::Value& bullet_buffer,
+                                              std::vector<std::vector<ground_data>>& ground_buffer )
         {
-            scene_manager::get_instans( )->push_back( game::create( root, feeds_buffer, ground_buffer ) );
-            change_action( [ &root, &feeds_buffer, &ground_buffer ]
+            scene_manager::get_instans( )->push_back( game::create( root, feed_buffet, bullet_buffer, ground_buffer ) );
+            change_action( [ ]
             {
                 scene_manager::get_instans( )->pop_front( );
             } );

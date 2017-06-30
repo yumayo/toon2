@@ -290,6 +290,12 @@
     <ClCompile Include="..\src\user\cube.cpp">
       <Filter>User Files\user</Filter>
     </ClCompile>
+    <ClCompile Include="..\cinder_cocoslike\renderer\surface_cubic.cpp">
+      <Filter>cinder_cocoslike\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cinder_cocoslike\renderer\sprite_cubic_animation.cpp">
+      <Filter>cinder_cocoslike\renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -536,6 +542,15 @@
       <Filter>cinder_cocoslike\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\src\user\cube.h">
+      <Filter>User Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cinder_cocoslike\renderer\surface_cubic.h">
+      <Filter>cinder_cocoslike\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cinder_cocoslike\renderer\sprite_cubic_animation.h">
+      <Filter>cinder_cocoslike\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\synchronization_objects.h">
       <Filter>User Files\user</Filter>
     </ClInclude>
   </ItemGroup>

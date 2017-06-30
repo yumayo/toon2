@@ -1,9 +1,9 @@
 {
-   "feed" : 6712,
+   "feed" : 10958,
    "max_radius" : 400,
    "select_skin_name" : "grass",
    "server" : {
-      "address" : "192.168.11.2",
+      "address" : "127.0.0.1",
       "tcp_port" : 25564,
       "udp_port" : 25565
    },
