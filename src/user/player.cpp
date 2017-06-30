@@ -83,7 +83,7 @@ bool player::parse_bullet_data( Json::Value * root, cinder::vec2 direction )
     // 小さい場合は打てない。
     if ( _target_radius < 40.0F ) return false;
 
-    scale_action( -4.0F );
+    //scale_action( -4.0F );
     Json::Value& data = *root;
     data["user_id"] = get_tag( );
     data["position"][0] = get_position( ).x + get_radius( ) * direction.x;

@@ -28,9 +28,8 @@ bool bullet::init( int bullet_id, float time_offset, cinder::vec2 position, cind
 
     _direction = direction;
 
-    _position += _direction * 400.0F * time_offset;
     using namespace action;
-    run_action( sequence::create( delay::create( 2.0F + time_offset ), remove_self::create( ) ) );
+    run_action( sequence::create( delay::create( 2.0F - time_offset ), remove_self::create( ) ) );
 
     return true;
 }

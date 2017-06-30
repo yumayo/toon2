@@ -37,8 +37,9 @@ bool bullet_manager::init( std::weak_ptr<node> cell_manager, Json::Value bullet_
                 auto skin_relative_path = cell->get_skin_relative_path( );
 
                 auto bullet = std::make_shared<user::bullet>( );
-                if ( bullet && bullet->init( bullet_id, time_offset, pos, direction, color, skin_relative_path ) );
+                if ( bullet && bullet->init( bullet_id, 0.0F, pos, direction, color, skin_relative_path ) );
                 else bullet.reset( );
+                bullet->update( -time_offset ); // 0.2秒遅れて同期するので差分を引きます。
 
                 auto n = get_child_by_tag( user_id );
                 if ( !n )
@@ -144,7 +145,7 @@ void bullet_manager::close_player( cinder::ColorA const& color )
 void bullet_manager::create_bullet( Json::Value const & data )
 {
     _created_bullet_data["data"][_number_of_created_bullet] = data;
-    _created_bullet_data["data"][_number_of_created_bullet]["time_offset"] = -_time_offset; // 時間ぶん引きます。
+    _created_bullet_data["data"][_number_of_created_bullet]["time_offset"] = _time_offset;
     _number_of_created_bullet++;
 }
 }
