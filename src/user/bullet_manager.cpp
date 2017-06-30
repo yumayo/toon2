@@ -7,11 +7,11 @@
 using namespace cinder;
 namespace user
 {
-CREATE_CPP( bullet_manager, std::weak_ptr<node> cell_manager )
+CREATE_CPP( bullet_manager, std::weak_ptr<node> cell_manager, Json::Value bullet_buffer )
 {
-    CREATE( bullet_manager, cell_manager );
+    CREATE( bullet_manager, cell_manager, bullet_buffer );
 }
-bool bullet_manager::init( std::weak_ptr<node> cell_manager )
+bool bullet_manager::init( std::weak_ptr<node> cell_manager, Json::Value bullet_buffer )
 {
     set_schedule_update( );
 
@@ -33,8 +33,11 @@ bool bullet_manager::init( std::weak_ptr<node> cell_manager )
             auto time_offset = data["time_offset"].asFloat( );
             if ( auto cell = std::dynamic_pointer_cast<user::cell>( _cell_manager.lock( )->get_child_by_tag( user_id ) ) )
             {
+                auto color = cell->get_color( );
+                auto skin_relative_path = cell->get_skin_relative_path( );
+
                 auto bullet = std::make_shared<user::bullet>( );
-                if ( bullet && bullet->init( bullet_id, time_offset, pos, direction, cell ) );
+                if ( bullet && bullet->init( bullet_id, time_offset, pos, direction, color, skin_relative_path ) );
                 else bullet.reset( );
 
                 auto n = get_child_by_tag( user_id );
@@ -71,6 +74,37 @@ bool bullet_manager::init( std::weak_ptr<node> cell_manager )
     {
         remove_child_by_tag( root["data"]["id"].asInt( ) );
     } ) );
+
+    auto cell_mgr = std::dynamic_pointer_cast<user::cell_manager>( _cell_manager.lock( ) );
+    for ( auto& folder_root : bullet_buffer["data"] )
+    {
+        for ( auto& bullet_root : folder_root )
+        {
+            auto pos = vec2( bullet_root["position"][0].asFloat( ), bullet_root["position"][1].asFloat( ) );
+            auto direction = vec2( bullet_root["direction"][0].asFloat( ), bullet_root["direction"][1].asFloat( ) );
+            auto user_id = bullet_root["user_id"].asInt( );
+            auto bullet_id = bullet_root["bullet_id"].asInt( );
+            auto time_offset = bullet_root["time_offset"].asInt( );
+
+            if ( auto cell = std::dynamic_pointer_cast<user::cell>( cell_mgr->get_child_by_tag( user_id ) ) )
+            {
+                auto color = cell->get_color( );
+                auto skin_relative_path = cell->get_skin_relative_path( );
+
+                auto bullet = std::make_shared<user::bullet>( );
+                if ( bullet && bullet->init( bullet_id, time_offset, pos, direction, color, skin_relative_path ) );
+                else bullet.reset( );
+
+                auto n = get_child_by_tag( user_id );
+                if ( !n )
+                {
+                    n = add_child( node::create( ) );
+                    n->set_tag( user_id );
+                }
+                n->add_child( bullet );
+            }
+        }
+    }
 
     return true;
 }

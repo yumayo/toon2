@@ -7,7 +7,7 @@ namespace user
 class bullet : public node
 {
 public:
-    bool init( int tag, float time_offset, cinder::vec2 position, cinder::vec2 direction, std::weak_ptr<node> cell );
+    bool init( int bullet_id, float time_offset, cinder::vec2 position, cinder::vec2 direction, cinder::Color color, std::string const& skin_relative_path );
     void update( float delta ) override;
     float get_radius( );
     bool is_hit( );

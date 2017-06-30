@@ -52,6 +52,10 @@ bool search_room::init( )
                         _is_founded = true;
                         _root_buffer = root;
                     }
+                    else if( root["name"].asString( ) == "bullet_data" )
+                    {
+                        _bullet_buffer = root;
+                    }
                 };
             }
         };
@@ -74,17 +78,6 @@ bool search_room::init( )
                     feed_data* data = reinterpret_cast<feed_data*>( wriable_data + index );
                     memcpy( &_feed_buffer[i], data, sizeof( feed_data ) );
                     index += sizeof( feed_data );
-                }
-            }
-            else if ( name == "bullet_data" )
-            {
-                int const number_of_bullet = _root_buffer["data"]["number_of_bullet"].asInt( );
-                _bullet_buffer = std::vector<bullet_data>( number_of_bullet );
-                for ( int i = 0; i < number_of_bullet; ++i )
-                {
-                    bullet_data* data = reinterpret_cast<bullet_data*>( wriable_data + index );
-                    memcpy( &_bullet_buffer[i], data, sizeof( bullet_data ) );
-                    index += sizeof( bullet_data );
                 }
             }
             else if ( name == "ground_data" )

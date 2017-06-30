@@ -13,12 +13,12 @@ public:
     CREATE_H( game, 
               Json::Value& root,
               std::vector<feed_data> feed_buffet,
-              std::vector<bullet_data>& bullet_buffer,
+              Json::Value& bullet_buffer,
               std::vector<std::vector<ground_data>>& ground_buffer );
     ~game( );
     bool init( Json::Value& root,
                std::vector<feed_data> feed_buffet,
-               std::vector<bullet_data>& bullet_buffer,
+               Json::Value& bullet_buffer,
                std::vector<std::vector<ground_data>>& ground_buffer );
     void update( float delta ) override;
     void render( ) override;

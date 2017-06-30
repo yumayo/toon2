@@ -12,11 +12,11 @@ public:
     CREATE_H( field, 
               Json::Value& root,
               std::vector<feed_data> feed_buffet,
-              std::vector<bullet_data>& bullet_buffer,
+              Json::Value& bullet_buffer,
               std::vector<std::vector<ground_data>>& ground_buffer );
     bool init( Json::Value& root,
                std::vector<feed_data> feed_buffet,
-               std::vector<bullet_data>& bullet_buffer,
+               Json::Value& bullet_buffer,
                std::vector<std::vector<ground_data>>& ground_buffer );
     void render( ) override;
     std::weak_ptr<node> get_bullet_manager( );

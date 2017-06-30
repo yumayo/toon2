@@ -12,7 +12,7 @@ namespace user
 CREATE_CPP( game,
             Json::Value& root,
             std::vector<feed_data> feed_buffet,
-            std::vector<bullet_data>& bullet_buffer,
+            Json::Value& bullet_buffer,
             std::vector<std::vector<ground_data>>& ground_buffer )
 {
     CREATE( game, root, feed_buffet, bullet_buffer, ground_buffer );
@@ -25,7 +25,7 @@ game::~game( )
 }
 bool game::init( Json::Value& root,
                  std::vector<feed_data> feed_buffet,
-                 std::vector<bullet_data>& bullet_buffer,
+                 Json::Value& bullet_buffer,
                  std::vector<std::vector<ground_data>>& ground_buffer )
 {
     set_schedule_update( );
