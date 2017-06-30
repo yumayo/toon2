@@ -12,14 +12,12 @@ public:
 public:
     std::string const& get_skin_relative_path( ) const;
     float get_radius( );
-    float get_startup_radius( );
     void set_radius( float value );
     void set_color( cinder::ColorA value ) override;
     void remove_crown( );
     void set_crown( std::weak_ptr<node> crown );
     bool is_crowner( );
     network::network_handle get_handle( );
-    float const setup_radius = 20.0F;
 protected:
     std::weak_ptr<renderer::circle> _base;
     std::weak_ptr<renderer::circle> _mask;

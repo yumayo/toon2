@@ -8,7 +8,7 @@ using namespace cinder;
 namespace user
 {
 bool cell::init( std::string const& ip_address,
-                   int port, std::string const& skin_relative_path )
+                 int port, std::string const& skin_relative_path )
 {
     auto dont_destroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
     _tcp_connection = std::dynamic_pointer_cast<network::tcp_client>( dont_destroy_node.lock( )->get_child_by_name( "tcp_connection" ) );
@@ -17,7 +17,7 @@ bool cell::init( std::string const& ip_address,
 
     _skin_relative_path = skin_relative_path;
 
-    _radius = setup_radius;
+    _radius = user_default::get_instans( )->get_root( )["system"]["min_radius"].asFloat( );
     if ( auto base = renderer::circle::create( _radius ) )
     {
         _base = base;
@@ -44,10 +44,6 @@ std::string const & cell::get_skin_relative_path( ) const
 float cell::get_radius( )
 {
     return _radius;
-}
-float cell::get_startup_radius( )
-{
-    return setup_radius;
 }
 void cell::set_radius( float value )
 {

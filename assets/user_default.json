@@ -1,6 +1,7 @@
 {
-   "feed" : 13060,
+   "feed" : 13090,
    "max_radius" : 400,
+   "min_radius" : null,
    "select_skin_name" : "grass",
    "server" : {
       "address" : "192.168.11.2",

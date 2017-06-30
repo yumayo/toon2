@@ -50,10 +50,10 @@ void field::render( )
 {
     auto player = std::dynamic_pointer_cast<user::player>( _player.lock( ) );
 
-    auto radius = player->get_radius( ) - player->get_startup_radius( );
-
     auto min_radius = user_default::get_instans( )->get_root( )["system"]["min_radius"].asFloat( );
     auto max_radius = user_default::get_instans( )->get_root( )["system"]["max_radius"].asFloat( );
+
+    auto radius = player->get_radius( ) - min_radius;
 
     radius = glm::clamp( radius,
                          min_radius,

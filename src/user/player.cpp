@@ -25,9 +25,10 @@ bool player::init( std::weak_ptr<node> cell_manager, std::string const& ip_addre
 }
 player::~player( )
 {
-    auto feed_num = user_default::get_instans( )->get_root( )["feed"].asInt( );
-    user_default::get_instans( )->get_root( )["feed"] = feed_num + int( _radius - setup_radius );
+    auto min_radius = user_default::get_instans( )->get_root( )["min_radius"].asFloat( );
     auto max_radius = user_default::get_instans( )->get_root( )["max_radius"].asFloat( );
+    auto feed_num = user_default::get_instans( )->get_root( )["feed"].asInt( );
+    user_default::get_instans( )->get_root( )["feed"] = feed_num + int( _radius - min_radius );
     user_default::get_instans( )->get_root( )["max_radius"] = std::max( max_radius, _radius );
 }
 void player::key_down( cinder::app::KeyEvent e )
