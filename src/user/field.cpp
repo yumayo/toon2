@@ -46,27 +46,6 @@ bool field::init( Json::Value& root,
 
     return true;
 }
-void field::render( )
-{
-    auto player = std::dynamic_pointer_cast<user::player>( _player.lock( ) );
-
-    auto min_radius = user_default::get_instans( )->get_root( )["system"]["min_radius"].asFloat( );
-    auto max_radius = user_default::get_instans( )->get_root( )["system"]["max_radius"].asFloat( );
-
-    auto radius = player->get_radius( ) - min_radius;
-
-    radius = glm::clamp( radius,
-                         min_radius,
-                         max_radius );
-
-    float r = radius / ( max_radius - min_radius );
-
-    CameraPersp camera;
-    camera.setPerspective( 60.0F, app::getWindowAspectRatio( ), 1.0F, 1100.0F );
-    camera.lookAt( vec3( player->get_position( ), -100 - 800 * easeOutCirc( r ) ), vec3( player->get_position( ), 0 ) );
-    camera.setWorldUp( vec3( 0, -1, 0 ) );
-    gl::setMatrices( camera );
-}
 std::weak_ptr<node> field::get_bullet_manager( )
 {
     return _bullet_manager;

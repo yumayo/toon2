@@ -21,7 +21,6 @@ public:
                Json::Value& bullet_buffer,
                std::vector<std::vector<ground_data>>& ground_buffer );
     void update( float delta ) override;
-    void render( ) override;
 private:
     std::weak_ptr<field> _field;
     std::weak_ptr<player> _player;

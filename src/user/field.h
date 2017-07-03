@@ -18,7 +18,6 @@ public:
                std::vector<feed_data> feed_buffet,
                Json::Value& bullet_buffer,
                std::vector<std::vector<ground_data>>& ground_buffer );
-    void render( ) override;
     std::weak_ptr<node> get_bullet_manager( );
 };
 }

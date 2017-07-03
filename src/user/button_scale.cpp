@@ -25,11 +25,11 @@ void button_scale::update( float delta )
 }
 bool button_scale::mouse_began( cinder::app::MouseEvent event )
 {
-    _touch = utility::hit_point_plane_2d_default_size( shared_from_this( ), event.getPos( ) );
+    _touch = utility::hit_point_plane_2d_default_size( event.getPos( ), shared_from_this( ) );
     if ( _touch && on_began ) on_began( );
     if ( _touch )
     {
-        remove_action_by_name("button_scale" );
+        remove_action_by_name( "button_scale" );
         set_scale( vec2( 1.0F ) );
         auto act = action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.2 ) ) );
         act->set_name( "button_scale" );
@@ -39,7 +39,7 @@ bool button_scale::mouse_began( cinder::app::MouseEvent event )
 }
 void button_scale::mouse_moved( cinder::app::MouseEvent event )
 {
-    _touch = utility::hit_point_plane_2d_default_size( shared_from_this( ), event.getPos( ) );
+    _touch = utility::hit_point_plane_2d_default_size( event.getPos( ), shared_from_this( ) );
     // in
     if ( ( true == _touch ) && ( false == _prev_touch ) )
     {
@@ -74,7 +74,7 @@ void button_scale::mouse_ended( cinder::app::MouseEvent event )
 }
 bool button_scale::touch_began( cinder::app::TouchEvent::Touch event )
 {
-    _touch = utility::hit_point_plane_2d_default_size( shared_from_this( ), event.getPos( ) );
+    _touch = utility::hit_point_plane_2d_default_size( event.getPos( ), shared_from_this( ) );
     if ( _touch && on_began ) on_began( );
     if ( _touch )
     {
@@ -88,7 +88,7 @@ bool button_scale::touch_began( cinder::app::TouchEvent::Touch event )
 }
 void button_scale::touch_moved( cinder::app::TouchEvent::Touch event )
 {
-    _touch = utility::hit_point_plane_2d_default_size( shared_from_this( ), event.getPos( ) );
+    _touch = utility::hit_point_plane_2d_default_size( event.getPos( ), shared_from_this( ) );
     // in
     if ( ( true == _touch ) && ( false == _prev_touch ) )
     {

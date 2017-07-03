@@ -5,7 +5,7 @@
 #include "action.hpp"
 #include "player.h"
 #include "utility.hpp"
-#include "cube.h"
+#include "renderer/circle.h"
 using namespace cinder;
 namespace user
 {
@@ -25,7 +25,7 @@ bool feed::init( int tag, cinder::vec2 position )
 
     _radius = 12.0F;
 
-    if ( auto object = cube::create( vec3( _radius ) ) )
+    if ( auto object = renderer::circle::create( _radius, 5 ) )
     {
         object->set_color( hsvToRgb( vec3( randFloat( ), randFloat( 0.5, 0.8 ), randFloat( 0.5, 0.8 ) ) ) );
         object->set_scale( vec2( 0.0F ) );
