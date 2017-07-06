@@ -1,8 +1,8 @@
 *.DS_Store
 *.lnk
 
-vc2015/*
-!vc2015/*.rc
-!vc2015/*.sln
-!vc2015/*.vcxproj
-!vc2015/*.vcxproj.filters
+vc2017/*
+!vc2017/*.rc
+!vc2017/*.sln
+!vc2017/*.vcxproj
+!vc2017/*.vcxproj.filters

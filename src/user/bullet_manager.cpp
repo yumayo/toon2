@@ -1,17 +1,18 @@
 ﻿#include "bullet_manager.h"
 #include "cell_manager.h"
-#include "scene_manager.h"
 #include "bullet.h"
-#include "utility.hpp"
-#include "action.hpp"
+#include <treelike/scene_manager.h>
+#include <treelike/utility.hpp>
+#include <treelike/action.hpp>
 using namespace cinder;
+using namespace treelike;
 namespace user
 {
-CREATE_CPP( bullet_manager, std::weak_ptr<node> cell_manager, Json::Value bullet_buffer )
+CREATE_CPP( bullet_manager, softptr<node> cell_manager, Json::Value bullet_buffer )
 {
     CREATE( bullet_manager, cell_manager, bullet_buffer );
 }
-bool bullet_manager::init( std::weak_ptr<node> cell_manager, Json::Value bullet_buffer )
+bool bullet_manager::init( softptr<node> cell_manager, Json::Value bullet_buffer )
 {
     set_schedule_update( );
 
@@ -20,9 +21,9 @@ bool bullet_manager::init( std::weak_ptr<node> cell_manager, Json::Value bullet_
     _cell_manager = cell_manager;
 
     auto dont_destroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
-    _tcp_connection = std::dynamic_pointer_cast<network::tcp_client>( dont_destroy_node.lock( )->get_child_by_name( "tcp_connection" ) );
+    _tcp_connection = dont_destroy_node->get_child_by_name( "tcp_connection" ).dynamicptr<network::tcp_client>( );
 
-    _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "create_bullet", [ this ] ( Json::Value root )
+    _tcp_connection->on_received_named_json.insert( std::make_pair( "create_bullet", [ this ] ( Json::Value root )
     {
         for ( auto& data : root["data"] )
         {
@@ -31,7 +32,7 @@ bool bullet_manager::init( std::weak_ptr<node> cell_manager, Json::Value bullet_
             auto pos = vec2( data["position"][0].asFloat( ), data["position"][1].asFloat( ) );
             auto direction = vec2( data["direction"][0].asFloat( ), data["direction"][1].asFloat( ) );
             auto time_offset = data["time_offset"].asFloat( );
-            if ( auto cell = std::dynamic_pointer_cast<user::cell>( _cell_manager.lock( )->get_child_by_tag( user_id ) ) )
+            if ( auto cell = _cell_manager->get_child_by_tag( user_id ).dynamicptr<user::cell>( ) )
             {
                 auto color = cell->get_color( );
                 auto skin_relative_path = cell->get_skin_relative_path( );
@@ -63,7 +64,7 @@ bool bullet_manager::init( std::weak_ptr<node> cell_manager, Json::Value bullet_
             //play_se( "sound/captured.wav" );
 
             _created_bullet_data["name"] = "create_bullet";
-            _tcp_connection.lock( )->write( Json::FastWriter( ).write( _created_bullet_data ) );
+            _tcp_connection->write( Json::FastWriter( ).write( _created_bullet_data ) );
 
             _number_of_created_bullet = 0;
             _created_bullet_data.clear( );
@@ -71,7 +72,7 @@ bool bullet_manager::init( std::weak_ptr<node> cell_manager, Json::Value bullet_
         _time_offset = 0.0F;
     } ) ) ) );
 
-    _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "erase_bullet", [ this ] ( Json::Value root )
+    _tcp_connection->on_received_named_json.insert( std::make_pair( "erase_bullet", [ this ] ( Json::Value root )
     {
         for ( auto& folder : get_children( ) )
         {
@@ -82,7 +83,7 @@ bool bullet_manager::init( std::weak_ptr<node> cell_manager, Json::Value bullet_
         }
     } ) );
 
-    auto cell_mgr = std::dynamic_pointer_cast<user::cell_manager>( _cell_manager.lock( ) );
+    auto cell_mgr = _cell_manager.dynamicptr<user::cell_manager>( );
     for ( auto& folder_root : bullet_buffer["data"] )
     {
         for ( auto& bullet_root : folder_root )
@@ -93,7 +94,7 @@ bool bullet_manager::init( std::weak_ptr<node> cell_manager, Json::Value bullet_
             auto bullet_id = bullet_root["bullet_id"].asInt( );
             auto time_offset = bullet_root["time_offset"].asInt( );
 
-            if ( auto cell = std::dynamic_pointer_cast<user::cell>( cell_mgr->get_child_by_tag( user_id ) ) )
+            if ( auto cell = cell_mgr->get_child_by_tag( user_id ).dynamicptr<user::cell>( ) )
             {
                 auto color = cell->get_color( );
                 auto skin_relative_path = cell->get_skin_relative_path( );
@@ -117,25 +118,25 @@ bool bullet_manager::init( std::weak_ptr<node> cell_manager, Json::Value bullet_
 }
 void bullet_manager::update( float delta )
 {
-    auto cell_manager = std::dynamic_pointer_cast<user::cell_manager>( _cell_manager.lock( ) );
+    auto cell_manager = _cell_manager.dynamicptr<user::cell_manager>( );
     auto player = cell_manager->get_player( );
     for ( auto const& folder : get_children( ) )
     {
         for ( auto const& bullet_node : folder->get_children( ) )
         {
-            if ( folder->get_tag( ) == player.lock( )->get_tag( ) ) continue;
+            if ( folder->get_tag( ) == player->get_tag( ) ) continue;
             if ( auto const& bullet = std::dynamic_pointer_cast<user::bullet>( bullet_node ) )
             {
                 if ( bullet->is_hit( ) ) continue;
-                if ( distance( player.lock( )->get_position( ), bullet->get_position( ) )
-                     < player.lock( )->get_radius( ) + bullet->get_radius( ) )
+                if ( distance( player->get_position( ), bullet->get_position( ) )
+                     < player->get_radius( ) + bullet->get_radius( ) )
                 {
                     bullet->hit( );
                     Json::Value root;
                     root["name"] = "blowout";
                     root["data"]["id"] = bullet->get_tag( );
-                    player.lock( )->blowout( );
-                    _tcp_connection.lock( )->write( Json::FastWriter( ).write( root ) );
+                    player->blowout( );
+                    _tcp_connection->write( Json::FastWriter( ).write( root ) );
                 }
             }
         }

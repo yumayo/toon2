@@ -1,10 +1,11 @@
 ﻿#include "score_board.h"
-#include "scene_manager.h"
-#include "renderer/label.h"
-#include "utility.hpp"
-#include "action.hpp"
+#include <treelike/scene_manager.h>
+#include <treelike/renderer/label.h>
+#include <treelike/utility.hpp>
+#include <treelike/action.hpp>
 #include "cell_manager.h"
 using namespace cinder;
+using namespace treelike;
 namespace user
 {
 CREATE_CPP( score_board, std::shared_ptr<node> cell_manager, cinder::vec2 size )
@@ -23,10 +24,11 @@ bool score_board::init( std::shared_ptr<node> cell_manager, cinder::vec2 size )
     set_color( ColorA( 1, 1, 1, 0.5F ) );
     set_pivot( vec2( 0, 0 ) );
 
-    auto l = renderer::label::create( get_name( ), "misaki_gothic.ttf", 48 );
+    auto l = renderer::label::create( "misaki_gothic.ttf", 48 );
     l->set_color( ColorA( 0, 0, 0 ) );
     l->set_anchor_point( vec2( 0.5F, 0 ) );
     l->set_position( vec2( get_content_size( ).x / 2, 6 ) );
+    l->set_text( get_name( ) );
     add_child( l );
 
     auto scores = rect::create( vec2( size.x - 10 * 2, size.y - 42 - 10 ) );
@@ -38,21 +40,19 @@ bool score_board::init( std::shared_ptr<node> cell_manager, cinder::vec2 size )
     add_child( scores );
 
     auto dont_destroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
-    _tcp_connection = std::dynamic_pointer_cast<network::tcp_client>( dont_destroy_node.lock( )->get_child_by_name( "tcp_connection" ) );
+    _tcp_connection = dont_destroy_node->get_child_by_name( "tcp_connection" ).dynamicptr<network::tcp_client>( );
 
-    _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "ranking", [ this ] ( Json::Value root )
+    _tcp_connection->on_received_named_json.insert( std::make_pair( "ranking", [ this, scores ] ( Json::Value root )
     {
         app::console( ) << "ranking" << std::endl;
         app::console( ) << root;
 
-        auto scores = get_child_by_name( "scores" );
         scores->remove_all_children( );
-        auto cell_manager = std::dynamic_pointer_cast<user::cell_manager>( _cell_manager.lock( ) );
+        auto cell_manager = _cell_manager.dynamicptr<user::cell_manager>( );
         cell_manager->remove_all_crown( );
 
-        run_action( action::call_func::create( [ this, root ]
+        run_action( action::call_func::create( [ this, scores, root ]
         {
-            auto scores = get_child_by_name( "scores" );
             int i = 1;
             std::vector<int> ids( 3 );
             for ( auto& rank : root["data"] )
@@ -62,12 +62,14 @@ bool score_board::init( std::shared_ptr<node> cell_manager, cinder::vec2 size )
 
                 int rank_number = i;
 
-                auto l = renderer::label::create( utility::format( " %-3d %-3d", rank_number, rank["id"].asInt( ) ), "misaki_gothic.ttf", 32 );
+                auto l = renderer::label::create( "misaki_gothic.ttf", 32 );
+                l->set_text( utility::format( " %-3d %-3d", rank_number, rank["id"].asInt( ) ) );
                 l->set_color( ColorA( 0, 0, 0 ) );
                 l->set_anchor_point( vec2( 0, 0 ) );
                 l->set_position( vec2( 0, ( rank_number - 1 ) * 32 ) );
                 scores->add_child( l );
-                auto s = renderer::label::create( utility::format( "%5d ", rank["score"].asInt( ) ), "misaki_gothic.ttf", 32 );
+                auto s = renderer::label::create( "misaki_gothic.ttf", 32 );
+                s->set_text( utility::format( "%5d ", rank["score"].asInt( ) ) );
                 s->set_color( ColorA( 0, 0, 0 ) );
                 s->set_anchor_point( vec2( 1, 0 ) );
                 s->set_position( vec2( scores->get_content_size( ).x, ( rank_number - 1 ) * 32 ) );
@@ -76,7 +78,7 @@ bool score_board::init( std::shared_ptr<node> cell_manager, cinder::vec2 size )
                 i++;
             }
 
-            auto cell_manager = std::dynamic_pointer_cast<user::cell_manager>( _cell_manager.lock( ) );
+            auto cell_manager = _cell_manager.dynamicptr<user::cell_manager>( );
             cell_manager->set_all_crown( ids );
         } ) );
     } ) );

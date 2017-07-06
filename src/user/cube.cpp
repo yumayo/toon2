@@ -1,6 +1,7 @@
 ﻿#include "cube.h"
 #include "cinder/gl/gl.h"
 using namespace cinder;
+using namespace treelike;
 namespace user
 {
 CREATE_CPP( cube, cinder::vec3 const & size )

@@ -2,12 +2,13 @@
 #include "ground.h"
 #include "cell_manager.h"
 #include "feed_manager.h"
-#include "scene_manager.h"
+#include <treelike/scene_manager.h>
 #include "bullet_manager.h"
-#include "action.hpp"
+#include <treelike/action.hpp>
 #include "cinder/Camera.h"
-#include "user_default.h"
+#include <treelike/user_default.h>
 using namespace cinder;
+using namespace treelike;
 namespace user
 {
 CREATE_CPP( field,
@@ -33,22 +34,17 @@ bool field::init( Json::Value& root,
     auto feed_manager = feed_manager::create( cell_manager, feed_buffet );
 
     // 1
-    add_child( ground );
+    _ground = add_child( ground );
     // 2
-    add_child( feed_manager );
+    _feed_manager = add_child( feed_manager );
     // 3
-    add_child( bullet_manager );
+    _bullet_manager = add_child( bullet_manager );
     // 4
-    add_child( cell_manager );
+    _cell_manager = add_child( cell_manager );
 
     _player = cell_manager->get_player( );
-    _bullet_manager = bullet_manager;
 
     return true;
-}
-std::weak_ptr<node> field::get_bullet_manager( )
-{
-    return _bullet_manager;
 }
 }
 

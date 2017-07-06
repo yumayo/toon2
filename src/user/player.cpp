@@ -1,20 +1,20 @@
 ﻿#include "player.h"
-#include "action.hpp"
-#include "utility/string_utility.h"
+#include <treelike/action.hpp>
 #include "skin.h"
-#include "scene_manager.h"
+#include <treelike/scene_manager.h>
 #include "bullet_manager.h"
 #include "cell_manager.h"
-#include "user_default.h"
+#include <treelike/user_default.h>
 using namespace cinder;
+using namespace treelike;
 namespace user
 {
-CREATE_CPP( player, std::weak_ptr<node> cell_manager, std::string const& ip_address,
+CREATE_CPP( player, softptr<node> cell_manager, std::string const& ip_address,
             int port, std::string const& relative_path_skin )
 {
     CREATE( player, cell_manager, ip_address, port, relative_path_skin );
 }
-bool player::init( std::weak_ptr<node> cell_manager, std::string const& ip_address,
+bool player::init( softptr<node> cell_manager, std::string const& ip_address,
                    int port, std::string const& relative_path_skin )
 {
     if ( !cell::init( ip_address, port, relative_path_skin ) ) return false;
@@ -38,13 +38,13 @@ void player::key_down( cinder::app::KeyEvent e )
         blowout( );
     }
 }
-void player::on_captured( std::weak_ptr<node> other )
+void player::on_captured( softptr<node> other )
 {
     Json::Value root;
     root["name"] = "player_on_captured";
     root["data"]["score"] = _radius;
-    root["data"]["id"] = other.lock( )->get_tag( );
-    _tcp_connection.lock( )->write( Json::FastWriter( ).write( root ) );
+    root["data"]["id"] = other->get_tag( );
+    _tcp_connection->write( Json::FastWriter( ).write( root ) );
 }
 void player::capture( float score )
 {
@@ -76,7 +76,7 @@ void player::blowout( )
     {
         Json::Value root;
         root["name"] = "kill";
-        _tcp_connection.lock( )->write( Json::FastWriter( ).write( root ) );
+        _tcp_connection->write( Json::FastWriter( ).write( root ) );
     }
 }
 bool player::parse_bullet_data( Json::Value * root, cinder::vec2 direction )

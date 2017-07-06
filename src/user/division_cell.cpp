@@ -6,6 +6,7 @@
 #include "player.h"
 #include "utility.hpp"
 using namespace cinder;
+using namespace treelike;
 namespace user
 {
 CREATE_CPP( division_cell, int tag, cinder::vec2 position, cinder::vec2 normalized_direction, float radius, cinder::Color const& color, std::string const& skin_relative_path )
@@ -39,11 +40,11 @@ bool division_cell::init( int tag, cinder::vec2 position, cinder::vec2 normalize
 }
 float division_cell::get_radius( )
 {
-    return _circle.lock( )->get_radius( );
+    return _circle->get_radius( );
 }
-void division_cell::on_captured( std::weak_ptr<node> other )
+void division_cell::on_captured( softptr<node> other )
 {
-    if ( auto pla = std::dynamic_pointer_cast<user::player>( other.lock( ) ) )
+    if ( auto pla = std::dynamic_pointer_cast<user::player>( other ) )
     {
         pla->capture( _score );
 

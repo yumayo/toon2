@@ -1,9 +1,9 @@
 #pragma once
-#include "node.h"
+#include <treelike/node.h>
 #include "cinder/gl/Shader.h"
 namespace user
 {
-class sphere : public node
+class sphere : public treelike::node
 {
 public:
     CREATE_H( sphere, float radius, float subdivisions = -1.0F );

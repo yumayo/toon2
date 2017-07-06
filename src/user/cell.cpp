@@ -1,19 +1,19 @@
 ﻿#include "cell.h"
-#include "action.hpp"
-#include "utility/string_utility.h"
+#include <treelike/action.hpp>
 #include "skin.h"
 #include "cinder/gl/Texture.h"
-#include "scene_manager.h"
+#include <treelike/scene_manager.h>
 using namespace cinder;
+using namespace treelike;
 namespace user
 {
 bool cell::init( std::string const& ip_address,
                  int port, std::string const& skin_relative_path )
 {
     auto dont_destroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
-    _tcp_connection = std::dynamic_pointer_cast<network::tcp_client>( dont_destroy_node.lock( )->get_child_by_name( "tcp_connection" ) );
+    _tcp_connection = dont_destroy_node->get_child_by_name( "tcp_connection" ).dynamicptr<network::tcp_client>( );
 
-    _handle = std::make_shared<network::network_object>( ip_address, port );
+    _handle = make_hard<network::network_handle>( ip_address, port );
 
     _skin_relative_path = skin_relative_path;
 
@@ -48,42 +48,43 @@ float cell::get_radius( )
 void cell::set_radius( float value )
 {
     _radius = value;
-    _base.lock( )->set_radius( get_radius( ) );
-    _mask.lock( )->set_radius( get_radius( ) );
+    _base->set_radius( get_radius( ) );
+    _mask->set_radius( get_radius( ) );
 
-    if ( auto crown = _base.lock( )->get_child_by_name( "crown" ) )
+    if ( auto crown = _base->get_child_by_name( "crown" ) )
     {
         crown->set_scale( vec2( _radius / ( crown->get_content_size( ).x / 2 ) ) );
     }
 }
-void user::cell::set_color( cinder::ColorA value )
+void user::cell::set_color( cinder::ColorA const& value )
 {
     node::set_color( value );
-    _mask.lock( )->set_color( value );
+    _mask->set_color( value );
 }
 void cell::remove_crown( )
 {
-    if ( auto crown = _base.lock( )->get_child_by_name( "crown" ) )
+    if ( auto crown = _base->get_child_by_name( "crown" ) )
     {
         crown->remove_from_parent( );
     }
 }
-void cell::set_crown( std::weak_ptr<node> crown )
+void cell::set_crown( hardptr<node> crown )
 {
-    crown.lock( )->set_name( "crown" );
-    _base.lock( )->add_child( crown.lock( ) );
+    crown->set_scale( vec2( 2.0F ) );
+    crown->set_name( "crown" );
+    _base->add_child( crown );
 
-    if ( auto crown = _base.lock( )->get_child_by_name( "crown" ) )
+    if ( auto crown = _base->get_child_by_name( "crown" ) )
     {
         crown->set_scale( vec2( _radius / ( crown->get_content_size( ).x / 2 ) ) );
     }
 }
 bool cell::is_crowner( )
 {
-    return _base.lock( )->get_child_by_name( "crown" ) != nullptr;
+    return _base->get_child_by_name( "crown" ) != nullptr;
 }
 network::network_handle user::cell::get_handle( )
 {
-    return _handle;
+    return *_handle;
 }
 }

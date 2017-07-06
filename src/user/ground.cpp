@@ -2,15 +2,16 @@
 #include "player.h"
 #include "cell_manager.h"
 #include "bullet_manager.h"
-#include "user_default.h"
+#include <treelike/user_default.h>
 using namespace cinder;
+using namespace treelike;
 namespace user
 {
-CREATE_CPP( ground, std::weak_ptr<node> cell_manager, std::weak_ptr<node> bullet_manager, Json::Value const& root, std::vector<std::vector<ground_data>>& ground_buffer )
+CREATE_CPP( ground, softptr<node> cell_manager, softptr<node> bullet_manager, Json::Value const& root, std::vector<std::vector<ground_data>>& ground_buffer )
 {
     CREATE( ground, cell_manager, bullet_manager, root, ground_buffer );
 }
-bool ground::init( std::weak_ptr<node> cell_manager, std::weak_ptr<node> bullet_manager, Json::Value const& root, std::vector<std::vector<ground_data>>& ground_buffer )
+bool ground::init( softptr<node> cell_manager, softptr<node> bullet_manager, Json::Value const& root, std::vector<std::vector<ground_data>>& ground_buffer )
 {
     if ( !renderer::surface_cubic::init( vec2( root["data"]["ground_size"].asInt( ) ), ColorA( 0.1F, 0.1F, 0.1F ) ) ) return false;
 
@@ -51,7 +52,7 @@ bool ground::init( std::weak_ptr<node> cell_manager, std::weak_ptr<node> bullet_
 }
 void ground::update( float delta )
 {
-    if ( auto& cell_manager = std::dynamic_pointer_cast<user::cell_manager>( _cell_manager.lock( ) ) )
+    if ( auto& cell_manager = _cell_manager.dynamicptr<user::cell_manager>( ) )
     {
         for ( auto const& c : cell_manager->get_children( ) )
         {
@@ -59,7 +60,7 @@ void ground::update( float delta )
         }
     }
 
-    if ( auto& bullet_manager = std::dynamic_pointer_cast<user::bullet_manager>( _bullet_manager.lock( ) ) )
+    if ( auto& bullet_manager = _bullet_manager.dynamicptr<user::bullet_manager>( ) )
     {
         for ( auto const& folder : bullet_manager->get_children( ) )
         {
@@ -70,13 +71,13 @@ void ground::update( float delta )
         }
     }
 }
-void ground::collide( std::weak_ptr<node> player )
+void ground::collide( softptr<node> player )
 {
-    auto pos = player.lock( )->get_position( );
+    auto pos = player->get_position( );
     auto size = get_content_size( ) * get_scale( );
     pos.x = clamp( pos.x, 0.0F, size.x );
     pos.y = clamp( pos.y, 0.0F, size.y );
-    player.lock( )->set_position( pos );
+    player->set_position( pos );
 }
 void ground::close_player( cinder::ColorA const & color )
 {
@@ -92,17 +93,17 @@ void ground::close_player( cinder::ColorA const & color )
     }
     _texture->update( _surface );
 }
-void ground::paint_ground_cell( std::weak_ptr<cell> cell )
+void ground::paint_ground_cell( softptr<cell> cell )
 {
-    if ( !cell.lock( ) ) return;
-    float radius = cell.lock( )->get_radius( ) / get_scale( ).x;
-    paint_fill_circle( cell.lock( )->get_position( ) / get_scale( ).x, radius, cell.lock( )->get_color( ) );
+    if ( !cell ) return;
+    float radius = cell->get_radius( ) / get_scale( ).x;
+    paint_fill_circle( cell->get_position( ) / get_scale( ).x, radius, cell->get_color( ) );
 }
-void ground::paint_ground_bullet( std::weak_ptr<bullet> bullet )
+void ground::paint_ground_bullet( softptr<bullet> bullet )
 {
-    if ( !bullet.lock( ) ) return;
-    float radius = bullet.lock( )->get_radius( ) / get_scale( ).x;
-    paint_fill_circle( bullet.lock( )->get_position( ) / get_scale( ).x, radius, bullet.lock( )->get_color( ) );
+    if ( !bullet ) return;
+    float radius = bullet->get_radius( ) / get_scale( ).x;
+    paint_fill_circle( bullet->get_position( ) / get_scale( ).x, radius, bullet->get_color( ) );
 }
 }
 

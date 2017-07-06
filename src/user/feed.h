@@ -9,7 +9,7 @@ public:
     bool init( int tag, cinder::vec2 position );
 public:
     float get_radius( );
-    void on_captured( std::weak_ptr<node> other ) final override;
+    void on_captured( softptr<treelike::node> other ) final override;
 protected:
     float _score = 0.0F;
     float _radius = 0.0F;

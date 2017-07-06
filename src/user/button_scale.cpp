@@ -1,9 +1,10 @@
 ﻿#include "button_scale.h"
 #include "cinder/gl/gl.h"
-#include "utility/collision.h"
-#include "utility/assert_log.h"
-#include "action.hpp"
+#include <treelike/utility/collision.h>
+#include <treelike/utility/assert_log.h>
+#include <treelike/action.hpp>
 using namespace cinder;
+using namespace treelike;
 namespace user
 {
 CREATE_CPP( button_scale )

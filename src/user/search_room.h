@@ -1,14 +1,13 @@
 #pragma once
-#include "cocoslike.hpp"
+#include <treelike.hpp>
 #include "jsoncpp/json.h"
-#include "network/udp_connection.h"
 #include "synchronization_objects.h"
 namespace user
 {
-class search_room : public node
+class search_room : public treelike::node
 {
-    std::weak_ptr<network::udp_connection> _udp_connection;
-    std::weak_ptr<network::tcp_client> _tcp_connection;
+    softptr<treelike::network::udp_connection> _udp_connection;
+    softptr<treelike::network::tcp_client> _tcp_connection;
     Json::Value _root_buffer;
     bool _is_founded = false;
     std::vector<feed_data> _feed_buffer;

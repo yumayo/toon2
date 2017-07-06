@@ -1,8 +1,8 @@
 #pragma once
-#include "cocoslike.hpp"
+#include <treelike.hpp>
 namespace user
 {
-class config : public scene
+class config : public treelike::scene
 {
 public:
     CREATE_H( config );
@@ -15,7 +15,7 @@ public:
     void touch_moved( cinder::app::TouchEvent::Touch event )override;
     void touch_ended( cinder::app::TouchEvent::Touch event )override;
 private:
-    std::weak_ptr<node> _slider;
+    softptr<treelike::node> _slider;
     cinder::vec2 _tap_start_position;
     cinder::vec2 _tap_position;
     cinder::vec2 _tap_prev_position;
@@ -25,8 +25,8 @@ private:
     bool _is_switched = true;
     float _skin_width = 200.0F;
 private:
-    std::weak_ptr<node> _bac;
-    std::weak_ptr<node> _edg;
+    softptr<treelike::node> _bac;
+    softptr<treelike::node> _edg;
     void change_action( std::function<void( )> end_fn );
 };
 }

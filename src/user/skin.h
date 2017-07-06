@@ -1,11 +1,11 @@
 #pragma once
-#include "cocoslike.hpp"
+#include <treelike.hpp>
 #include "cinder/gl/Texture.h"
 #include "cinder/gl/GlslProg.h"
 #include "cinder/gl/Batch.h"
 namespace user
 {
-class skin : public renderer::circle
+class skin : public treelike::renderer::circle
 {
 public:
     CREATE_H( skin, float radius, float segments, std::string const& relative_path );

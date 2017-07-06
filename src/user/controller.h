@@ -1,16 +1,16 @@
 #pragma once
-#include "node.h"
-#include "renderer/circle.h"
+#include <treelike/node.h>
+#include <treelike/renderer/circle.h>
 #include "player.h"
 #include "ground.h"
 #include "bullet_manager.h"
 namespace user
 {
-class controller : public node
+class controller : public treelike::node
 {
 public:
-    CREATE_H( controller, std::weak_ptr<player> player, std::weak_ptr<ground> ground, std::weak_ptr<bullet_manager> bullet_manager );
-    bool init( std::weak_ptr<player> player, std::weak_ptr<ground> ground, std::weak_ptr<bullet_manager> bullet_manager );
+    CREATE_H( controller, softptr<player> player, softptr<ground> ground, softptr<bullet_manager> bullet_manager );
+    bool init( softptr<player> player, softptr<ground> ground, softptr<bullet_manager> bullet_manager );
     bool mouse_began( cinder::app::MouseEvent event ) override;
     void mouse_moved( cinder::app::MouseEvent event ) override;
     void mouse_ended( cinder::app::MouseEvent event ) override;
@@ -32,10 +32,10 @@ private:
     cinder::vec2 _last_normaized_axis;
     cinder::vec2 _tap_start_position;
     cinder::vec2 _axis;
-    std::weak_ptr<renderer::circle> _base_node;
-    std::weak_ptr<renderer::circle> _axis_node;
-    std::weak_ptr<player> _player;
-    std::weak_ptr<ground> _ground;
-    std::weak_ptr<bullet_manager> _bullet_manager;
+    softptr<treelike::renderer::circle> _base_node;
+    softptr<treelike::renderer::circle> _axis_node;
+    softptr<player> _player;
+    softptr<ground> _ground;
+    softptr<bullet_manager> _bullet_manager;
 };
 }

@@ -1,9 +1,10 @@
 ﻿#include "create_dot_obeject.h"
 #include "cinder/Surface.h"
 using namespace cinder;
+using namespace treelike;
 namespace user
 {
-std::shared_ptr<node> create_dot( std::string const & relative_path, float target_width )
+std::shared_ptr<treelike::node> create_dot( std::string const & relative_path, float target_width )
 {
     Surface32f csv = loadImage( app::loadAsset( relative_path ) );
 

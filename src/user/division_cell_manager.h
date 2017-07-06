@@ -1,6 +1,6 @@
 #pragma once
-#include "node.h"
-#include "network.hpp"
+#include <treelike/node.h>
+#include <treelike/network.hpp>
 #include "jsoncpp/json.h"
 namespace user
 {
@@ -27,17 +27,17 @@ namespace user
 // float radius
 // int player_id
 
-class division_cell_manager : public node
+class division_cell_manager : public treelike::node
 {
 public:
-    CREATE_H( division_cell_manager, std::weak_ptr<node> cell_manager, std::vector<Json::Value> const& division_cells_buffer );
-    bool init( std::weak_ptr<node> cell_manager, std::vector<Json::Value> const& division_cells_buffer );
+    CREATE_H( division_cell_manager, softptr<treelike::node> cell_manager, std::vector<Json::Value> const& division_cells_buffer );
+    bool init( softptr<treelike::node> cell_manager, std::vector<Json::Value> const& division_cells_buffer );
     void update( float delta ) final override;
     void on_feed_captured( int tag );
 protected:
     int _number_of_captured_division_cell = 0;
     Json::Value _captured_division_cell_data;
-    std::weak_ptr<node> _cell_manager;
-    std::weak_ptr<network::tcp_client> _tcp_connection;
+    softptr<treelike::node> _cell_manager;
+    softptr<treelike::network::tcp_client> _tcp_connection;
 };
 }

@@ -2,11 +2,12 @@
 #include "cinder/gl/gl.h"
 #include "cinder/Rand.h"
 #include "feed_manager.h"
-#include "action.hpp"
+#include <treelike/action.hpp>
 #include "player.h"
-#include "utility.hpp"
-#include "renderer/circle.h"
+#include <treelike/utility.hpp>
+#include <treelike/renderer/circle.h>
 using namespace cinder;
+using namespace treelike;
 namespace user
 {
 CREATE_CPP( feed, int tag, cinder::vec2 position )
@@ -51,13 +52,13 @@ float feed::get_radius( )
 {
     return _radius;
 }
-void feed::on_captured( std::weak_ptr<node> other )
+void feed::on_captured( softptr<node> other )
 {
-    if ( auto pla = std::dynamic_pointer_cast<user::player>( other.lock( ) ) )
+    if ( auto pla = other.dynamicptr<user::player>( ) )
     {
         pla->capture( _score );
 
-        if ( auto feed_mgr = std::dynamic_pointer_cast<feed_manager>( get_parent( ) ) )
+        if ( auto feed_mgr = get_parent( ).dynamicptr<feed_manager>( ) )
         {
             feed_mgr->on_feed_captured( get_tag( ) );
         }

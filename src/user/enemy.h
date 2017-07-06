@@ -9,6 +9,6 @@ public:
               int port, std::string const& relative_path_skin = "" );
     bool init( std::string const& ip_address, int port, std::string const& relative_path_skin );
 public:
-    void on_captured( std::weak_ptr<node> other ) override;
+    void on_captured( softptr<treelike::node> other ) override;
 };
 }

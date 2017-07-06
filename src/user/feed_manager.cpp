@@ -1,33 +1,34 @@
 ﻿#include "feed_manager.h"
 #include "feed.h"
 #include "cell_manager.h"
-#include "scene_manager.h"
-#include "user_default.h"
-#include "utility.hpp"
-#include "action.hpp"
+#include <treelike/scene_manager.h>
+#include <treelike/user_default.h>
+#include <treelike/utility.hpp>
+#include <treelike/action.hpp>
 #include "se.h"
 using namespace cinder;
+using namespace treelike;
 namespace user
 {
-CREATE_CPP( feed_manager, std::weak_ptr<node> cell_manager, std::vector<feed_data>& feed_buffer )
+CREATE_CPP( feed_manager, softptr<node> cell_manager, std::vector<feed_data>& feed_buffer )
 {
     CREATE( feed_manager, cell_manager, feed_buffer );
 }
-bool feed_manager::init( std::weak_ptr<node> cell_manager, std::vector<feed_data>& feed_buffer )
+bool feed_manager::init( softptr<node> cell_manager, std::vector<feed_data>& feed_buffer )
 {
     set_name( "feed_manager" );
 
     _cell_manager = cell_manager;
 
     auto dont_destroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
-    _tcp_connection = std::dynamic_pointer_cast<network::tcp_client>( dont_destroy_node.lock( )->get_child_by_name( "tcp_connection" ) );
+    _tcp_connection = dont_destroy_node->get_child_by_name( "tcp_connection" ).dynamicptr<network::tcp_client>();
 
     for ( auto& f : feed_buffer )
     {
         add_child( feed::create( f.id, f.position ) );
     }
 
-    _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "feed_captured", [ this ] ( Json::Value root )
+    _tcp_connection->on_received_named_json.insert( std::make_pair( "feed_captured", [ this ] ( Json::Value root )
     {
         for ( auto& obj : root["data"] )
         {
@@ -47,7 +48,7 @@ bool feed_manager::init( std::weak_ptr<node> cell_manager, std::vector<feed_data
             play_se( "sound/captured.wav" );
 
             _captured_feed_data["name"] = "feed_captured";
-            _tcp_connection.lock( )->write( Json::FastWriter( ).write( _captured_feed_data ) );
+            _tcp_connection->write( Json::FastWriter( ).write( _captured_feed_data ) );
 
             _captured_feed_number = 0;
             _captured_feed_data.clear( );
@@ -60,7 +61,7 @@ bool feed_manager::init( std::weak_ptr<node> cell_manager, std::vector<feed_data
 }
 void feed_manager::update( float delta )
 {
-    for ( auto child : _cell_manager.lock( )->get_children( ) )
+    for ( auto child : _cell_manager->get_children( ) )
     {
         if ( auto pla = std::dynamic_pointer_cast<cell>( child ) )
         {

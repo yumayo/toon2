@@ -1,7 +1,8 @@
 ﻿#include "spike.h"
 #include "cinder/gl/gl.h"
-#include "utility.hpp"
+#include <treelike/utility.hpp>
 using namespace cinder;
+using namespace treelike;
 namespace user
 {
 CREATE_CPP( spike, float radius, float segments, float sharpness )

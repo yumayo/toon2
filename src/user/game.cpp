@@ -1,12 +1,13 @@
 ﻿#include "game.h"
 #include "cell_manager.h"
 #include "create_dot_obeject.h"
-#include "scene_manager.h"
+#include <treelike/scene_manager.h>
 #include "title.h"
-#include "network.hpp"
+#include <treelike/network.hpp>
 #include "score_board.h"
 #include "se.h"
 using namespace cinder;
+using namespace treelike;
 namespace user
 {
 CREATE_CPP( game,
@@ -20,8 +21,8 @@ CREATE_CPP( game,
 game::~game( )
 {
     auto dont_destroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
-    dont_destroy_node.lock( )->remove_child_by_name( "udp_connection" );
-    dont_destroy_node.lock( )->remove_child_by_name( "tcp_connection" );
+    dont_destroy_node->remove_child_by_name( "udp_connection" );
+    dont_destroy_node->remove_child_by_name( "tcp_connection" );
 }
 bool game::init( Json::Value& root,
                  std::vector<feed_data> feed_buffet,
@@ -32,9 +33,9 @@ bool game::init( Json::Value& root,
 
     auto dont_destroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
 
-    auto tcp_connection = std::dynamic_pointer_cast<network::tcp_client>( dont_destroy_node.lock( )->get_child_by_name( "tcp_connection" ) );
+    auto tcp_connection = dont_destroy_node->get_child_by_name( "tcp_connection" ).dynamicptr<network::tcp_client>( );
 
-    tcp_connection->on_errored = [ this ] ( asio::error_code const& e )
+    tcp_connection->on_errored = [ this ] ( boost::system::error_code const& e )
     {
         scene_manager::get_instans( )->replace( title::create( ) );
     };
@@ -49,9 +50,10 @@ bool game::init( Json::Value& root,
         add_child( field );
     }
 
-    _player = std::dynamic_pointer_cast<cell_manager>( _field.lock( )->get_child_by_name( "cell_manager" ) )->get_player( );
-    _ground = std::dynamic_pointer_cast<ground>( _field.lock( )->get_child_by_name( "ground" ) );
-    if ( auto controller = controller::create( _player, _ground, std::dynamic_pointer_cast<bullet_manager>( _field.lock( )->get_bullet_manager( ).lock( ) ) ) )
+    auto m = _field->get_cell_manager( ).dynamicptr<cell_manager>( );
+    _player = m->get_player( );
+    _ground = _field->get_ground( ).dynamicptr<ground>( );
+    if ( auto controller = controller::create( _player, _ground, _field->get_bullet_manager( ).dynamicptr<bullet_manager>( ) ) )
     {
         _controller = controller;
         add_child( controller );
@@ -67,7 +69,7 @@ bool game::init( Json::Value& root,
     };
     add_child( bac );
 
-    add_child( score_board::create( _field.lock( )->get_child_by_name( "cell_manager" ), vec2( 300, 300 ) ) );
+    add_child( score_board::create( _field->get_cell_manager( ), vec2( 300, 300 ) ) );
 
     return true;
 }
@@ -78,7 +80,7 @@ void game::update( float delta )
     auto max_radius = user_default::get_instans( )->get_root( )["system"]["max_radius"].asFloat( );
     auto min_radius = user_default::get_instans( )->get_root( )["system"]["min_radius"].asFloat( );
     // 0~
-    auto radius = _player.lock( )->get_radius( ) - min_radius;
+    auto radius = _player->get_radius( ) - min_radius;
 
     radius = glm::clamp( radius, 0.0F, max_radius );
 
@@ -87,9 +89,9 @@ void game::update( float delta )
 
     auto scale = 1.0F + 1.0F - easeOutCirc( r ) * 1.5F;
 
-    _field.lock( )->set_scale( vec2( scale ) );
+    _field->set_scale( vec2( scale ) );
 
     auto win_half = vec2( app::getWindowSize( ) ) * 0.5F;
-    if ( _player.lock( ) ) _field.lock( )->set_position( win_half - _player.lock( )->get_position( ) * _field.lock( )->get_scale( ).x );
+    if ( _player ) _field->set_position( win_half - _player->get_position( ) * _field->get_scale( ).x );
 }
 }

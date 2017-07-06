@@ -1,8 +1,8 @@
 ﻿#include "skin.h"
-#include "utility/assert_log.h"
+#include <treelike/utility/assert_log.h>
 #include "cinder/gl/gl.h"
-
 using namespace cinder;
+using namespace treelike;
 namespace user
 {
 CREATE_CPP( skin, float radius, float segments, std::string const& relative_path )

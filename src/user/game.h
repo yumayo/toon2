@@ -1,5 +1,5 @@
 #pragma once
-#include "cocoslike.hpp"
+#include <treelike.hpp>
 #include "field.h"
 #include "player.h"
 #include "controller.h"
@@ -7,7 +7,7 @@
 #include "synchronization_objects.h"
 namespace user
 {
-class game : public scene
+class game : public treelike::scene
 {
 public:
     CREATE_H( game, 
@@ -22,10 +22,10 @@ public:
                std::vector<std::vector<ground_data>>& ground_buffer );
     void update( float delta ) override;
 private:
-    std::weak_ptr<field> _field;
-    std::weak_ptr<player> _player;
-    std::weak_ptr<ground> _ground;
-    std::weak_ptr<controller> _controller;
-    std::weak_ptr<node> _back_button;
+    softptr<field> _field;
+    softptr<player> _player;
+    softptr<ground> _ground;
+    softptr<controller> _controller;
+    softptr<node> _back_button;
 };
 }

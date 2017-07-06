@@ -1,27 +1,28 @@
 ﻿#include "division_cell_manager.h"
 #include "feed.h"
 #include "cell_manager.h"
-#include "scene_manager.h"
-#include "user_default.h"
-#include "utility.hpp"
-#include "action.hpp"
+#include <treelike/scene_manager.h>
+#include <treelike/user_default.h>
+#include <treelike/utility.hpp>
+#include <treelike/action.hpp>
 #include "se.h"
 #include "division_cell.h"
 using namespace cinder;
+using namespace treelike;
 namespace user
 {
-CREATE_CPP( division_cell_manager, std::weak_ptr<node> cell_manager, std::vector<Json::Value> const& division_cells_buffer )
+CREATE_CPP( division_cell_manager, softptr<node> cell_manager, std::vector<Json::Value> const& division_cells_buffer )
 {
     CREATE( division_cell_manager, cell_manager, division_cells_buffer );
 }
-bool division_cell_manager::init( std::weak_ptr<node> cell_manager, std::vector<Json::Value> const& division_cells_buffer )
+bool division_cell_manager::init( softptr<node> cell_manager, std::vector<Json::Value> const& division_cells_buffer )
 {
     set_name( "division_cell_manager" );
 
     _cell_manager = cell_manager;
 
-    _tcp_connection = std::dynamic_pointer_cast<network::tcp_client>(
-        scene_manager::get_instans( )->get_dont_destroy_node( ).lock( )->get_child_by_name( "tcp_connection" ) );
+    _tcp_connection = scene_manager::get_instans( )->get_dont_destroy_node( )->get_child_by_name( "tcp_connection" )
+        .dynamicptr<network::tcp_client>( );
 
     for ( auto& c : division_cells_buffer )
     {
@@ -32,7 +33,7 @@ bool division_cell_manager::init( std::weak_ptr<node> cell_manager, std::vector<
         add_child( division_cell::create( c.first, ) );
     }
 
-    _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "feed_captured", [ this ] ( Json::Value root )
+    _tcp_connection->on_received_named_json.insert( std::make_pair( "feed_captured", [ this ] ( Json::Value root )
     {
         for ( auto& obj : root["data"] )
         {
@@ -52,7 +53,7 @@ bool division_cell_manager::init( std::weak_ptr<node> cell_manager, std::vector<
             play_se( "sound/captured.wav" );
 
             _captured_feed_data["name"] = "feed_captured";
-            _tcp_connection.lock( )->write( Json::FastWriter( ).write( _captured_feed_data ) );
+            _tcp_connection->write( Json::FastWriter( ).write( _captured_feed_data ) );
 
             _captured_feed_number = 0;
             _captured_feed_data.clear( );
@@ -65,7 +66,7 @@ bool division_cell_manager::init( std::weak_ptr<node> cell_manager, std::vector<
 }
 void division_cell_manager::update( float delta )
 {
-    for ( auto child : _cell_manager.lock( )->get_children( ) )
+    for ( auto child : _cell_manager->get_children( ) )
     {
         if ( auto pla = std::dynamic_pointer_cast<cell>( child ) )
         {

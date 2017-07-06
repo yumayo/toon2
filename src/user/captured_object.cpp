@@ -1,17 +1,18 @@
 ﻿#include "captured_object.h"
-#include "action.hpp"
+#include <treelike/action.hpp>
 using namespace cinder;
+using namespace treelike;
 namespace user
 {
 captured_object::~captured_object( )
 {
 
 }
-void captured_object::captured( std::weak_ptr<node> other )
+void captured_object::captured( softptr<node> other )
 {
     _captureing = true;
 
-    run_action( action::sequence::create( action::move_to_target::create( 0.2F, other.lock( ) ),
+    run_action( action::sequence::create( action::move_to_target::create( 0.2F, other ),
                                           action::call_func::create( [ this, other ] ( )
     {
         // 0.2F後にデリートしない場合止まって描画されてしまうためfalseにしています。

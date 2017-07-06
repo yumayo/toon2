@@ -1,9 +1,10 @@
 ﻿#include "bullet.h"
 #include "skin.h"
-#include "utility.hpp"
-#include "action.hpp"
+#include <treelike/utility.hpp>
+#include <treelike/action.hpp>
 #include "cell.h"
 using namespace cinder;
+using namespace treelike;
 namespace user
 {
 bool bullet::init( int bullet_id, float time_offset, cinder::vec2 position, cinder::vec2 direction, cinder::Color color, std::string const& skin_relative_path )
@@ -17,14 +18,14 @@ bool bullet::init( int bullet_id, float time_offset, cinder::vec2 position, cind
     set_color( color );
 
     _base = add_child( user::spike::create( _radius, _radius, 10.0F ) );
-    _mask = _base.lock( )->add_child( skin_relative_path.empty( ) ?
+    _mask = _base->add_child( skin_relative_path.empty( ) ?
                                       renderer::circle::create( _radius ) :
                                       skin::create( _radius, _radius, skin_relative_path ) );
     if ( skin_relative_path.empty( ) )
     {
-        _mask.lock( )->set_color( color );
+        _mask->set_color( color );
     }
-    _mask.lock( )->set_scale( vec2( 0.9F ) );
+    _mask->set_scale( vec2( 0.9F ) );
 
     _direction = direction;
 

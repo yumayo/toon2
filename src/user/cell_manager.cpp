@@ -1,14 +1,15 @@
 ﻿#include "cell_manager.h"
 #include "player.h"
-#include "user_default.h"
-#include "action.hpp"
-#include "scene_manager.h"
-#include "network.hpp"
+#include <treelike/user_default.h>
+#include <treelike/action.hpp>
+#include <treelike/scene_manager.h>
+#include <treelike/network.hpp>
 #include "ground.h"
 #include "title.h"
 #include "bullet_manager.h"
 #include "boost/lexical_cast.hpp"
 using namespace cinder;
+using namespace treelike;
 namespace user
 {
 CREATE_CPP( cell_manager, Json::Value& root )
@@ -31,35 +32,35 @@ bool cell_manager::init( Json::Value& root )
     }
 
     auto dont_destroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
-    _udp_connection = std::dynamic_pointer_cast<network::udp_connection>( dont_destroy_node.lock( )->get_child_by_name( "udp_connection" ) );
-    _tcp_connection = std::dynamic_pointer_cast<network::tcp_client>( dont_destroy_node.lock( )->get_child_by_name( "tcp_connection" ) );
+    _udp_connection = dont_destroy_node->get_child_by_name( "udp_connection" ).dynamicptr<network::udp_connection>( );
+    _tcp_connection = dont_destroy_node->get_child_by_name( "tcp_connection" ).dynamicptr<network::tcp_client>( );
 
     // 他のクライアントが接続を切ったら呼ばれます。
-    _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "close_client", [ this ] ( Json::Value root )
+    _tcp_connection->on_received_named_json.insert( std::make_pair( "close_client", [ this ] ( Json::Value root )
     {
         app::console( ) << "close_client" << std::endl;
         app::console( ) << root;
 
         // 削除ハンドルを作成。
-        auto info = std::make_shared<network::network_object>( root["data"]["ip_address"].asString( ), root["data"]["udp_port"].asInt( ) );
+        auto info = network::network_handle( root["data"]["ip_address"].asString( ), root["data"]["udp_port"].asInt( ) );
 
-        auto target = std::find_if( _enemys.begin( ), _enemys.end( ), [ info ] ( std::weak_ptr<enemy>& n )
+        auto target = std::find_if( _enemys.begin( ), _enemys.end( ), [ info ] ( softptr<enemy>& n )
         {
-            return **n.lock( )->get_handle( ) == *info;
+            return n->get_handle( ) == info;
         } );
         if ( target == _enemys.end( ) ) return;
 
-        auto bullet_manager = std::dynamic_pointer_cast<user::bullet_manager>( _bullet_manager.lock( ) );
-        bullet_manager->close_player( ( *target ).lock( )->get_color( ) );
+        auto bullet_manager = _bullet_manager.dynamicptr<user::bullet_manager>( );
+        bullet_manager->close_player( ( *target )->get_color( ) );
 
-        auto ground_mgr = std::dynamic_pointer_cast<ground>( _ground.lock( ) );
-        ground_mgr->close_player( ( *target ).lock( )->get_color( ) );
+        auto ground_mgr = _ground.dynamicptr<ground>( );
+        ground_mgr->close_player( ( *target )->get_color( ) );
 
         // 保存リストの方の削除。
         {
-            auto remove_itr = std::remove_if( _enemys.begin( ), _enemys.end( ), [ info ] ( std::weak_ptr<enemy>& n )
+            auto remove_itr = std::remove_if( _enemys.begin( ), _enemys.end( ), [ info ] ( softptr<enemy>& n )
             {
-                return **n.lock( )->get_handle( ) == *info;
+                return n->get_handle( ) == info;
             } );
             _enemys.erase( remove_itr, _enemys.end( ) );
         }
@@ -69,48 +70,43 @@ bool cell_manager::init( Json::Value& root )
             {
                 if ( auto cell = std::dynamic_pointer_cast<user::cell>( n ) )
                 {
-                    return **cell->get_handle( ) == *info;
+                    return cell->get_handle( ) == info;
                 }
                 return false;
             } );
             _children.erase( remove_itr, _children.end( ) );
         }
-
-        // 削除したとサーバーに通知。
-        _udp_connection.lock( )->destroy_client( info );
     } ) );
 
     // 新しいクライアントが接続してきたら呼ばれます。
-    _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "new_client", [ this ] ( Json::Value root )
+    _tcp_connection->on_received_named_json.insert( std::make_pair( "new_client", [ this ] ( Json::Value root )
     {
-        // udpの方にクライアントの情報を渡してあげます。
-        _udp_connection.lock( )->regist_client( root["data"]["ip_address"].asString( ), root["data"]["udp_port"].asInt( ) );
         create_enemy( root["data"] );
     } ) );
 
     // クライアントの捕食が発生したら呼ばれます。
-    _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "player_capture", [ this ] ( Json::Value root )
+    _tcp_connection->on_received_named_json.insert( std::make_pair( "player_capture", [ this ] ( Json::Value root )
     {
-        _player.lock( )->capture( root["data"]["score"].asFloat( ) );
+        _player->capture( root["data"]["score"].asFloat( ) );
     } ) );
 
     // サーバーから死んでくれと言われたらタイトルに戻ります。
-    _tcp_connection.lock( )->on_received_named_json.insert( std::make_pair( "kill", [ this ] ( Json::Value root )
+    _tcp_connection->on_received_named_json.insert( std::make_pair( "kill", [ this ] ( Json::Value root )
     {
         scene_manager::get_instans( )->replace( title::create( ) );
     } ) );
 
     // 他のオブジェクトからゲームの更新命令がされたら呼ばれます。
     // 毎フレーム呼ぶのでudpで通信します。
-    _udp_connection.lock( )->on_received_named_json.insert( std::make_pair( "game_update", [ this ] ( network::network_handle handle, Json::Value root )
+    _udp_connection->on_received_named_json.insert( std::make_pair( "game_update", [ this ] ( network::network_handle handle, Json::Value root )
     {
         for ( auto& enemy : _enemys )
         {
-            if ( **enemy.lock( )->get_handle( ) == **handle )
+            if ( enemy->get_handle( ) == handle )
             {
-                enemy.lock( )->set_position( vec2( root["data"]["position"][0].asFloat( ),
+                enemy->set_position( vec2( root["data"]["position"][0].asFloat( ),
                                                    root["data"]["position"][1].asFloat( ) ) );
-                enemy.lock( )->set_radius( root["data"]["radius"].asFloat( ) );
+                enemy->set_radius( root["data"]["radius"].asFloat( ) );
                 return;
             }
         }
@@ -120,16 +116,16 @@ bool cell_manager::init( Json::Value& root )
 }
 void cell_manager::update( float delta )
 {
-    if ( !_player.lock( ) || _player.expired( ) ) return;
+    if ( !_player || _player.expired( ) ) return;
 
     // 大きさで、描画順を変更。
-    get_children( ).sort( [ ] ( std::shared_ptr<node>& a, std::shared_ptr<node>& b )
+    sort_children( [ ] ( hardptr<node>& a, hardptr<node>& b )
     {
-        std::weak_ptr<cell> p_a = std::dynamic_pointer_cast<cell>( a );
-        std::weak_ptr<cell> p_b = std::dynamic_pointer_cast<cell>( b );
-        if ( p_a.lock( ) && p_b.lock( ) )
+        softptr<cell> p_a = std::dynamic_pointer_cast<cell>( a );
+        softptr<cell> p_b = std::dynamic_pointer_cast<cell>( b );
+        if ( p_a && p_b )
         {
-            return p_a.lock( )->get_radius( ) < p_b.lock( )->get_radius( );
+            return p_a->get_radius( ) < p_b->get_radius( );
         }
         return false;
     } );
@@ -138,71 +134,71 @@ void cell_manager::update( float delta )
     for ( auto& enemy : _enemys )
     {
         // 自分の大きさは加味しません。
-        if ( distance( _player.lock( )->get_position( ), enemy.lock( )->get_position( ) )
-             < _player.lock( )->get_radius( ) * 0 + enemy.lock( )->get_radius( ) )
+        if ( distance( _player->get_position( ), enemy->get_position( ) )
+             < _player->get_radius( ) * 0 + enemy->get_radius( ) )
         {
-            std::weak_ptr<cell> small = _player;
-            std::weak_ptr<cell> large = enemy;
-            if ( large.lock( )->get_radius( ) < small.lock( )->get_radius( ) ) swap( small, large );
-            if ( small.lock( )->get_radius( ) < large.lock( )->get_radius( ) / 2 )
+            softptr<cell> small = _player;
+            softptr<cell> large = enemy;
+            if ( large->get_radius( ) < small->get_radius( ) ) swap( small, large );
+            if ( small->get_radius( ) < large->get_radius( ) / 2 )
             {
-                if ( !small.lock( )->is_captureing( ) )
+                if ( !small->is_captureing( ) )
                 {
-                    small.lock( )->captured( large );
+                    small->captured( large );
                 }
             }
         }
     }
 
-    if ( !_udp_connection.lock( ) ) return;
+    if ( !_udp_connection ) return;
 
     // 最後に自分のポジションなどを相手に送ります。
     {
         Json::Value root;
         root["name"] = "ground";
-        root["data"]["position"][0] = _player.lock( )->get_position( ).x;
-        root["data"]["position"][1] = _player.lock( )->get_position( ).y;
-        root["data"]["radius"] = _player.lock( )->get_radius( );
+        root["data"]["position"][0] = _player->get_position( ).x;
+        root["data"]["position"][1] = _player->get_position( ).y;
+        root["data"]["radius"] = _player->get_radius( );
 
         auto server_addr = user_default::get_instans( )->get_root( )["server"]["address"].asString( );
         auto server_port = user_default::get_instans( )->get_root( )["server"]["udp_port"].asInt( );
-        _udp_connection.lock( )->write( std::make_shared<network::network_object>( server_addr, server_port ), root );
+        _udp_connection->write( network::network_handle( server_addr, server_port ), root );
     }
     {
         Json::Value root;
         root["name"] = "game_update";
-        root["data"]["position"][0] = _player.lock( )->get_position( ).x;
-        root["data"]["position"][1] = _player.lock( )->get_position( ).y;
-        root["data"]["radius"] = _player.lock( )->get_radius( );
+        root["data"]["position"][0] = _player->get_position( ).x;
+        root["data"]["position"][1] = _player->get_position( ).y;
+        root["data"]["radius"] = _player->get_radius( );
 
         for ( auto& enemy : _enemys )
         {
-            _udp_connection.lock( )->write( enemy.lock( )->get_handle( ), root );
+            _udp_connection->write( enemy->get_handle( ), root );
         }
     }
 }
-std::list<std::weak_ptr<enemy>>& cell_manager::get_enemys( )
+std::list<softptr<enemy>>& cell_manager::get_enemys( )
 {
     return _enemys;
 }
-std::weak_ptr<player>& cell_manager::get_player( )
+softptr<player>& cell_manager::get_player( )
 {
     return _player;
 }
-void cell_manager::set_ground( std::weak_ptr<node> ground )
+void cell_manager::set_ground( softptr<node> ground )
 {
     _ground = ground;
 }
-void cell_manager::set_bullet_manager( std::weak_ptr<node> bullet_manager )
+void cell_manager::set_bullet_manager( softptr<node> bullet_manager )
 {
     _bullet_manager = bullet_manager;
 }
 void cell_manager::remove_all_crown( )
 {
-    _player.lock( )->remove_crown( );
+    _player->remove_crown( );
     for ( auto& enemy : _enemys )
     {
-        enemy.lock( )->remove_crown( );
+        enemy->remove_crown( );
     }
 }
 void cell_manager::set_all_crown( std::vector<int> const& ids )
@@ -211,12 +207,9 @@ void cell_manager::set_all_crown( std::vector<int> const& ids )
     {
         if ( auto cell = get_child_by_tag( ids[i] ) )
         {
-            auto p = std::dynamic_pointer_cast<user::cell>( cell );
+            auto p = cell.dynamicptr<user::cell>( );
             if ( p->is_crowner( ) ) continue;
-
-            auto s = renderer::sprite_cubic::create( "crown" + boost::lexical_cast<std::string>( i + 1 ) + ".png" );
-            s->set_scale( vec2( 2.0F ) );
-            p->set_crown( s );
+            p->set_crown( renderer::sprite_cubic::create( "crown" + boost::lexical_cast<std::string>( i + 1 ) + ".png" ) );
         }
     }
 }

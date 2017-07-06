@@ -1,15 +1,16 @@
 ﻿#include "gacha.h"
 #include "create_dot_obeject.h"
-#include "scene_manager.h"
+#include <treelike/scene_manager.h>
 #include "title.h"
 #include "feed.h"
 #include "boost/lexical_cast.hpp"
 #include "player.h"
 #include "cinder/Rand.h"
 #include "se.h"
-#include "utility/file_system.h"
+#include <treelike/utility/file_system.h>
 #include "enemy.h"
 using namespace cinder;
+using namespace treelike;
 namespace user
 {
 CREATE_CPP( gacha )
@@ -53,7 +54,8 @@ bool gacha::init( )
 
     auto feed_num = user_default::get_instans( )->get_root( )["feed"].asInt( );
 
-    auto fla = renderer::label::create( "x" + boost::lexical_cast<std::string>( feed_num ), "misaki_gothic.ttf", 86 );
+    auto fla = renderer::label::create( "misaki_gothic.ttf", 86 );
+    fla->set_text( "x" + boost::lexical_cast<std::string>( feed_num ) );
     _feed_number_label = fla;
     fla->set_position( vec2( app::getWindowSize( ) ) * vec2( 1, 1 ) + vec2( -50, -50 ) );
     fla->set_anchor_point( vec2( 1, 1 ) );
@@ -64,14 +66,14 @@ bool gacha::init( )
     fee->set_position( vec2( -50, 0 ) );
     fla->add_child( fee );
 
-    auto m = fee->get_world_matrix( );
-    m = translate( m, fee->get_position( ) );
-    auto start_pos = vec2( m[2][0], m[2][1] );
-    auto end_pos = gar->get_position( );
-    auto mas_pos = mas->get_position( );
-
-    gar->on_ended = [ this, start_pos, end_pos, mas_pos ]
+    gar->on_ended = [ this, fee, gar, mas ]
     {
+        auto m = fee->get_world_matrix( );
+        m = translate( m, fee->get_position( ) );
+        auto start_pos = vec2( m[2][0], m[2][1] );
+        auto end_pos = gar->get_position( );
+        auto mas_pos = mas->get_position( );
+
         auto& root = user_default::get_instans( )->get_root( );
         if ( root["feed"].asInt( ) < 10 ) return;
 
@@ -81,7 +83,7 @@ bool gacha::init( )
         {
             auto feed_num = root["feed"].asInt( ) - 1;
             root["feed"] = feed_num;
-            _feed_number_label.lock( )->set_text( "x " + boost::lexical_cast<std::string>( feed_num ) );
+            _feed_number_label->set_text( "x" + boost::lexical_cast<std::string>( feed_num ) );
             auto f = feed::create( node::INVALID_TAG, vec2( 0 ) );
             f->set_position( start_pos );
             f->run_action( sequence::create( ease<EaseInOutCirc>::create( move_to::create( 1.0F, end_pos ) ), remove_self::create( ) ) );
@@ -103,7 +105,7 @@ bool gacha::init( )
             enemy->run_action( repeat_forever::create( rotate_by::create( 10.0F, M_PI * 2 ) ) );
             eff->add_child( enemy );
 
-            if ( is_complete( ) ) remove_child( _garagara.lock( ) );
+            if ( is_complete( ) ) remove_child( _garagara );
         } );
         run_action( sequence::create( repeat_times::create( sequence::create( spawn, delay::create( 0.05F ) ), 10 ), delay::create( 1.0F ), new_skin ) );
     };
@@ -143,8 +145,8 @@ bool gacha::touch_began( cinder::app::TouchEvent::Touch event )
 void gacha::change_action( std::function<void( )> end_fn )
 {
     float i = 0;
-    size_t size = _maschine.lock( )->get_children( ).size( );
-    for ( auto& c : _maschine.lock( )->get_children( ) )
+    size_t size = _maschine->get_children( ).size( );
+    for ( auto& c : _maschine->get_children( ) )
     {
         c->remove_all_actions( );
         c->run_action( action::sequence::create(
@@ -152,11 +154,11 @@ void gacha::change_action( std::function<void( )> end_fn )
             action::ease<EaseOutBounce>::create( action::scale_to::create( 0.2F, vec2( 0 ) ) ) ) );
         i += 1.0F / size;
     }
-    if ( _garagara.lock( ) )
+    if ( _garagara )
     {
         i = 0;
-        size = _garagara.lock( )->get_children( ).size( );
-        for ( auto& c : _garagara.lock( )->get_children( ) )
+        size = _garagara->get_children( ).size( );
+        for ( auto& c : _garagara->get_children( ) )
         {
             c->remove_all_actions( );
             c->run_action( action::sequence::create(
@@ -166,9 +168,9 @@ void gacha::change_action( std::function<void( )> end_fn )
         }
     }
     i = 0;
-    size = _back_button.lock( )->get_children( ).size( );
-    auto itr = _back_button.lock( )->get_children( ).begin( );
-    for ( ; itr != --_back_button.lock( )->get_children( ).end( ); ++itr )
+    size = _back_button->get_children( ).size( );
+    auto itr = _back_button->get_children( ).begin( );
+    for ( ; itr != --_back_button->get_children( ).end( ); ++itr )
     {
         ( *itr )->remove_all_actions( );
         ( *itr )->run_action( action::sequence::create(

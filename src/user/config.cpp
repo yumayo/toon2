@@ -1,12 +1,13 @@
 ﻿#include "config.h"
 #include "create_dot_obeject.h"
-#include "user_default.h"
+#include <treelike/user_default.h>
 #include "player.h"
 #include "title.h"
-#include "scene_manager.h"
+#include <treelike/scene_manager.h>
 #include "se.h"
 using namespace cinder;
-using namespace action;
+using namespace treelike;
+using namespace treelike::action;
 namespace user
 {
 CREATE_CPP( config )
@@ -51,7 +52,7 @@ bool config::init( )
     _slider = slider;
     // スライド方向がマイナスなので * -1 しています。
     _object_select_position = vec2( select_index * -1 * _skin_width, 0 );
-    _slider.lock( )->set_position( _object_select_position );
+    _slider->set_position( _object_select_position );
     slide_manager->add_child( slider );
 
     auto edge = create_dot( "edge.png", _skin_width );
@@ -91,13 +92,13 @@ void config::update( float delta )
     {
         play_se( "sound/slide.wav" );
     }
-    _slider.lock( )->set_position( calc_select_position );
+    _slider->set_position( calc_select_position );
 
     user_default::get_instans( )->get_root( )["select_skin_name"] = _skin_names[abs( index )] == "null" ? Json::Value::null : _skin_names[abs( index )];
 }
 bool config::mouse_began( cinder::app::MouseEvent event )
 {
-    _tap_start_slide_object_position = _slider.lock( )->get_position( );
+    _tap_start_slide_object_position = _slider->get_position( );
 
     _tap_start_position = event.getPos( );
     _tap_position = event.getPos( );
@@ -128,8 +129,8 @@ void user::config::change_action( std::function<void( )> end_fn )
 {
     {
         float i = 0;
-        int size = _slider.lock( )->get_children( ).size( );
-        for ( auto& c : _slider.lock( )->get_children( ) )
+        int size = _slider->get_children( ).size( );
+        for ( auto& c : _slider->get_children( ) )
         {
             c->remove_all_actions( );
             c->run_action( sequence::create(
@@ -140,8 +141,8 @@ void user::config::change_action( std::function<void( )> end_fn )
     }
     {
         float i = 0;
-        int size = _edg.lock( )->get_children( ).size( );
-        for ( auto& c : _edg.lock( )->get_children( ) )
+        int size = _edg->get_children( ).size( );
+        for ( auto& c : _edg->get_children( ) )
         {
             c->remove_all_actions( );
             c->run_action( sequence::create(
@@ -152,9 +153,9 @@ void user::config::change_action( std::function<void( )> end_fn )
     }
     {
         float i = 0;
-        int size = _bac.lock( )->get_children( ).size( );
-        auto itr = _bac.lock( )->get_children( ).begin( );
-        for ( ; itr != --_bac.lock( )->get_children( ).end( ); ++itr )
+        int size = _bac->get_children( ).size( );
+        auto itr = _bac->get_children( ).begin( );
+        for ( ; itr != --_bac->get_children( ).end( ); ++itr )
         {
             ( *itr )->remove_all_actions( );
             ( *itr )->run_action( sequence::create(
