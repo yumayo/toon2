@@ -27,6 +27,7 @@ bool cell::init( std::string const& ip_address,
              renderer::circle::create( _radius ) : skin::create( _radius, _radius, _skin_relative_path ) )
         {
             _mask = mask;
+            mask->set_name( "cell_mask" );
             mask->set_scale( vec2( 0.9F ) );
             base->add_child( mask );
         }

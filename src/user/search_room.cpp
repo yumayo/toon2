@@ -12,6 +12,7 @@ CREATE_CPP( search_room )
 bool search_room::init( )
 {
     set_name( "search_room" );
+    set_schedule_update( );
 
     auto dont_destroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
 
@@ -114,37 +115,33 @@ bool search_room::init( )
 
     tcp_connection->on_connect_failed = [ this ]
     {
-        scene_manager::get_instans( )->top( )->set_block_schedule_event( false );
-        _tcp_connection->remove_from_parent( );
-        _udp_connection->remove_from_parent( );
-        if ( on_not_found ) on_not_found( );
-        remove_from_parent( );
+        _is_failed = true;
     };
     tcp_connection->on_disconnected = [ this ]
     {
-        scene_manager::get_instans( )->top( )->set_block_schedule_event( false );
-        _tcp_connection->remove_from_parent( );
-        _udp_connection->remove_from_parent( );
-        if ( on_not_found ) on_not_found( );
-        remove_from_parent( );
+        _is_failed = true;
     };
     tcp_connection->on_send_failed = [ this ]
     {
-        scene_manager::get_instans( )->top( )->set_block_schedule_event( false );
-        _tcp_connection->remove_from_parent( );
-        _udp_connection->remove_from_parent( );
-        if ( on_not_found ) on_not_found( );
-        remove_from_parent( );
+        _is_failed = true;
     };
     tcp_connection->on_errored = [ this ] ( boost::system::error_code const& e )
     {
+        _is_failed = true;
+    };
+
+    return true;
+}
+void search_room::update( float delta )
+{
+    if ( _is_failed )
+    {
+        _is_failed = false;
         scene_manager::get_instans( )->top( )->set_block_schedule_event( false );
         _tcp_connection->remove_from_parent( );
         _udp_connection->remove_from_parent( );
         if ( on_not_found ) on_not_found( );
         remove_from_parent( );
-    };
-
-    return true;
+    }
 }
 }

@@ -10,12 +10,14 @@ class search_room : public treelike::node
     softptr<treelike::network::tcp_client> _tcp_connection;
     Json::Value _root_buffer;
     bool _is_founded = false;
+    bool _is_failed = false;
     std::vector<feed_data> _feed_buffer;
     Json::Value _bullet_buffer;
     std::vector<std::vector<ground_data>> _ground_buffer;
 public:
     CREATE_H( search_room );
     bool init( );
+    void update( float delta ) override;
 public:
     std::function<void( Json::Value& root_buffer,
                         std::vector<feed_data> feed_buffet,
