@@ -64,10 +64,7 @@ void user::cell::set_color( cinder::ColorA const& value )
 }
 void cell::remove_crown( )
 {
-    if ( auto crown = _base->get_child_by_name( "crown" ) )
-    {
-        crown->remove_from_parent( );
-    }
+    _base->remove_child_by_name( "crown" );
 }
 void cell::set_crown( hardptr<node> crown )
 {

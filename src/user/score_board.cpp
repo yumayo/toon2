@@ -48,39 +48,35 @@ bool score_board::init( std::shared_ptr<node> cell_manager, cinder::vec2 size )
         app::console( ) << root;
 
         scores->remove_all_children( );
+
+        int i = 1;
+        std::vector<int> ids( 3 );
+        for ( auto& rank : root["data"] )
+        {
+            if ( i > 8 ) return;
+            if ( i - 1 < ids.size( ) ) ids[i - 1] = rank["id"].asInt( );
+
+            int rank_number = i;
+
+            auto l = renderer::label::create( "misaki_gothic.ttf", 32 );
+            l->set_text( utility::format( " %-3d %-3d", rank_number, rank["id"].asInt( ) ) );
+            l->set_color( ColorA( 0, 0, 0 ) );
+            l->set_anchor_point( vec2( 0, 0 ) );
+            l->set_position( vec2( 0, ( rank_number - 1 ) * 32 ) );
+            scores->add_child( l );
+            auto s = renderer::label::create( "misaki_gothic.ttf", 32 );
+            s->set_text( utility::format( "%5d ", rank["score"].asInt( ) ) );
+            s->set_color( ColorA( 0, 0, 0 ) );
+            s->set_anchor_point( vec2( 1, 0 ) );
+            s->set_position( vec2( scores->get_content_size( ).x, ( rank_number - 1 ) * 32 ) );
+            scores->add_child( s );
+
+            i++;
+        }
+
         auto cell_manager = _cell_manager.dynamicptr<user::cell_manager>( );
         cell_manager->remove_all_crown( );
-
-        run_action( action::call_func::create( [ this, scores, root ]
-        {
-            int i = 1;
-            std::vector<int> ids( 3 );
-            for ( auto& rank : root["data"] )
-            {
-                if ( i > 8 ) return;
-                if ( i - 1 < ids.size( ) ) ids[i - 1] = rank["id"].asInt( );
-
-                int rank_number = i;
-
-                auto l = renderer::label::create( "misaki_gothic.ttf", 32 );
-                l->set_text( utility::format( " %-3d %-3d", rank_number, rank["id"].asInt( ) ) );
-                l->set_color( ColorA( 0, 0, 0 ) );
-                l->set_anchor_point( vec2( 0, 0 ) );
-                l->set_position( vec2( 0, ( rank_number - 1 ) * 32 ) );
-                scores->add_child( l );
-                auto s = renderer::label::create( "misaki_gothic.ttf", 32 );
-                s->set_text( utility::format( "%5d ", rank["score"].asInt( ) ) );
-                s->set_color( ColorA( 0, 0, 0 ) );
-                s->set_anchor_point( vec2( 1, 0 ) );
-                s->set_position( vec2( scores->get_content_size( ).x, ( rank_number - 1 ) * 32 ) );
-                scores->add_child( s );
-
-                i++;
-            }
-
-            auto cell_manager = _cell_manager.dynamicptr<user::cell_manager>( );
-            cell_manager->set_all_crown( ids );
-        } ) );
+        cell_manager->set_all_crown( ids );
     } ) );
 
     return true;
