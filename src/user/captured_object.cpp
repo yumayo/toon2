@@ -16,7 +16,7 @@ void captured_object::captured( softptr<node> other )
                                           action::call_func::create( [ this, other ] ( )
     {
         // 0.2F後にデリートしない場合止まって描画されてしまうためfalseにしています。
-        set_visible( false );
+        set_block_visible( true );
 
         on_captured( other );
     } ) ) );

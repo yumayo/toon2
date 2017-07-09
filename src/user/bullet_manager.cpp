@@ -23,7 +23,7 @@ bool bullet_manager::init( softptr<node> cell_manager, Json::Value bullet_buffer
     auto dont_destroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
     _tcp_connection = dont_destroy_node->get_child_by_name( "tcp_connection" ).dynamicptr<network::tcp_client>( );
 
-    _tcp_connection->on_received_named_json.insert( std::make_pair( "create_bullet", [ this ] ( Json::Value root )
+    _tcp_connection->on( "create_bullet", [ this ] ( Json::Value root )
     {
         for ( auto& data : root["data"] )
         {
@@ -55,7 +55,7 @@ bool bullet_manager::init( softptr<node> cell_manager, Json::Value bullet_buffer
                 utility::log( "【bullet_manager】対象のプレイヤー[%d]が見つかりませんでした。", user_id );
             }
         }
-    } ) );
+    } );
 
     run_action( action::repeat_forever::create( action::sequence::create( action::delay::create( 0.2F ), action::call_func::create( [ this ]
     {
@@ -72,16 +72,16 @@ bool bullet_manager::init( softptr<node> cell_manager, Json::Value bullet_buffer
         _time_offset = 0.0F;
     } ) ) ) );
 
-    _tcp_connection->on_received_named_json.insert( std::make_pair( "erase_bullet", [ this ] ( Json::Value root )
+    _tcp_connection->on( "erase_bullet", [ this ] ( Json::Value root )
     {
         for ( auto& folder : get_children( ) )
         {
             for ( auto& bullet_node : folder->get_children( ) )
             {
-                if ( bullet_node->get_tag( ) == root["data"]["id"].asInt( ) ) bullet_node->remove_from_parent( );
+                bullet_node->remove_child_by_tag( root["data"]["id"].asInt( ) );
             }
         }
-    } ) );
+    } );
 
     auto cell_mgr = _cell_manager.dynamicptr<user::cell_manager>( );
     for ( auto& folder_root : bullet_buffer["data"] )

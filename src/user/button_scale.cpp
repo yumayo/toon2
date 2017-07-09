@@ -30,7 +30,7 @@ bool button_scale::mouse_began( cinder::app::MouseEvent event )
     if ( _touch && on_began ) on_began( );
     if ( _touch )
     {
-        remove_action_by_name( "button_scale" );
+        if ( auto child = get_child_by_name( "button_scale" ) ) remove_child( child );
         set_scale( vec2( 1.0F ) );
         auto act = action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.2 ) ) );
         act->set_name( "button_scale" );
@@ -44,7 +44,7 @@ void button_scale::mouse_moved( cinder::app::MouseEvent event )
     // in
     if ( ( true == _touch ) && ( false == _prev_touch ) )
     {
-        remove_action_by_name( "button_scale" );
+        if ( auto child = get_child_by_name( "button_scale" ) ) remove_child( child );
         set_scale( vec2( 1.0F ) );
         auto act = action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.2 ) ) );
         act->set_name( "button_scale" );
@@ -53,7 +53,7 @@ void button_scale::mouse_moved( cinder::app::MouseEvent event )
     // out
     if ( ( false == _touch ) && ( true == _prev_touch ) )
     {
-        remove_action_by_name( "button_scale" );
+        if ( auto child = get_child_by_name( "button_scale" ) ) remove_child( child );
         set_scale( vec2( 1.2F ) );
         auto act = action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.0 ) ) );
         act->set_name( "button_scale" );
@@ -65,7 +65,7 @@ void button_scale::mouse_ended( cinder::app::MouseEvent event )
     if ( _touch && on_ended ) on_ended( );
     if ( _touch )
     {
-        remove_action_by_name( "button_scale" );
+        if ( auto child = get_child_by_name( "button_scale" ) ) remove_child( child );
         set_scale( vec2( 1.2F ) );
         auto act = action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.0 ) ) );
         act->set_name( "button_scale" );
@@ -79,7 +79,7 @@ bool button_scale::touch_began( cinder::app::TouchEvent::Touch event )
     if ( _touch && on_began ) on_began( );
     if ( _touch )
     {
-        remove_action_by_name( "button_scale" );
+        if ( auto child = get_child_by_name( "button_scale" ) ) remove_child( child );
         set_scale( vec2( 1.0F ) );
         auto act = action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.2 ) ) );
         act->set_name( "button_scale" );
@@ -102,7 +102,7 @@ void button_scale::touch_moved( cinder::app::TouchEvent::Touch event )
     // out
     if ( ( false == _touch ) && ( true == _prev_touch ) )
     {
-        remove_action_by_name( "button_scale" );
+        if ( auto child = get_child_by_name( "button_scale" ) ) remove_child( child );
         set_scale( vec2( 1.2F ) );
         auto act = action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.0 ) ) );
         act->set_name( "button_scale" );
@@ -114,7 +114,7 @@ void button_scale::touch_ended( cinder::app::TouchEvent::Touch event )
     if ( _touch && on_ended ) on_ended( );
     if ( _touch )
     {
-        remove_action_by_name( "button_scale" );
+        if ( auto child = get_child_by_name( "button_scale" ) ) remove_child( child );
         set_scale( vec2( 1.2F ) );
         auto act = action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1, vec2( 1.0 ) ) );
         act->set_name( "button_scale" );

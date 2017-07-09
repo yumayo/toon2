@@ -40,9 +40,9 @@ bool score_board::init( std::shared_ptr<node> cell_manager, cinder::vec2 size )
     add_child( scores );
 
     auto dont_destroy_node = scene_manager::get_instans( )->get_dont_destroy_node( );
-    _tcp_connection = dont_destroy_node->get_child_by_name( "tcp_connection" ).dynamicptr<network::tcp_client>( );
+    _tcp_connection = dont_destroy_node->get_child_by_name( "tcp_connection" );
 
-    _tcp_connection->on_received_named_json.insert( std::make_pair( "ranking", [ this, scores ] ( Json::Value root )
+    _tcp_connection->on( "ranking", [ this, scores ] ( Json::Value root )
     {
         app::console( ) << "ranking" << std::endl;
         app::console( ) << root;
@@ -74,10 +74,10 @@ bool score_board::init( std::shared_ptr<node> cell_manager, cinder::vec2 size )
             i++;
         }
 
-        auto cell_manager = _cell_manager.dynamicptr<user::cell_manager>( );
+        softptr<user::cell_manager> cell_manager = _cell_manager;
         cell_manager->remove_all_crown( );
         cell_manager->set_all_crown( ids );
-    } ) );
+    } );
 
     return true;
 }

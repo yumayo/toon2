@@ -36,7 +36,7 @@ bool cell_manager::init( Json::Value& root )
     _tcp_connection = dont_destroy_node->get_child_by_name( "tcp_connection" ).dynamicptr<network::tcp_client>( );
 
     // 他のクライアントが接続を切ったら呼ばれます。
-    _tcp_connection->on_received_named_json.insert( std::make_pair( "close_client", [ this ] ( Json::Value root )
+    _tcp_connection->on( "close_client", [ this ] ( Json::Value root )
     {
         app::console( ) << "close_client" << std::endl;
         app::console( ) << root;
@@ -76,29 +76,29 @@ bool cell_manager::init( Json::Value& root )
             } );
             _children.erase( remove_itr, _children.end( ) );
         }
-    } ) );
+    } );
 
     // 新しいクライアントが接続してきたら呼ばれます。
-    _tcp_connection->on_received_named_json.insert( std::make_pair( "new_client", [ this ] ( Json::Value root )
+    _tcp_connection->on( "new_client", [ this ] ( Json::Value root )
     {
         create_enemy( root["data"] );
-    } ) );
+    } );
 
     // クライアントの捕食が発生したら呼ばれます。
-    _tcp_connection->on_received_named_json.insert( std::make_pair( "player_capture", [ this ] ( Json::Value root )
+    _tcp_connection->on( "player_capture", [ this ] ( Json::Value root )
     {
         _player->capture( root["data"]["score"].asFloat( ) );
-    } ) );
+    } );
 
     // サーバーから死んでくれと言われたらタイトルに戻ります。
-    _tcp_connection->on_received_named_json.insert( std::make_pair( "kill", [ this ] ( Json::Value root )
+    _tcp_connection->on( "kill", [ this ] ( Json::Value root )
     {
         scene_manager::get_instans( )->replace( title::create( ) );
-    } ) );
+    } );
 
     // 他のオブジェクトからゲームの更新命令がされたら呼ばれます。
     // 毎フレーム呼ぶのでudpで通信します。
-    _udp_connection->on_received_named_json.insert( std::make_pair( "game_update", [ this ] ( network::network_handle handle, Json::Value root )
+    _udp_connection->on( "game_update", [ this ] ( network::network_handle handle, Json::Value root )
     {
         for ( auto& enemy : _enemys )
         {
@@ -110,7 +110,7 @@ bool cell_manager::init( Json::Value& root )
                 return;
             }
         }
-    } ) );
+    } );
 
     return true;
 }
