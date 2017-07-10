@@ -59,7 +59,7 @@ bool game::init( Json::Value& root,
         add_child( controller );
     }
 
-    auto bac = create_dot_button( "back.png", 64 );
+    auto bac = dot_button::create( "back.png", 64 );
     _back_button = bac;
     bac->set_position( vec2( 64 ) + vec2( 10 ) );
     bac->on_ended = [ this ]

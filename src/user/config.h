@@ -1,5 +1,6 @@
 #pragma once
 #include <treelike.hpp>
+#include <cinder/gl/GlslProg.h>
 namespace user
 {
 class config : public treelike::scene

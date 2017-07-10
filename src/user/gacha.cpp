@@ -9,6 +9,8 @@
 #include "se.h"
 #include <treelike/utility/file_system.h>
 #include "enemy.h"
+#include <cinder/gl/gl.h>
+#include "render3d.h"
 using namespace cinder;
 using namespace treelike;
 namespace user
@@ -33,21 +35,21 @@ bool gacha::init( )
     set_schedule_mouse_event( );
     set_schedule_touch_event( );
 
-    auto mas = create_dot( "gacha_maschine.png", 600 );
+    auto mas = dot_object::create( "gacha_maschine.png", 600 );
     _maschine = mas;
     mas->set_position( vec2( app::getWindowSize( ) ) * 0.5F );
     add_child( mas );
 
-    auto gar = create_dot_button( "garagara.png", 200 );
+    auto gar = dot_button::create( "garagara.png", 200 );
     _garagara = gar;
     gar->set_position( vec2( app::getWindowSize( ) ) * 0.5F + vec2( 0, -100 ) );
     using namespace action;
     gar->run_action( repeat_forever::create( sequence::create( ease<EaseInOutSine>::create( move_by::create( 1.0F, vec2( 0, -20 ) ) ),
                                                                ease<EaseInOutSine>::create( move_by::create( 1.0F, vec2( 0, 20 ) ) ) ) ) );
     // コンプしてなかったらガチャマークを登録します。
-    if ( !is_complete( ) )  add_child( gar );
+    if ( !is_complete( ) )add_child( gar );
 
-    auto bac = create_dot_button( "back.png", 150 );
+    auto bac = dot_button::create( "back.png", 150 );
     _back_button = bac;
     bac->set_position( vec2( app::getWindowSize( ) ) * vec2( 0, 1 ) + vec2( 100, -100 ) );
     add_child( bac );

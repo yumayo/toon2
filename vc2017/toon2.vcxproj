@@ -222,6 +222,7 @@
     <ClCompile Include="..\src\user\game.cpp" />
     <ClCompile Include="..\src\user\ground.cpp" />
     <ClCompile Include="..\src\user\player.cpp" />
+    <ClCompile Include="..\src\user\render3d.cpp" />
     <ClCompile Include="..\src\user\score_board.cpp" />
     <ClCompile Include="..\src\user\se.cpp" />
     <ClCompile Include="..\src\user\search_room.cpp" />
@@ -249,6 +250,7 @@
     <ClInclude Include="..\src\user\game.h" />
     <ClInclude Include="..\src\user\ground.h" />
     <ClInclude Include="..\src\user\player.h" />
+    <ClInclude Include="..\src\user\render3d.h" />
     <ClInclude Include="..\src\user\score_board.h" />
     <ClInclude Include="..\src\user\se.h" />
     <ClInclude Include="..\src\user\search_room.h" />

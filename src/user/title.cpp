@@ -5,6 +5,8 @@
 #include "config.h"
 #include "search_room.h"
 #include "se.h"
+#include <cinder/gl/gl.h>
+#include "render3d.h"
 using namespace cinder;
 using namespace treelike;
 namespace user
@@ -36,36 +38,26 @@ bool title::init( )
     add_se( "sound/view.wav" );
     add_se( "sound/garagara.wav" );
 
-    auto tit = create_dot( "title.png", app::getWindowWidth( ) * 0.9F );
-    _title_logo = tit;
-    add_child( tit );
-    tit->set_position( vec2( app::getWindowSize( ) ) * vec2( 0.5F, 0.35F ) );
+    auto _3d = add_child( render3d::create( ) );
 
-    softptr<node> test;
-    hardptr<renderer::button> but;
-    test = but;
+    _title_logo = _3d->add_child( dot_object::create( "title.png", app::getWindowWidth( ) * 0.9F ) );
+    _title_logo->set_position( vec2( app::getWindowSize( ) ) * vec2( 0.5F, 0.35F ) );
 
-    auto sta = create_dot_button( "start.png", 200 );
-    _start_button = sta;
-    add_child( sta );
-    sta->set_position( vec2( app::getWindowSize( ) ) * vec2( 0.5F, 0.75F ) );
+    _start_button = _3d->add_child( dot_button::create( "start.png", 200 ) );
+    _start_button->set_position( vec2( app::getWindowSize( ) ) * vec2( 0.5F, 0.75F ) );
 
-    auto gac = create_dot_button( "gacha.png", 100 );
-    _gacha_button = gac;
-    add_child( gac );
-    gac->set_position( vec2( app::getWindowSize( ) ) * vec2( 1.0F, 0.75F ) + vec2( -150, -60 ) );
+    _gacha_button = _3d->add_child( dot_button::create( "gacha.png", 100 ) );
+    _gacha_button->set_position( vec2( app::getWindowSize( ) ) * vec2( 1.0F, 0.75F ) + vec2( -150, -60 ) );
 
-    auto con = create_dot_button( "config.png", 100 );
-    _config_button = con;
-    add_child( con );
-    con->set_position( vec2( app::getWindowSize( ) ) * vec2( 1.0F, 0.75F ) + vec2( -150, 60 ) );
+    _config_button = _3d->add_child( dot_button::create( "config.png", 100 ) );
+    _config_button->set_position( vec2( app::getWindowSize( ) ) * vec2( 1.0F, 0.75F ) + vec2( -150, 60 ) );
 
-    sta->on_ended = [ this ]
+    _start_button.dynamicptr<dot_button>( )->on_ended = [ this ]
     {
         play_se( "sound/start.wav" );
         set_block_schedule_event( );
         auto search_handle = search_room::create( );
-        search_handle->on_founded = [ this ]( Json::Value& root, 
+        search_handle->on_founded = [ this ]( Json::Value& root,
                                               std::vector<feed_data> feed_buffet,
                                               Json::Value& bullet_buffer,
                                               std::vector<std::vector<ground_data>>& ground_buffer )
@@ -82,13 +74,13 @@ bool title::init( )
         };
         add_child( search_handle );
     };
-    gac->on_ended = [ this ]
+    _gacha_button.dynamicptr<dot_button>( )->on_ended = [ this ]
     {
         play_se( "sound/gacha.wav" );
         set_block_schedule_event( );
         change_action( [ ] { scene_manager::get_instans( )->replace( gacha::create( ) ); } );
     };
-    con->on_ended = [ this ]
+    _config_button.dynamicptr<dot_button>( )->on_ended = [ this ]
     {
         play_se( "sound/config.wav" );
         set_block_schedule_event( );

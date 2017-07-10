@@ -98,6 +98,9 @@
     <ClInclude Include="..\src\user\title.h">
       <Filter>Source Files\user</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\user\render3d.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -180,6 +183,9 @@
       <Filter>Source Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\title.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\render3d.cpp">
       <Filter>Source Files\user</Filter>
     </ClCompile>
   </ItemGroup>

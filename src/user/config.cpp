@@ -5,6 +5,7 @@
 #include "title.h"
 #include <treelike/scene_manager.h>
 #include "se.h"
+#include "render3d.h"
 using namespace cinder;
 using namespace treelike;
 using namespace treelike::action;
@@ -16,6 +17,8 @@ CREATE_CPP( config )
 }
 bool config::init( )
 {
+    auto _3d = add_child( render3d::create( ) );
+
     set_schedule_update( );
     set_schedule_mouse_event( );
     set_schedule_touch_event( );
@@ -23,7 +26,7 @@ bool config::init( )
     auto slide_manager = node::create( );
     slide_manager->set_position( vec2( app::getWindowSize( ) ) * vec2( 0.5F ) );
     slide_manager->set_pivot( vec2( 0.5F ) );
-    add_child( slide_manager );
+    _3d->add_child( slide_manager );
 
     auto slider = node::create( );
     // デフォルト仕様。
@@ -55,16 +58,13 @@ bool config::init( )
     _slider->set_position( _object_select_position );
     slide_manager->add_child( slider );
 
-    auto edge = create_dot( "edge.png", _skin_width );
-    _edg = edge;
-    slide_manager->add_child( edge );
 
-    auto bac = create_dot_button( "back.png", 150.0F );
-    _bac = bac;
-    bac->set_position( vec2( app::getWindowSize( ) ) * vec2( 0, 1 ) + vec2( 100, -100 ) );
-    add_child( bac );
+    _edg = slide_manager->add_child( dot_object::create( "edge.png", _skin_width ) );
+    _edg->set_position_3d( vec3( _edg->get_position( ), -200.0F ) );
 
-    bac->on_ended = [ this ]
+    _bac = _3d->add_child( dot_button::create( "back.png", 150.0F ) );
+    _bac->set_position_3d( vec3( vec2( app::getWindowSize( ) ) * vec2( 0, 1 ) + vec2( 100, -100 ), -200.0F ) );
+    _bac.dynamicptr<dot_button>( )->on_ended = [ this ]
     {
         play_se( "sound/back.wav" );
         set_block_schedule_event( );
