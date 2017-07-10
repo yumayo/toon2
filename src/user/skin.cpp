@@ -17,7 +17,7 @@ bool skin::init( float radius, float segments, std::string const& relative_path 
 
     _texture = gl::Texture::create( loadImage( app::loadAsset( relative_path ) ) );
 
-    _glsl = gl::getStockShader( gl::ShaderDef( ).texture( ).lambert( ) );
+    _glsl = gl::getStockShader( gl::ShaderDef( ).texture( ) );
 
     return true;
 }
