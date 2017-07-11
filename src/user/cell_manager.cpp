@@ -101,44 +101,37 @@ bool cell_manager::init( Json::Value& root )
     // 毎フレーム呼ぶのでudpで通信します。
     _udp_connection->on( "game_update", [ this ] ( network::network_handle handle, Json::Value root )
     {
+        std::vector<cell_data> cell_datas;
+        for ( auto& data : root["data"] )
+        {
+            cell_datas.push_back( { data["frame"].asInt( ), data["time"].asFloat( ), data["radius"].asFloat( ),
+                                  vec2( data["position"][0].asFloat( ), data["position"][1].asFloat( ) ) } );
+        }
+        auto& prev_enemy_datas = _prev_enemy_datas[handle];
+        // パケットロスがあったら
+        if ( !prev_enemy_datas.empty( ) && ( ( cell_datas.back( ).frame - 2 ) == prev_enemy_datas.back( ).frame ) )
+        {
+            auto packet_loss_frame = ( cell_datas.back( ).frame - 1 ) - prev_enemy_datas.back( ).frame;
+            if ( cell_datas.size( ) < packet_loss_frame ) throw std::runtime_error( "パケットロス超過をしました。" );
+            auto& data = cell_datas[cell_datas.size( ) - packet_loss_frame];
+            float packet_loss_time = data.time;
+            cinder::ColorA color = cinder::ColorA::black( );
+            for ( auto& cell_node : get_children( ) )
+            {
+                auto cell = std::dynamic_pointer_cast<user::cell>( cell_node );
+                if ( cell->get_handle( ) == handle ) { color = cell->get_color( ); break; }
+            }
+            if ( cinder::ColorA::black( ) == color ) throw std::runtime_error( "ハンドルと一致するプレイヤーが見つかりませんでした。" );
+            for ( int i = cell_datas.size( ) - packet_loss_frame; i < cell_datas.size( ); ++i )
+            {
+                _ground.dynamicptr<ground>( )->insert( cell_datas[i].time, cell_datas[i].position, cell_datas[i].radius, color );
+            }
+        }
+        _prev_enemy_datas[handle] = cell_datas;
         for ( auto& enemy : _enemys )
         {
             if ( enemy->get_handle( ) == handle )
             {
-                std::vector<cell_data> cell_datas;
-                for ( auto& data : root["data"] )
-                {
-                    cell_datas.push_back( { data["frame"].asInt( ), data["time"].asFloat( ), data["radius"].asFloat( ),
-                                          vec2( data["position"][0].asFloat( ), data["position"][1].asFloat( ) ) } );
-                }
-                auto& prev_cell_datas = _prev_enemy_datas[handle];
-                // パケットロスがあったら
-                if ( !prev_cell_datas.empty( ) && cell_datas.back( ).frame - 2 == prev_cell_datas.back( ).frame )
-                {
-                    auto packet_loss_frame = ( cell_datas.back( ).frame - 1 ) - prev_cell_datas.back( ).frame;
-                    if ( cell_datas.size( ) < packet_loss_frame ) throw std::runtime_error( "ぱけろありすぎ" );
-                    auto& data = cell_datas[cell_datas.size( ) - packet_loss_frame];
-                    float packet_loss_time = data.time;
-                    // 欲しいデータはcolor pos radiusの３つだけ。
-                    struct paint_data
-                    {
-                        float time;
-                        cinder::vec2 pos;
-                        float radius;
-                        cinder::ColorA col;
-                    };
-                    std::map<network::network_handle, cinder::ColorA> color_map;
-                    for ( auto& cell_node : get_children( ) )
-                    {
-                        auto cell = std::dynamic_pointer_cast<user::cell>( cell_node );
-                        color_map.insert( std::make_pair( cell->get_handle( ), cell->get_color( ) ) );
-                    }
-                    for ( int i = cell_datas.size( ) - packet_loss_frame; cell_datas.size( ); ++i )
-                    {
-                        _ground.dynamicptr<ground>( )->insert( cell_datas[i].time, cell_datas[i].position, cell_datas[i].radius, color_map[handle] );
-                    }
-                }
-                _prev_enemy_datas[handle] = cell_datas;
                 enemy->set_position( cell_datas.back( ).position );
                 enemy->set_radius( cell_datas.back( ).radius );
                 return;

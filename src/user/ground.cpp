@@ -117,7 +117,7 @@ void ground::close_player( cinder::ColorA const & color )
 void ground::insert( float time, cinder::vec2 position, float radius, cinder::ColorA color )
 {
     _is_inserted = true;
-    int i = _past_paint_datas.size( ) - 1;
+    int i = std::max( 0, (int)_past_paint_datas.size( ) - 1 );
     for ( ; i >= 0; --i )
     {
         if ( _past_paint_datas[i].time < time ) break;

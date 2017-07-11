@@ -205,15 +205,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\user\analog_axis.cpp" />
     <ClCompile Include="..\src\user\bullet.cpp" />
     <ClCompile Include="..\src\user\bullet_manager.cpp" />
-    <ClCompile Include="..\src\user\button_scale.cpp" />
+    <ClCompile Include="..\src\user\button.cpp" />
     <ClCompile Include="..\src\user\captured_object.cpp" />
     <ClCompile Include="..\src\user\cell.cpp" />
     <ClCompile Include="..\src\user\cell_manager.cpp" />
     <ClCompile Include="..\src\user\config.cpp" />
     <ClCompile Include="..\src\user\controller.cpp" />
     <ClCompile Include="..\src\user\create_dot_obeject.cpp" />
+    <ClCompile Include="..\src\user\debug_command.cpp" />
     <ClCompile Include="..\src\user\enemy.cpp" />
     <ClCompile Include="..\src\user\feed.cpp" />
     <ClCompile Include="..\src\user\feed_manager.cpp" />
@@ -230,18 +232,21 @@
     <ClCompile Include="..\src\user\sphere.cpp" />
     <ClCompile Include="..\src\user\spike.cpp" />
     <ClCompile Include="..\src\user\title.cpp" />
+    <ClCompile Include="..\src\user\__TY__.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h" />
+    <ClInclude Include="..\src\user\analog_axis.h" />
     <ClInclude Include="..\src\user\bullet.h" />
     <ClInclude Include="..\src\user\bullet_manager.h" />
-    <ClInclude Include="..\src\user\button_scale.h" />
+    <ClInclude Include="..\src\user\button.h" />
     <ClInclude Include="..\src\user\captured_object.h" />
     <ClInclude Include="..\src\user\cell.h" />
     <ClInclude Include="..\src\user\cell_manager.h" />
     <ClInclude Include="..\src\user\config.h" />
     <ClInclude Include="..\src\user\controller.h" />
     <ClInclude Include="..\src\user\create_dot_obeject.h" />
+    <ClInclude Include="..\src\user\debug_command.h" />
     <ClInclude Include="..\src\user\enemy.h" />
     <ClInclude Include="..\src\user\feed.h" />
     <ClInclude Include="..\src\user\feed_manager.h" />
@@ -259,6 +264,7 @@
     <ClInclude Include="..\src\user\spike.h" />
     <ClInclude Include="..\src\user\synchronization_objects.h" />
     <ClInclude Include="..\src\user\title.h" />
+    <ClInclude Include="..\src\user\__TY__.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="F:\library\cinder\proj\vc2017\cinder.vcxproj">

@@ -52,7 +52,7 @@ CREATE_CPP( dot_button, std::string const & relative_path, float target_width )
 }
 bool dot_button::init( std::string const & relative_path, float target_width )
 {
-    button_scale::init( );
+    rect_button_scale_action::init( );
 
     Surface32f csv = loadImage( app::loadAsset( relative_path ) );
 

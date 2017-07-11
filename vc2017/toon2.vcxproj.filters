@@ -29,9 +29,6 @@
     <ClInclude Include="..\src\user\bullet_manager.h">
       <Filter>Source Files\user</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\user\button_scale.h">
-      <Filter>Source Files\user</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\user\captured_object.h">
       <Filter>Source Files\user</Filter>
     </ClInclude>
@@ -101,6 +98,18 @@
     <ClInclude Include="..\src\user\render3d.h">
       <Filter>Source Files\user</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\user\button.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\analog_axis.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\__TY__.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\user\debug_command.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -117,9 +126,6 @@
       <Filter>Source Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\bullet_manager.cpp">
-      <Filter>Source Files\user</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\user\button_scale.cpp">
       <Filter>Source Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\captured_object.cpp">
@@ -186,6 +192,18 @@
       <Filter>Source Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\render3d.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\button.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\analog_axis.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\__TY__.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\debug_command.cpp">
       <Filter>Source Files\user</Filter>
     </ClCompile>
   </ItemGroup>
