@@ -22,6 +22,9 @@ public:
 protected:
     std::list<softptr<enemy>> _enemys;
     softptr<player> _player;
+    std::map<treelike::network::network_handle, std::vector<cell_data>> _prev_enemy_datas;
+    std::vector<cell_data> _player_datas;
+    int _send_frame = 0;
     softptr<treelike::network::udp_connection> _udp_connection;
     softptr<treelike::network::tcp_client> _tcp_connection;
     softptr<treelike::node> _ground;

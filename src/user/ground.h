@@ -17,11 +17,23 @@ public:
     // 自身のプレイヤーのみの当たり判定計算ですね。
     void collide( softptr<treelike::node> player );
     void close_player( cinder::ColorA const& color );
-public:
+    void insert( float time, cinder::vec2 position, float radius, cinder::ColorA color );
+private:
     void paint_ground_cell( softptr<cell> cell );
     void paint_ground_bullet( softptr<bullet> bullet );
+    void paint_ground( cinder::vec2 position, float radius, cinder::ColorA color );
 private:
     softptr<treelike::node> _bullet_manager;
     softptr<treelike::node> _cell_manager;
+    struct paint_data
+    {
+        float time;
+        cinder::vec2 position;
+        float radius;
+        cinder::ColorA color;
+    };
+    std::vector<paint_data> _past_paint_datas;
+    bool _is_inserted = false;
+    int _min_insert_iterator = 0;
 };
 }

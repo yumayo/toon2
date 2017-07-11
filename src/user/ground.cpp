@@ -52,6 +52,16 @@ bool ground::init( softptr<node> cell_manager, softptr<node> bullet_manager, Jso
 }
 void ground::update( float delta )
 {
+    if ( _is_inserted )
+    {
+        for ( int i = _min_insert_iterator; i < _past_paint_datas.size( ); ++i )
+        {
+            paint_fill_circle( _past_paint_datas[i].position, _past_paint_datas[i].radius, _past_paint_datas[i].color );
+        }
+        _is_inserted = false;
+        _min_insert_iterator = 0;
+    }
+
     if ( auto& cell_manager = _cell_manager.dynamicptr<user::cell_manager>( ) )
     {
         for ( auto const& c : cell_manager->get_children( ) )
@@ -70,6 +80,17 @@ void ground::update( float delta )
             }
         }
     }
+
+    // 古いデータは切り捨てます。
+    int i = 0;
+    for ( ; i < _past_paint_datas.size( ); ++i )
+    {
+        if ( _past_paint_datas[i].time > app::getElapsedSeconds( ) - 0.5F )
+        {
+            break;
+        }
+    }
+    _past_paint_datas.erase( _past_paint_datas.begin( ), _past_paint_datas.begin( ) + i );
 }
 void ground::collide( softptr<node> player )
 {
@@ -93,17 +114,33 @@ void ground::close_player( cinder::ColorA const & color )
     }
     _texture->update( _surface );
 }
+void ground::insert( float time, cinder::vec2 position, float radius, cinder::ColorA color )
+{
+    _is_inserted = true;
+    int i = _past_paint_datas.size( ) - 1;
+    for ( ; i >= 0; --i )
+    {
+        if ( _past_paint_datas[i].time < time ) break;
+    }
+    _min_insert_iterator = i;
+    _past_paint_datas.insert( _past_paint_datas.begin( ) + i, paint_data( { time, position, radius, color } ) );
+}
 void ground::paint_ground_cell( softptr<cell> cell )
 {
     if ( !cell ) return;
     float radius = cell->get_radius( ) / get_scale( ).x;
-    paint_fill_circle( cell->get_position( ) / get_scale( ).x, radius, cell->get_color( ) );
+    paint_ground( cell->get_position( ) / get_scale( ).x, radius, cell->get_color( ) );
 }
 void ground::paint_ground_bullet( softptr<bullet> bullet )
 {
     if ( !bullet ) return;
     float radius = bullet->get_radius( ) / get_scale( ).x;
-    paint_fill_circle( bullet->get_position( ) / get_scale( ).x, radius, bullet->get_color( ) );
+    paint_ground( bullet->get_position( ) / get_scale( ).x, radius, bullet->get_color( ) );
+}
+void ground::paint_ground( cinder::vec2 position, float radius, cinder::ColorA color )
+{
+    _past_paint_datas.push_back( { (float)app::getElapsedSeconds( ), position, radius, color } );
+    paint_fill_circle( position, radius, color );
 }
 }
 
