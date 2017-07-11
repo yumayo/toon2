@@ -17,7 +17,7 @@ public:
     // 自身のプレイヤーのみの当たり判定計算ですね。
     void collide( softptr<treelike::node> player );
     void close_player( cinder::ColorA const& color );
-private:
+public:
     void paint_ground_cell( softptr<cell> cell );
     void paint_ground_bullet( softptr<bullet> bullet );
 private:

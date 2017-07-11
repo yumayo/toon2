@@ -22,3 +22,10 @@ struct ground_data
 {
     unsigned int id;
 };
+struct cell_data
+{
+    int frame;
+    float time;
+    float radius;
+    cinder::vec2 position;
+};

@@ -13,6 +13,7 @@
 #include "render3d.h"
 using namespace cinder;
 using namespace treelike;
+using namespace treelike::action;
 namespace user
 {
 CREATE_CPP( gacha )
@@ -21,6 +22,11 @@ CREATE_CPP( gacha )
 }
 bool gacha::init( )
 {
+    set_schedule_mouse_event( );
+    set_schedule_touch_event( );
+
+    _3d = add_child( render3d::create( ) );
+
     utility::file_system system;
     system.search( app::getAssetPath( "skin/" ).string( ) );
     _skin_items = system.get_names( );
@@ -29,89 +35,79 @@ bool gacha::init( )
     auto& root = user_default::get_instans( )->get_root( );
     for ( auto const& i : _skin_items )
     {
+        if ( i == "null" ) continue; // nullテクスチャ読み込みません。
         root["skin"][i];
     }
 
-    set_schedule_mouse_event( );
-    set_schedule_touch_event( );
+    _maschine = _3d->add_child( dot_object::create( "gacha_maschine.png", 600 ) );
+    _maschine->set_position( vec2( app::getWindowSize( ) ) * 0.5F );
 
-    auto mas = dot_object::create( "gacha_maschine.png", 600 );
-    _maschine = mas;
-    mas->set_position( vec2( app::getWindowSize( ) ) * 0.5F );
-    add_child( mas );
+    if ( !is_complete( ) )
+    {
+        _garagara = _3d->add_child( dot_button::create( "garagara.png", 200 ) );
+        _garagara->set_position( vec2( app::getWindowSize( ) ) * 0.5F + vec2( 0, -100 ) );
+        _garagara->run_action( repeat_forever::create( sequence::create( ease<EaseInOutSine>::create( move_by::create( 1.0F, vec2( 0, -20 ) ) ),
+                                                                         ease<EaseInOutSine>::create( move_by::create( 1.0F, vec2( 0, 20 ) ) ) ) ) );
+    }
 
-    auto gar = dot_button::create( "garagara.png", 200 );
-    _garagara = gar;
-    gar->set_position( vec2( app::getWindowSize( ) ) * 0.5F + vec2( 0, -100 ) );
-    using namespace action;
-    gar->run_action( repeat_forever::create( sequence::create( ease<EaseInOutSine>::create( move_by::create( 1.0F, vec2( 0, -20 ) ) ),
-                                                               ease<EaseInOutSine>::create( move_by::create( 1.0F, vec2( 0, 20 ) ) ) ) ) );
-    // コンプしてなかったらガチャマークを登録します。
-    if ( !is_complete( ) )add_child( gar );
-
-    auto bac = dot_button::create( "back.png", 150 );
-    _back_button = bac;
-    bac->set_position( vec2( app::getWindowSize( ) ) * vec2( 0, 1 ) + vec2( 100, -100 ) );
-    add_child( bac );
+    _back_button = _3d->add_child( dot_button::create( "back.png", 150 ) );
+    _back_button->set_position( vec2( app::getWindowSize( ) ) * vec2( 0, 1 ) + vec2( 100, -100 ) );
 
     auto feed_num = user_default::get_instans( )->get_root( )["feed"].asInt( );
 
-    auto fla = renderer::label::create( "misaki_gothic.ttf", 86 );
-    fla->set_text( "x" + boost::lexical_cast<std::string>( feed_num ) );
-    _feed_number_label = fla;
-    fla->set_position( vec2( app::getWindowSize( ) ) * vec2( 1, 1 ) + vec2( -50, -50 ) );
-    fla->set_anchor_point( vec2( 1, 1 ) );
-    fla->set_pivot( vec2( 0, 0.6 ) );
-    add_child( fla );
+    _feed_number_label = add_child( renderer::label::create( "misaki_gothic.ttf", 86 ) );
+    _feed_number_label->set_text( "x" + boost::lexical_cast<std::string>( feed_num ) );
+    _feed_number_label->set_position( vec2( app::getWindowSize( ) ) * vec2( 1, 1 ) + vec2( -50, -50 ) );
+    _feed_number_label->set_anchor_point( vec2( 1, 1 ) );
+    _feed_number_label->set_pivot( vec2( 0, 0.6 ) );
 
-    auto fee = feed::create( node::INVALID_TAG, vec2( 0 ) );
-    fee->set_position( vec2( -50, 0 ) );
-    fla->add_child( fee );
 
-    gar->on_ended = [ this, fee, gar, mas ]
+    _feed = _feed_number_label->add_child( feed::create( node::INVALID_TAG, vec2( 0 ) ) );
+    _feed->set_position( vec2( -50, 0 ) );
+
+    _garagara.dynamicptr<dot_button>( )->on_ended = [ this ]
     {
-        auto m = fee->get_world_matrix( );
-        m = translate( m, fee->get_position( ) );
+        auto m = _feed->get_world_matrix( );
+        m = translate( m, _feed->get_position( ) );
         auto start_pos = vec2( m[2][0], m[2][1] );
-        auto end_pos = gar->get_position( );
-        auto mas_pos = mas->get_position( );
+        auto end_pos = _garagara->get_position( );
+        auto mas_pos = _maschine->get_position( );
 
-        auto& root = user_default::get_instans( )->get_root( );
-        if ( root["feed"].asInt( ) < 10 ) return;
+        if ( user_default::get_instans( )->get_root( )["feed"].asInt( ) < 10 ) return;
 
         play_se( "sound/garagara.wav" );
         set_block_schedule_event( );
-        auto spawn = call_func::create( [ this, start_pos, end_pos, &root ]
+        auto spawn = call_func::create( [ this, start_pos, end_pos ]
         {
-            auto feed_num = root["feed"].asInt( ) - 1;
-            root["feed"] = feed_num;
+            auto feed_num = user_default::get_instans( )->get_root( )["feed"].asInt( ) - 1;
+            user_default::get_instans( )->get_root( )["feed"] = feed_num;
             _feed_number_label->set_text( "x" + boost::lexical_cast<std::string>( feed_num ) );
             auto f = feed::create( node::INVALID_TAG, vec2( 0 ) );
             f->set_position( start_pos );
             f->run_action( sequence::create( ease<EaseInOutCirc>::create( move_to::create( 1.0F, end_pos ) ), remove_self::create( ) ) );
             add_child( f );
         } );
-        auto new_skin = call_func::create( [ this, &root, mas_pos ]
+        auto new_skin = call_func::create( [ this, mas_pos ]
         {
             play_se( "sound/view.wav" );
-            auto eff = renderer::sprite_animation::create( "new_skin_effect.png" );
-            eff->set_name( "effect" );
-            eff->set_cut( { 8, 7 } );
-            eff->set_cut_size( vec2( 128 ) );
-            eff->set_position( mas_pos + vec2( 0, 200 ) );
-            eff->run_action( ease<EaseOutExpo>::create( scale_to::create( 0.5F, vec2( 7 ) ) ) );
-            eff->run_action( sequence::create( ease<EaseOutExpo>::create( move_to::create( 0.75F, vec2( app::getWindowSize( ) ) * vec2( 0.5F ) ) ), call_func::create( [ this ] { _is_animation_end = true; } ) ) );
-            add_child( eff );
+            auto effect = renderer::sprite_animation::create( "new_skin_effect.png" );
+            effect->set_name( "effect" );
+            effect->set_cut( { 8, 7 } );
+            effect->set_cut_size( vec2( 128 ) );
+            effect->set_position( mas_pos + vec2( 0, 200 ) );
+            effect->run_action( ease<EaseOutExpo>::create( scale_to::create( 0.5F, vec2( 7 ) ) ) );
+            effect->run_action( sequence::create( ease<EaseOutExpo>::create( move_to::create( 0.75F, vec2( app::getWindowSize( ) ) * vec2( 0.5F ) ) ), call_func::create( [ this ] { _is_animation_end = true; } ) ) );
+            add_child( effect );
 
             auto enemy = enemy::create( "", 0, "skin/" + get_new_skin_name( ) + ".png" );
             enemy->run_action( repeat_forever::create( rotate_by::create( 10.0F, M_PI * 2 ) ) );
-            eff->add_child( enemy );
+            effect->add_child( enemy );
 
-            if ( is_complete( ) ) remove_child( _garagara );
+            if ( is_complete( ) ) _3d->remove_child( _garagara );
         } );
         run_action( sequence::create( repeat_times::create( sequence::create( spawn, delay::create( 0.05F ) ), 10 ), delay::create( 1.0F ), new_skin ) );
     };
-    bac->on_ended = [ this ]
+    _back_button.dynamicptr<dot_button>( )->on_ended = [ this ]
     {
         play_se( "sound/back.wav" );
         set_block_schedule_event( );
@@ -126,8 +122,8 @@ bool gacha::mouse_began( cinder::app::MouseEvent event )
     if ( auto eff = get_child_by_name( "effect" ) )
     {
         _is_animation_end = false;
-        eff->run_action( action::sequence::create( action::ease<EaseOutBounce>::create( action::scale_to::create( 0.3F, vec2( 0 ) ) ),
-                                                   action::remove_self::create( ) ) );
+        eff->run_action( sequence::create( ease<EaseOutBounce>::create( scale_to::create( 0.3F, vec2( 0 ) ) ),
+                                           remove_self::create( ) ) );
         set_block_schedule_event( false );
     }
     return true;
@@ -138,8 +134,8 @@ bool gacha::touch_began( cinder::app::TouchEvent::Touch event )
     if ( auto eff = get_child_by_name( "effect" ) )
     {
         _is_animation_end = false;
-        eff->run_action( action::sequence::create( action::ease<EaseOutBounce>::create( action::scale_to::create( 0.3F, vec2( 0 ) ) ),
-                                                   action::remove_self::create( ) ) );
+        eff->run_action( sequence::create( ease<EaseOutBounce>::create( scale_to::create( 0.3F, vec2( 0 ) ) ),
+                                           remove_self::create( ) ) );
         set_block_schedule_event( false );
     }
     return true;
@@ -151,9 +147,9 @@ void gacha::change_action( std::function<void( )> end_fn )
     for ( auto& c : _maschine->get_children( ) )
     {
         c->remove_all_actions( );
-        c->run_action( action::sequence::create(
-            action::delay::create( i ),
-            action::ease<EaseOutBounce>::create( action::scale_to::create( 0.2F, vec2( 0 ) ) ) ) );
+        c->run_action( sequence::create(
+            delay::create( i ),
+            ease<EaseOutBounce>::create( scale_to::create( 0.2F, vec2( 0 ) ) ) ) );
         i += 1.0F / size;
     }
     if ( _garagara )
@@ -163,9 +159,9 @@ void gacha::change_action( std::function<void( )> end_fn )
         for ( auto& c : _garagara->get_children( ) )
         {
             c->remove_all_actions( );
-            c->run_action( action::sequence::create(
-                action::delay::create( i ),
-                action::ease<EaseOutBounce>::create( action::scale_to::create( 0.2F, vec2( 0 ) ) ) ) );
+            c->run_action( sequence::create(
+                delay::create( i ),
+                ease<EaseOutBounce>::create( scale_to::create( 0.2F, vec2( 0 ) ) ) ) );
             i += 1.0F / size;
         }
     }
@@ -175,16 +171,16 @@ void gacha::change_action( std::function<void( )> end_fn )
     for ( ; itr != --_back_button->get_children( ).end( ); ++itr )
     {
         ( *itr )->remove_all_actions( );
-        ( *itr )->run_action( action::sequence::create(
-            action::delay::create( i ),
-            action::ease<EaseOutBounce>::create( action::scale_to::create( 0.2F, vec2( 0 ) ) ) ) );
+        ( *itr )->run_action( sequence::create(
+            delay::create( i ),
+            ease<EaseOutBounce>::create( scale_to::create( 0.2F, vec2( 0 ) ) ) ) );
         i += 1.0F / size;
     }
     ( *itr )->remove_all_actions( );
-    ( *itr )->run_action( action::sequence::create(
-        action::delay::create( i ),
-        action::ease<EaseOutBounce>::create( action::scale_to::create( 0.2F, vec2( 0 ) ) ),
-        action::call_func::create( end_fn ) ) );
+    ( *itr )->run_action( sequence::create(
+        delay::create( i ),
+        ease<EaseOutBounce>::create( scale_to::create( 0.2F, vec2( 0 ) ) ),
+        call_func::create( end_fn ) ) );
 }
 std::string user::gacha::get_new_skin_name( )
 {

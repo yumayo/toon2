@@ -8,6 +8,7 @@
 #include "title.h"
 #include "bullet_manager.h"
 #include "boost/lexical_cast.hpp"
+#include "synchronization_objects.h"
 using namespace cinder;
 using namespace treelike;
 namespace user
@@ -104,8 +105,7 @@ bool cell_manager::init( Json::Value& root )
         {
             if ( enemy->get_handle( ) == handle )
             {
-                enemy->set_position( vec2( root["data"]["position"][0].asFloat( ),
-                                                   root["data"]["position"][1].asFloat( ) ) );
+                enemy->set_position( vec2( root["data"]["position"][0].asFloat( ), root["data"]["position"][1].asFloat( ) ) );
                 enemy->set_radius( root["data"]["radius"].asFloat( ) );
                 return;
             }
@@ -152,30 +152,21 @@ void cell_manager::update( float delta )
 
     if ( !_udp_connection ) return;
 
-    // 最後に自分のポジションなどを相手に送ります。
-    {
-        Json::Value root;
-        root["name"] = "ground";
-        root["data"]["position"][0] = _player->get_position( ).x;
-        root["data"]["position"][1] = _player->get_position( ).y;
-        root["data"]["radius"] = _player->get_radius( );
+    Json::Value root;
+    root["name"] = "game_update";
+    root["data"]["radius"] = _player->get_radius( );
+    root["data"]["position"][0] = _player->get_position( ).x;
+    root["data"]["position"][1] = _player->get_position( ).y;
 
-        auto server_addr = user_default::get_instans( )->get_root( )["server"]["address"].asString( );
-        auto server_port = user_default::get_instans( )->get_root( )["server"]["udp_port"].asInt( );
-        _udp_connection->write( network::network_handle( server_addr, server_port ), root );
-    }
+    for ( auto& enemy : _enemys )
     {
-        Json::Value root;
-        root["name"] = "game_update";
-        root["data"]["position"][0] = _player->get_position( ).x;
-        root["data"]["position"][1] = _player->get_position( ).y;
-        root["data"]["radius"] = _player->get_radius( );
-
-        for ( auto& enemy : _enemys )
-        {
-            _udp_connection->write( enemy->get_handle( ), root );
-        }
+        _udp_connection->write( enemy->get_handle( ), root );
     }
+
+    root["name"] = "ground";
+    auto server_addr = user_default::get_instans( )->get_root( )["server"]["address"].asString( );
+    auto server_port = user_default::get_instans( )->get_root( )["server"]["udp_port"].asInt( );
+    _udp_connection->write( network::network_handle( server_addr, server_port ), root );
 }
 std::list<softptr<enemy>>& cell_manager::get_enemys( )
 {

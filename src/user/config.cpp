@@ -60,6 +60,8 @@ bool config::init( )
 
 
     _edg = slide_manager->add_child( dot_object::create( "edge.png", _skin_width ) );
+    _edg->set_rotation( 0.0F );
+    _edg->set_axis( vec3( 0, 0, 1 ) );
     _edg->set_position_3d( vec3( _edg->get_position( ), -200.0F ) );
 
     _bac = _3d->add_child( dot_button::create( "back.png", 150.0F ) );

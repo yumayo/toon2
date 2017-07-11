@@ -6,6 +6,7 @@
 #include <treelike/network.hpp>
 #include "score_board.h"
 #include "se.h"
+#include "render3d.h"
 using namespace cinder;
 using namespace treelike;
 namespace user
@@ -59,15 +60,14 @@ bool game::init( Json::Value& root,
         add_child( controller );
     }
 
-    auto bac = dot_button::create( "back.png", 64 );
-    _back_button = bac;
-    bac->set_position( vec2( 64 ) + vec2( 10 ) );
-    bac->on_ended = [ this ]
+    _3d = add_child( render3d::create( ) );
+    _back_button = _3d->add_child( dot_button::create( "back.png", 64 ) );
+    _back_button->set_position( vec2( 64 ) + vec2( 10 ) );
+    _back_button.dynamicptr<dot_button>( )->on_ended = [ this ]
     {
         play_se( "sound/back.wav" );
         scene_manager::get_instans( )->replace( title::create( ) );
     };
-    add_child( bac );
 
     add_child( score_board::create( _field->get_cell_manager( ), vec2( 300, 300 ) ) );
 

@@ -26,6 +26,7 @@ private:
     softptr<player> _player;
     softptr<ground> _ground;
     softptr<controller> _controller;
-    softptr<node> _back_button;
+    softptr<treelike::node> _back_button;
+    softptr<treelike::node> _3d;
 };
 }
