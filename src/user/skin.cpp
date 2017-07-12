@@ -31,7 +31,7 @@ void skin::render( )
     object.radius( _radius );
     object.subdivisions( _segments );
 
-    _texture->bind( );
+    gl::ScopedTextureBind scp_texture( _texture );
     gl::Batch::create( object, _glsl )->draw( );
 }
 }

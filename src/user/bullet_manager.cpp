@@ -49,10 +49,9 @@ bool bullet_manager::init( softptr<node> cell_manager, Json::Value bullet_buffer
 
     _tcp_connection->on( "erase_bullet", [ this ] ( Json::Value root )
     {
-        for ( auto& folder : get_children( ) )
-        {
-            folder->remove_child_by_tag( root["data"]["id"].asInt( ) );
-        }
+        auto user_id = root["data"]["user_id"].asInt( );
+        if ( user_id == node::INVALID_TAG ) return;
+        if ( auto folder = get_child_by_tag( user_id ) ) folder->remove_child_by_tag( root["data"]["id"].asInt( ) );
     } );
 
     auto cell_mgr = _cell_manager.dynamicptr<user::cell_manager>( );
@@ -84,6 +83,7 @@ void bullet_manager::update( float delta )
                     bullet->hit( );
                     Json::Value root;
                     root["name"] = "blowout";
+                    root["data"]["user_id"] = folder->get_tag( );
                     root["data"]["id"] = bullet->get_tag( );
                     player->blowout( bullet->get_radius( ) / 2 );
                     _tcp_connection->write( Json::FastWriter( ).write( root ) );
