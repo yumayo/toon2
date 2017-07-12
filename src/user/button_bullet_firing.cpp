@@ -15,12 +15,29 @@ bool button_bullet_firing_function::init( )
 {
     circle_button_opacity_action::init( );
     set_schedule_key_event( );
-    on_key_event( app::KeyEvent::KEY_SPACE, [ this ] ( cinder::app::KeyEvent e )
+    on_key_event( app::KeyEvent::KEY_SPACE, [ this ]
     {
         auto m = get_world_matrix( );
         auto pos = vec2( m[2][0], m[2][1] );
         began( pos );
         ended( pos );
+    } );
+    on_key_event( app::KeyEvent::KEY_o, [ this ]
+    {
+        remove_action_by_name( "debug_key_action" );
+        auto act = action::repeat_forever::create( action::sequence::create( action::delay::create( 1.0F ), action::call_func::create( [ this ]
+        {
+            auto m = get_world_matrix( );
+            auto pos = vec2( m[2][0], m[2][1] );
+            began( pos );
+            ended( pos );
+        } ) ) );
+        act->set_name( "debug_key_action" );
+        run_action( act );
+    } );
+    on_key_event( app::KeyEvent::KEY_p, [ this ]
+    {
+        remove_action_by_name( "debug_key_action" );
     } );
     return true;
 }
@@ -29,10 +46,10 @@ void button_bullet_firing_function::key_down( cinder::app::KeyEvent e )
     auto itr = _key_events.find( e.getCode( ) );
     if ( itr != _key_events.end( ) )
     {
-        if ( itr->second ) itr->second( e );
+        if ( itr->second ) itr->second( );
     }
 }
-void button_bullet_firing_function::on_key_event( int code, std::function<void( cinder::app::KeyEvent )> func )
+void button_bullet_firing_function::on_key_event( int code, std::function<void( )> func )
 {
     _key_events.insert( std::make_pair( code, func ) );
 }

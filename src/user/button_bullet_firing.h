@@ -13,9 +13,9 @@ public:
     bool init( );
 private:
     void key_down( cinder::app::KeyEvent e ) override;
-    void on_key_event( int code, std::function<void( cinder::app::KeyEvent )> func );
+    void on_key_event( int code, std::function<void( )> func );
 private:
-    std::map<int, std::function<void( cinder::app::KeyEvent )>> _key_events;
+    std::map<int, std::function<void( )>> _key_events;
 };
 class button_bullet_firing : public treelike::node
 {

@@ -11,10 +11,10 @@ public:
     bool init( softptr<player> player, softptr<bullet_manager> bullet_manager );
     void key_down( cinder::app::KeyEvent e ) override;
 private:
-    void on_key_event( int code, std::function<void( cinder::app::KeyEvent )> func );
+    void on_key_event( int code, std::function<void( )> func );
 private:
     softptr<player> _player;
     softptr<bullet_manager> _bullet_manager;
-    std::map<int, std::function<void( cinder::app::KeyEvent )>> _key_events;
+    std::map<int, std::function<void( )>> _key_events;
 };
 }
