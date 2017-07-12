@@ -62,17 +62,13 @@ bool bullet_manager::init( softptr<node> cell_manager, Json::Value bullet_buffer
             _number_of_created_bullet = 0;
             _created_bullet_data.clear( );
         }
-        _time_offset = 0.0F;
     } ) ) ) );
 
     _tcp_connection->on( "erase_bullet", [ this ] ( Json::Value root )
     {
         for ( auto& folder : get_children( ) )
         {
-            for ( auto& bullet_node : folder->get_children( ) )
-            {
-                bullet_node->remove_child_by_tag( root["data"]["id"].asInt( ) );
-            }
+            folder->remove_child_by_tag( root["data"]["id"].asInt( ) );
         }
     } );
 
@@ -129,7 +125,6 @@ void bullet_manager::update( float delta )
             }
         }
     }
-    _time_offset += delta;
 }
 void bullet_manager::close_player( cinder::ColorA const& color )
 {

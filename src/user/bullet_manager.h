@@ -17,6 +17,5 @@ protected:
     softptr<treelike::network::tcp_client> _tcp_connection;
     int _number_of_created_bullet = 0;
     Json::Value _created_bullet_data;
-    float _time_offset = 0.0F;
 };
 }
