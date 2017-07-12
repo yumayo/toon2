@@ -233,6 +233,7 @@
     <ClCompile Include="..\src\user\se.cpp" />
     <ClCompile Include="..\src\user\search_room.cpp" />
     <ClCompile Include="..\src\user\skin.cpp" />
+    <ClCompile Include="..\src\user\soft_circle.cpp" />
     <ClCompile Include="..\src\user\sphere.cpp" />
     <ClCompile Include="..\src\user\spike.cpp" />
     <ClCompile Include="..\src\user\title.cpp" />
@@ -268,6 +269,7 @@
     <ClInclude Include="..\src\user\se.h" />
     <ClInclude Include="..\src\user\search_room.h" />
     <ClInclude Include="..\src\user\skin.h" />
+    <ClInclude Include="..\src\user\soft_circle.h" />
     <ClInclude Include="..\src\user\sphere.h" />
     <ClInclude Include="..\src\user\spike.h" />
     <ClInclude Include="..\src\user\synchronization_objects.h" />

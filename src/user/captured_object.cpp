@@ -12,7 +12,7 @@ void captured_object::captured( softptr<node> other )
 {
     _captureing = true;
 
-    run_action( action::sequence::create( action::move_to_target::create( 0.2F, other ),
+    run_action( action::sequence::create( action::ease<EaseInCubic>::create( action::move_to_target::create( 0.3F, other ) ),
                                           action::call_func::create( [ this, other ] ( )
     {
         // 0.2F後にデリートしない場合止まって描画されてしまうためfalseにしています。

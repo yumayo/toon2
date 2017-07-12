@@ -3,6 +3,7 @@
 #include "skin.h"
 #include "cinder/gl/Texture.h"
 #include <treelike/scene_manager.h>
+#include "soft_circle.h"
 using namespace cinder;
 using namespace treelike;
 namespace user
@@ -18,7 +19,7 @@ bool cell::init( std::string const& ip_address,
     _skin_relative_path = skin_relative_path;
 
     _radius = user_default::get_instans( )->get_root( )["system"]["min_radius"].asFloat( );
-    if ( auto base = renderer::circle::create( _radius ) )
+    if ( auto base = soft_circle::create( _radius ) )
     {
         _base = base;
         add_child( base );

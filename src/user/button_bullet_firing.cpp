@@ -67,9 +67,9 @@ bool button_bullet_firing::init( softptr<player> player, softptr<bullet_manager>
     _circle_button->on_ended = [ this ]
     {
         Json::Value data;
-        if ( parser::bullet_straight( &data, _player, get_parent( )->get_child_by_name( "analog_axis" ) ) )
+        if ( parser::bullet_fireworks( &data, _player, get_parent( )->get_child_by_name( "analog_axis" ) ) )
         {
-            _bullet_manager->create_bullet( data );
+            _bullet_manager->create_bullet( data, 2 );
         }
     };
 

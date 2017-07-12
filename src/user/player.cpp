@@ -18,7 +18,6 @@ bool player::init( softptr<node> cell_manager, std::string const& ip_address,
                    int port, std::string const& relative_path_skin )
 {
     if ( !cell::init( ip_address, port, relative_path_skin ) ) return false;
-    set_schedule_key_event( );
     _target_radius = _radius;
     _cell_manager = cell_manager;
     return true;
@@ -30,13 +29,6 @@ player::~player( )
     auto feed_num = user_default::get_instans( )->get_root( )["feed"].asInt( );
     user_default::get_instans( )->get_root( )["feed"] = feed_num + int( _radius - min_radius );
     user_default::get_instans( )->get_root( )["max_radius"] = std::max( max_radius, _radius );
-}
-void player::key_down( cinder::app::KeyEvent e )
-{
-    if ( e.getCode( ) == cinder::app::KeyEvent::KEY_b )
-    {
-        blowout( );
-    }
 }
 void player::on_captured( softptr<node> other )
 {
@@ -68,9 +60,9 @@ void player::scale_action( float score )
     act->set_name( "scale_action" );
     run_action( act );
 }
-void player::blowout( )
+void player::blowout( float power )
 {
-    scale_action( -8.0F );
+    scale_action( -power );
 
     if ( _radius < user_default::get_instans( )->get_root( )["system"]["min_radius"].asFloat( ) )
     {

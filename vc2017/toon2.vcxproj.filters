@@ -122,6 +122,9 @@
     <ClInclude Include="..\src\user\parser.h">
       <Filter>Source Files\user</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\user\soft_circle.h">
+      <Filter>Source Files\user</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -228,6 +231,9 @@
       <Filter>Source Files\user</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user\parser.cpp">
+      <Filter>Source Files\user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user\soft_circle.cpp">
       <Filter>Source Files\user</Filter>
     </ClCompile>
   </ItemGroup>

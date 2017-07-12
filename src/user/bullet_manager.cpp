@@ -2,9 +2,12 @@
 #include "cell_manager.h"
 #include "bullet.h"
 #include "bullet_straight.h"
+#include "bullet_fireworks.h"
 #include <treelike/scene_manager.h>
 #include <treelike/utility.hpp>
 #include <treelike/action.hpp>
+#include "parser.h"
+#include <cinder/Rand.h>
 using namespace cinder;
 using namespace treelike;
 namespace user
@@ -28,7 +31,7 @@ bool bullet_manager::init( softptr<node> cell_manager, Json::Value bullet_buffer
     {
         for ( auto& data : root["data"] )
         {
-            add_bullet( data );
+            add_bullet( data, 1 );
         }
     } );
 
@@ -57,7 +60,7 @@ bool bullet_manager::init( softptr<node> cell_manager, Json::Value bullet_buffer
     {
         for ( auto& bullet_root : folder_root )
         {
-            add_bullet( bullet_root );
+            add_bullet( bullet_root, 1 );
         }
     }
 
@@ -82,7 +85,7 @@ void bullet_manager::update( float delta )
                     Json::Value root;
                     root["name"] = "blowout";
                     root["data"]["id"] = bullet->get_tag( );
-                    player->blowout( );
+                    player->blowout( bullet->get_radius( ) / 2 );
                     _tcp_connection->write( Json::FastWriter( ).write( root ) );
                 }
             }
@@ -99,7 +102,7 @@ void bullet_manager::close_player( cinder::ColorA const& color )
         }
     }
 }
-void bullet_manager::create_bullet( Json::Value const & data )
+void bullet_manager::create_bullet( Json::Value const & data, int type )
 {
     auto writable_data = data;
     writable_data["bullet_id"] = _bullet_id++;
@@ -107,32 +110,96 @@ void bullet_manager::create_bullet( Json::Value const & data )
     _created_bullet_data["data"][_number_of_created_bullet] = writable_data;
     _number_of_created_bullet++;
 
-    add_bullet( writable_data );
+    add_bullet( writable_data, type );
 }
-void bullet_manager::add_bullet( Json::Value const & data )
+void bullet_manager::add_bullet( Json::Value const & data, int type )
 {
     auto user_id = data["user_id"].asInt( );
     auto bullet_id = data["bullet_id"].asInt( );
     auto time = data["time"].asFloat( );
     auto start_position = vec2( data["start_position"][0].asFloat( ), data["start_position"][1].asFloat( ) );
     auto end_position = vec2( data["end_position"][0].asFloat( ), data["end_position"][1].asFloat( ) );
-    if ( auto cell = _cell_manager->get_child_by_tag( user_id ).dynamicptr<user::cell>( ) )
-    {
-        auto color = cell->get_color( );
-        auto skin_relative_path = cell->get_skin_relative_path( );
+    auto radius = data["radius"].asFloat( );
 
-        auto folder = get_child_by_tag( user_id );
-        if ( !folder )
-        {
-            folder = add_child( node::create( ) );
-            folder->set_tag( user_id );
-        }
-        folder->add_child( bullet_straight::create( bullet_id, time, start_position, end_position, color, skin_relative_path ) );
-    }
-    else
+    switch ( type )
     {
-        utility::log( "【bullet_manager】対象のプレイヤー[%d]が見つかりませんでした。", user_id );
+    case 1:
+    {
+        if ( auto cell = _cell_manager->get_child_by_tag( user_id ).dynamicptr<user::cell>( ) )
+        {
+            auto color = cell->get_color( );
+            auto skin_relative_path = cell->get_skin_relative_path( );
+
+            auto folder = get_child_by_tag( user_id );
+            if ( !folder )
+            {
+                folder = add_child( node::create( ) );
+                folder->set_tag( user_id );
+            }
+            folder->add_child( bullet_straight::create( bullet_id, time, radius, start_position, end_position, color, skin_relative_path ) );
+        }
+        else
+        {
+            utility::log( "【bullet_manager】対象のプレイヤー[%d]が見つかりませんでした。", user_id );
+        }
     }
+    break;
+    case 2:
+    {
+        if ( auto cell = _cell_manager->get_child_by_tag( user_id ).dynamicptr<user::cell>( ) )
+        {
+            auto color = cell->get_color( );
+            auto skin_relative_path = cell->get_skin_relative_path( );
+
+            auto folder = get_child_by_tag( user_id );
+            if ( !folder )
+            {
+                folder = add_child( node::create( ) );
+                folder->set_tag( user_id );
+            }
+            folder->add_child( bullet_fireworks::create( bullet_id, time, radius, start_position, end_position, color, skin_relative_path,
+                                                         [ this, radius, start_position, end_position ]
+            {
+                if ( 30.0F < radius )
+                {
+                    float radian = -M_PI / 4;
+                    for ( int i = 0; i < 3; i += 1, radian += M_PI / 4 )
+                    {
+                        auto angle = atan2( end_position.y - start_position.y, end_position.x - start_position.x );
+                        auto direction = vec2( cos( radian + angle ), sin( radian + angle ) );
+                        Json::Value root;
+                        parser::bullet_fireworks_tip( &root, _cell_manager.dynamicptr<cell_manager>( )->get_player( ),
+                                                      end_position, direction );
+                        create_bullet( root, 2 );
+                    }
+                }
+                else
+                {
+                    float radian = -M_PI / 4;
+                    for ( int i = 0; i < 3; i += 1, radian += M_PI / 4 )
+                    {
+                        auto angle = atan2( end_position.y - start_position.y, end_position.x - start_position.x );
+                        auto direction = vec2( cos( radian + angle ), sin( radian + angle ) );
+                        Json::Value root;
+                        parser::bullet_tip( &root, _cell_manager.dynamicptr<cell_manager>( )->get_player( )->get_tag( ),
+                                            end_position, direction );
+                        create_bullet( root, 1 );
+                    }
+                }
+
+            } ) );
+        }
+        else
+        {
+            utility::log( "【bullet_manager】対象のプレイヤー[%d]が見つかりませんでした。", user_id );
+        }
+    }
+    break;
+    default:
+        break;
+    }
+
+
 }
 }
 
