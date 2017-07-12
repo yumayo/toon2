@@ -158,7 +158,7 @@ void bullet_manager::add_bullet( Json::Value const & data, int type )
                 folder->set_tag( user_id );
             }
             folder->add_child( bullet_fireworks::create( bullet_id, time, radius, start_position, end_position, color, skin_relative_path,
-                                                         [ this, radius, start_position, end_position ]
+                                                         [ this, user_id, radius, start_position, end_position ]
             {
                 if ( 30.0F < radius )
                 {
@@ -168,7 +168,7 @@ void bullet_manager::add_bullet( Json::Value const & data, int type )
                         auto angle = atan2( end_position.y - start_position.y, end_position.x - start_position.x );
                         auto direction = vec2( cos( radian + angle ), sin( radian + angle ) );
                         Json::Value root;
-                        parser::bullet_fireworks_tip( &root, _cell_manager.dynamicptr<cell_manager>( )->get_player( ),
+                        parser::bullet_fireworks_tip( &root, user_id,
                                                       end_position, direction );
                         create_bullet( root, 2 );
                     }
@@ -181,7 +181,7 @@ void bullet_manager::add_bullet( Json::Value const & data, int type )
                         auto angle = atan2( end_position.y - start_position.y, end_position.x - start_position.x );
                         auto direction = vec2( cos( radian + angle ), sin( radian + angle ) );
                         Json::Value root;
-                        parser::bullet_tip( &root, _cell_manager.dynamicptr<cell_manager>( )->get_player( )->get_tag( ),
+                        parser::bullet_tip( &root, user_id,
                                             end_position, direction );
                         create_bullet( root, 1 );
                     }
