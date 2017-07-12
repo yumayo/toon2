@@ -12,10 +12,13 @@ public:
     void update( float delta ) final override;
     void close_player( cinder::ColorA const& color );
     void create_bullet( Json::Value const& data );
+private:
+    void add_bullet( Json::Value const& data );
 protected:
     softptr<treelike::node> _cell_manager;
     softptr<treelike::network::tcp_client> _tcp_connection;
     int _number_of_created_bullet = 0;
     Json::Value _created_bullet_data;
+    int _bullet_id = 0;
 };
 }

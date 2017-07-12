@@ -28,27 +28,7 @@ bool bullet_manager::init( softptr<node> cell_manager, Json::Value bullet_buffer
     {
         for ( auto& data : root["data"] )
         {
-            auto bullet_id = data["bullet_id"].asInt( );
-            auto user_id = data["user_id"].asInt( );
-            auto start_position = vec2( data["start_position"][0].asFloat( ), data["start_position"][1].asFloat( ) );
-            auto end_position = vec2( data["end_position"][0].asFloat( ), data["end_position"][1].asFloat( ) );
-            if ( auto cell = _cell_manager->get_child_by_tag( user_id ).dynamicptr<user::cell>( ) )
-            {
-                auto color = cell->get_color( );
-                auto skin_relative_path = cell->get_skin_relative_path( );
-
-                auto folder = get_child_by_tag( user_id );
-                if ( !folder )
-                {
-                    folder = add_child( node::create( ) );
-                    folder->set_tag( user_id );
-                }
-                folder->add_child( bullet_straight::create( bullet_id, start_position, end_position, color, skin_relative_path ) );
-            }
-            else
-            {
-                utility::log( "【bullet_manager】対象のプレイヤー[%d]が見つかりませんでした。", user_id );
-            }
+            add_bullet( data );
         }
     } );
 
@@ -72,31 +52,16 @@ bool bullet_manager::init( softptr<node> cell_manager, Json::Value bullet_buffer
         }
     } );
 
-    auto cell_mgr = _cell_manager.dynamicptr<user::cell_manager>( );
-    for ( auto& folder_root : bullet_buffer["data"] )
-    {
-        for ( auto& bullet_root : folder_root )
-        {
-            auto pos = vec2( bullet_root["position"][0].asFloat( ), bullet_root["position"][1].asFloat( ) );
-            auto direction = vec2( bullet_root["direction"][0].asFloat( ), bullet_root["direction"][1].asFloat( ) );
-            auto user_id = bullet_root["user_id"].asInt( );
-            auto bullet_id = bullet_root["bullet_id"].asInt( );
 
-            if ( auto cell = cell_mgr->get_child_by_tag( user_id ).dynamicptr<user::cell>( ) )
-            {
-                auto color = cell->get_color( );
-                auto skin_relative_path = cell->get_skin_relative_path( );
-
-                auto folder = get_child_by_tag( user_id );
-                if ( !folder )
-                {
-                    folder = add_child( node::create( ) );
-                    folder->set_tag( user_id );
-                }
-                folder->add_child( bullet_straight::create( bullet_id, pos, direction, color, skin_relative_path ) );
-            }
-        }
-    }
+    // 初期化時のやつは消しておきます。
+    //auto cell_mgr = _cell_manager.dynamicptr<user::cell_manager>( );
+    //for ( auto& folder_root : bullet_buffer["data"] )
+    //{
+    //    for ( auto& bullet_root : folder_root )
+    //    {
+    //        add_bullet( bullet_root );
+    //    }
+    //}
 
     return true;
 }
@@ -138,11 +103,19 @@ void bullet_manager::close_player( cinder::ColorA const& color )
 }
 void bullet_manager::create_bullet( Json::Value const & data )
 {
-    _created_bullet_data["data"][_number_of_created_bullet] = data;
+    auto writable_data = data;
+
+    _created_bullet_data["data"][_number_of_created_bullet] = writable_data;
     _number_of_created_bullet++;
 
-    auto bullet_id = data["bullet_id"].asInt( );
+    writable_data["bullet_id"] = _bullet_id++;
+
+    add_bullet( writable_data );
+}
+void bullet_manager::add_bullet( Json::Value const & data )
+{
     auto user_id = data["user_id"].asInt( );
+    auto bullet_id = data["bullet_id"].asInt( );
     auto start_position = vec2( data["start_position"][0].asFloat( ), data["start_position"][1].asFloat( ) );
     auto end_position = vec2( data["end_position"][0].asFloat( ), data["end_position"][1].asFloat( ) );
     if ( auto cell = _cell_manager->get_child_by_tag( user_id ).dynamicptr<user::cell>( ) )
@@ -157,6 +130,10 @@ void bullet_manager::create_bullet( Json::Value const & data )
             folder->set_tag( user_id );
         }
         folder->add_child( bullet_straight::create( bullet_id, start_position, end_position, color, skin_relative_path ) );
+    }
+    else
+    {
+        utility::log( "【bullet_manager】対象のプレイヤー[%d]が見つかりませんでした。", user_id );
     }
 }
 }
