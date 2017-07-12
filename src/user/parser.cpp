@@ -22,6 +22,7 @@ bool bullet_straight( Json::Value * root, softptr<treelike::node> n_player, soft
     player->scale_action( -4.0F );
     Json::Value& data = *root;
     data["user_id"] = player->get_tag( );
+    data["time"] = 2.0F;
     data["start_position"][0] = start_position.x;
     data["start_position"][1] = start_position.y;
     data["end_position"][0] = end_position.x;

@@ -44,6 +44,18 @@ void base_button::touch_ended( cinder::app::TouchEvent::Touch event )
 {
     ended( event.getPos( ) );
 }
+void base_button::touches_began( cinder::app::TouchEvent event )
+{
+    for ( auto& touch : event.getTouches( ) ) began( touch.getPos( ) );
+}
+void base_button::touches_moved( cinder::app::TouchEvent event )
+{
+    for ( auto& touch : event.getTouches( ) ) moved( touch.getPos( ) );
+}
+void base_button::touches_ended( cinder::app::TouchEvent event )
+{
+    for ( auto& touch : event.getTouches( ) ) ended( touch.getPos( ) );
+}
 bool base_button::began( cinder::vec2 touch_position )
 {
     _touch = hit_touch( touch_position );

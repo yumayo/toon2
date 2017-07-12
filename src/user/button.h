@@ -23,12 +23,16 @@ public:
     bool touch_began( cinder::app::TouchEvent::Touch event ) final override;
     void touch_moved( cinder::app::TouchEvent::Touch event ) final override;
     void touch_ended( cinder::app::TouchEvent::Touch event ) final override;
+    void touches_began( cinder::app::TouchEvent event ) final override;
+    void touches_moved( cinder::app::TouchEvent event ) final override;
+    void touches_ended( cinder::app::TouchEvent event ) final override;
 public:
     std::function<void( )> on_began;
     std::function<void( )> on_ended;
 private:
     bool _touch = false;
     bool _prev_touch = false;
+    int touch_id = 0;
 };
 class base_rect_button : virtual public base_button
 {
