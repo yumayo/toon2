@@ -71,9 +71,9 @@ void bullet_manager::update( float delta )
     auto player = cell_manager->get_player( );
     for ( auto const& folder : get_children( ) )
     {
+        if ( folder->get_tag( ) == player->get_tag( ) ) continue;
         for ( auto const& bullet_node : folder->get_children( ) )
         {
-            if ( folder->get_tag( ) == player->get_tag( ) ) continue;
             if ( auto const& bullet = std::dynamic_pointer_cast<user::bullet>( bullet_node ) )
             {
                 if ( bullet->is_hit( ) ) continue;
@@ -104,11 +104,10 @@ void bullet_manager::close_player( cinder::ColorA const& color )
 void bullet_manager::create_bullet( Json::Value const & data )
 {
     auto writable_data = data;
+    writable_data["bullet_id"] = _bullet_id++;
 
     _created_bullet_data["data"][_number_of_created_bullet] = writable_data;
     _number_of_created_bullet++;
-
-    writable_data["bullet_id"] = _bullet_id++;
 
     add_bullet( writable_data );
 }
