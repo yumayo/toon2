@@ -12,19 +12,17 @@ public:
     virtual void in_action( ) = 0;
     virtual void out_action( ) = 0;
     bool init( );
-private:
+    bool began( cinder::vec2 touch_position );
+    void moved( cinder::vec2 touch_position );
+    void ended( cinder::vec2 touch_position );
+public:
     void update( float delta ) final override;
-private:
     bool mouse_began( cinder::app::MouseEvent event ) final override;
     void mouse_moved( cinder::app::MouseEvent event ) final override;
     void mouse_ended( cinder::app::MouseEvent event ) final override;
     bool touch_began( cinder::app::TouchEvent::Touch event ) final override;
     void touch_moved( cinder::app::TouchEvent::Touch event ) final override;
     void touch_ended( cinder::app::TouchEvent::Touch event ) final override;
-private:
-    bool began( cinder::vec2 touch_position );
-    void moved( cinder::vec2 touch_position );
-    void ended( cinder::vec2 touch_position );
 public:
     std::function<void( )> on_began;
     std::function<void( )> on_ended;
@@ -48,6 +46,7 @@ class base_anytype_button_opacity_action : virtual public base_button
 {
 public:
     virtual ~base_anytype_button_opacity_action( ) {}
+    bool init( );
     virtual void in_action( ) final override;
     virtual void out_action( ) final override;
 };
@@ -55,6 +54,7 @@ class base_anytype_button_scale_action : virtual public base_button
 {
 public:
     virtual ~base_anytype_button_scale_action( ) {}
+    bool init( );
     virtual void in_action( ) final  override;
     virtual void out_action( ) final override;
 };

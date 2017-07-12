@@ -16,7 +16,7 @@ public:
     void capture( float score );
     void scale_action( float score );
     void blowout( );
-    bool parse_bullet_data( Json::Value* root, cinder::vec2 direction );
+    float get_target_radius( );
 protected:
     float _target_radius = 0.0F;
     softptr<treelike::node> _cell_manager;

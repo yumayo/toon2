@@ -2,7 +2,6 @@
 #include <treelike/renderer/surface_cubic.h>
 #include "player.h"
 #include "jsoncpp/json.h"
-#include "bullet.h"
 #include "synchronization_objects.h"
 namespace user
 {
@@ -19,8 +18,8 @@ public:
     void close_player( cinder::ColorA const& color );
     void insert( float time, cinder::vec2 position, float radius, cinder::ColorA color );
 private:
-    void paint_ground_cell( softptr<cell> cell );
-    void paint_ground_bullet( softptr<bullet> bullet );
+    void paint_ground_cell( softptr<treelike::node> cell );
+    void paint_ground_bullet( softptr<treelike::node> bullet );
     void paint_ground( cinder::vec2 position, float radius, cinder::ColorA color );
 private:
     softptr<treelike::node> _bullet_manager;

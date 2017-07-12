@@ -2,6 +2,7 @@
 #include "player.h"
 #include "cell_manager.h"
 #include "bullet_manager.h"
+#include "bullet.h"
 #include <treelike/user_default.h>
 using namespace cinder;
 using namespace treelike;
@@ -76,7 +77,7 @@ void ground::update( float delta )
         {
             for ( auto const& bullet_node : folder->get_children( ) )
             {
-                paint_ground_bullet( std::dynamic_pointer_cast<bullet>( bullet_node ) );
+                paint_ground_bullet( bullet_node );
             }
         }
     }
@@ -125,15 +126,17 @@ void ground::insert( float time, cinder::vec2 position, float radius, cinder::Co
     _min_insert_iterator = i;
     _past_paint_datas.insert( _past_paint_datas.begin( ) + i, paint_data( { time, position, radius, color } ) );
 }
-void ground::paint_ground_cell( softptr<cell> cell )
+void ground::paint_ground_cell( softptr<treelike::node> cell_node )
 {
-    if ( !cell ) return;
+    if ( !cell_node ) return;
+    auto cell = cell_node.dynamicptr<user::cell>( );
     float radius = cell->get_radius( ) / get_scale( ).x;
     paint_ground( cell->get_position( ) / get_scale( ).x, radius, cell->get_color( ) );
 }
-void ground::paint_ground_bullet( softptr<bullet> bullet )
+void ground::paint_ground_bullet( softptr<treelike::node> bullet_node )
 {
-    if ( !bullet ) return;
+    if ( !bullet_node ) return;
+    auto bullet = bullet_node.dynamicptr<user::bullet>( );
     float radius = bullet->get_radius( ) / get_scale( ).x;
     paint_ground( bullet->get_position( ) / get_scale( ).x, radius, bullet->get_color( ) );
 }

@@ -13,6 +13,8 @@ bool analog_axis::init( )
     set_schedule_mouse_event( );
     set_schedule_touch_event( );
 
+    set_name( "analog_axis" );
+
     _last_normaized_axis = normalize( vec2( 1 ) );
 
     _base_node = add_child( renderer::circle::create( 128.0F ) );
@@ -80,7 +82,7 @@ void analog_axis::began( cinder::vec2 pos )
 
     _base_node->set_position( _tap_start_position );
     _axis_node->set_position( _axis );
-    _last_normaized_axis = normalize( _axis );
+    if ( _axis != vec2( 0 ) ) _last_normaized_axis = normalize( _axis );
 }
 void analog_axis::moved( cinder::vec2 pos )
 {
@@ -89,7 +91,7 @@ void analog_axis::moved( cinder::vec2 pos )
     if ( len <= length( _axis ) )
         _axis = normalize( _axis ) * len;
     _axis_node->set_position( _axis );
-    _last_normaized_axis = normalize( _axis );
+    if ( _axis != vec2( 0 ) ) _last_normaized_axis = normalize( _axis );
 }
 void analog_axis::ended( cinder::vec2 pos )
 {

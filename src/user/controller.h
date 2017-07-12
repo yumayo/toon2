@@ -4,6 +4,7 @@
 #include "ground.h"
 #include "bullet_manager.h"
 #include "analog_axis.h"
+#include "button_bullet_firing.h"
 #include "debug_command.h"
 namespace user
 {
@@ -19,5 +20,6 @@ private:
     softptr<bullet_manager> _bullet_manager;
     softptr<analog_axis> _analog_axis;
     softptr<debug_command> _debug_command;
+    softptr<button_bullet_firing> _button_bullet_firing;
 };
 }

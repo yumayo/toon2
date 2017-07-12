@@ -1,6 +1,7 @@
 ﻿#include "bullet_manager.h"
 #include "cell_manager.h"
 #include "bullet.h"
+#include "bullet_straight.h"
 #include <treelike/scene_manager.h>
 #include <treelike/utility.hpp>
 #include <treelike/action.hpp>
@@ -29,26 +30,20 @@ bool bullet_manager::init( softptr<node> cell_manager, Json::Value bullet_buffer
         {
             auto bullet_id = data["bullet_id"].asInt( );
             auto user_id = data["user_id"].asInt( );
-            auto pos = vec2( data["position"][0].asFloat( ), data["position"][1].asFloat( ) );
-            auto direction = vec2( data["direction"][0].asFloat( ), data["direction"][1].asFloat( ) );
-            auto time_offset = data["time_offset"].asFloat( );
+            auto start_position = vec2( data["start_position"][0].asFloat( ), data["start_position"][1].asFloat( ) );
+            auto end_position = vec2( data["end_position"][0].asFloat( ), data["end_position"][1].asFloat( ) );
             if ( auto cell = _cell_manager->get_child_by_tag( user_id ).dynamicptr<user::cell>( ) )
             {
                 auto color = cell->get_color( );
                 auto skin_relative_path = cell->get_skin_relative_path( );
 
-                auto bullet = std::make_shared<user::bullet>( );
-                if ( bullet && bullet->init( bullet_id, 0.0F, pos, direction, color, skin_relative_path ) );
-                else bullet.reset( );
-                bullet->update( -time_offset ); // 0.2秒遅れて同期するので差分を引きます。
-
-                auto n = get_child_by_tag( user_id );
-                if ( !n )
+                auto folder = get_child_by_tag( user_id );
+                if ( !folder )
                 {
-                    n = add_child( node::create( ) );
-                    n->set_tag( user_id );
+                    folder = add_child( node::create( ) );
+                    folder->set_tag( user_id );
                 }
-                n->add_child( bullet );
+                folder->add_child( bullet_straight::create( bullet_id, start_position, end_position, color, skin_relative_path ) );
             }
             else
             {
@@ -61,8 +56,6 @@ bool bullet_manager::init( softptr<node> cell_manager, Json::Value bullet_buffer
     {
         if ( _number_of_created_bullet != 0 )
         {
-            //play_se( "sound/captured.wav" );
-
             _created_bullet_data["name"] = "create_bullet";
             _tcp_connection->write( Json::FastWriter( ).write( _created_bullet_data ) );
 
@@ -92,24 +85,19 @@ bool bullet_manager::init( softptr<node> cell_manager, Json::Value bullet_buffer
             auto direction = vec2( bullet_root["direction"][0].asFloat( ), bullet_root["direction"][1].asFloat( ) );
             auto user_id = bullet_root["user_id"].asInt( );
             auto bullet_id = bullet_root["bullet_id"].asInt( );
-            auto time_offset = bullet_root["time_offset"].asInt( );
 
             if ( auto cell = cell_mgr->get_child_by_tag( user_id ).dynamicptr<user::cell>( ) )
             {
                 auto color = cell->get_color( );
                 auto skin_relative_path = cell->get_skin_relative_path( );
 
-                auto bullet = std::make_shared<user::bullet>( );
-                if ( bullet && bullet->init( bullet_id, time_offset, pos, direction, color, skin_relative_path ) );
-                else bullet.reset( );
-
-                auto n = get_child_by_tag( user_id );
-                if ( !n )
+                auto folder = get_child_by_tag( user_id );
+                if ( !folder )
                 {
-                    n = add_child( node::create( ) );
-                    n->set_tag( user_id );
+                    folder = add_child( node::create( ) );
+                    folder->set_tag( user_id );
                 }
-                n->add_child( bullet );
+                folder->add_child( bullet_straight::create( bullet_id, pos, direction, color, skin_relative_path ) );
             }
         }
     }
@@ -156,8 +144,25 @@ void bullet_manager::close_player( cinder::ColorA const& color )
 void bullet_manager::create_bullet( Json::Value const & data )
 {
     _created_bullet_data["data"][_number_of_created_bullet] = data;
-    _created_bullet_data["data"][_number_of_created_bullet]["time_offset"] = _time_offset;
     _number_of_created_bullet++;
+
+    auto bullet_id = data["bullet_id"].asInt( );
+    auto user_id = data["user_id"].asInt( );
+    auto start_position = vec2( data["start_position"][0].asFloat( ), data["start_position"][1].asFloat( ) );
+    auto end_position = vec2( data["end_position"][0].asFloat( ), data["end_position"][1].asFloat( ) );
+    if ( auto cell = _cell_manager->get_child_by_tag( user_id ).dynamicptr<user::cell>( ) )
+    {
+        auto color = cell->get_color( );
+        auto skin_relative_path = cell->get_skin_relative_path( );
+
+        auto folder = get_child_by_tag( user_id );
+        if ( !folder )
+        {
+            folder = add_child( node::create( ) );
+            folder->set_tag( user_id );
+        }
+        folder->add_child( bullet_straight::create( bullet_id, start_position, end_position, color, skin_relative_path ) );
+    }
 }
 }
 

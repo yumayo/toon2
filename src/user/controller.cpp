@@ -22,6 +22,7 @@ bool controller::init( softptr<player> player, softptr<ground> ground, softptr<b
 
     _analog_axis = add_child( analog_axis::create( ) );
     _debug_command = add_child( debug_command::create( player, bullet_manager ) );
+    _button_bullet_firing = add_child( button_bullet_firing::create( player, bullet_manager ) );
 
     return true;
 }

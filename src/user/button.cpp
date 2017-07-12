@@ -83,35 +83,47 @@ bool base_ciecle_button::hit_touch( cinder::vec2 touch_position )
 {
     return utility::hit_point_ciecle_non_scale( touch_position, shared_from_this( ) );
 }
+bool base_anytype_button_opacity_action::init( )
+{
+    base_button::init( );
+    set_opacity( 0.5F );
+    return true;
+}
 void base_anytype_button_opacity_action::in_action( )
 {
-    if ( auto child = get_child_by_name( "button_action" ) ) remove_child( child );
+    remove_action_by_name( "button_action" );
     set_opacity( 0.5F );
-    auto act = action::ease<EaseOutBounce>::create( action::opacity_by::create( 0.1F, 1.0F ) );
+    auto act = action::ease<EaseOutCirc>::create( action::opacity_to::create( 0.3F, 1.0F ) );
     act->set_name( "button_action" );
     run_action( act );
 }
 void base_anytype_button_opacity_action::out_action( )
 {
-    if ( auto child = get_child_by_name( "button_action" ) ) remove_child( child );
+    remove_action_by_name( "button_action" );
     set_opacity( 1.0F );
-    auto act = action::ease<EaseOutBounce>::create( action::opacity_by::create( 0.1F, 0.5F ) );
+    auto act = action::ease<EaseOutCirc>::create( action::opacity_to::create( 0.3F, 0.5F ) );
     act->set_name( "button_action" );
     run_action( act );
 }
+bool base_anytype_button_scale_action::init( )
+{
+    base_button::init( );
+    set_scale( vec2( 1.0F ) );
+    return true;
+}
 void base_anytype_button_scale_action::in_action( )
 {
-    if ( auto child = get_child_by_name( "button_action" ) ) remove_child( child );
+    remove_action_by_name( "button_action" );
     set_scale( vec2( 1.0F ) );
-    auto act = action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1F, vec2( 1.2F ) ) );
+    auto act = action::ease<EaseOutBounce>::create( action::scale_to::create( 0.3F, vec2( 1.2F ) ) );
     act->set_name( "button_action" );
     run_action( act );
 }
 void base_anytype_button_scale_action::out_action( )
 {
-    if ( auto child = get_child_by_name( "button_action" ) ) remove_child( child );
+    remove_action_by_name( "button_action" );
     set_scale( vec2( 1.2F ) );
-    auto act = action::ease<EaseOutBounce>::create( action::scale_to::create( 0.1F, vec2( 1.0F ) ) );
+    auto act = action::ease<EaseOutBounce>::create( action::scale_to::create( 0.3F, vec2( 1.0F ) ) );
     act->set_name( "button_action" );
     run_action( act );
 }

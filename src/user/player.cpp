@@ -79,19 +79,8 @@ void player::blowout( )
         _tcp_connection->write( Json::FastWriter( ).write( root ) );
     }
 }
-bool player::parse_bullet_data( Json::Value * root, cinder::vec2 direction )
+float player::get_target_radius( )
 {
-    // 小さい場合は打てない。
-    if ( _target_radius < user_default::get_instans( )->get_root( )["system"]["min_radius"].asFloat( ) + 4.0F ) return false;
-
-    scale_action( -4.0F );
-    Json::Value& data = *root;
-    data["user_id"] = get_tag( );
-    data["position"][0] = get_position( ).x + get_radius( ) * direction.x;
-    data["position"][1] = get_position( ).y + get_radius( ) * direction.y;
-    data["direction"][0] = direction.x;
-    data["direction"][1] = direction.y;
-
-    return true;
+    return _target_radius;
 }
 }
